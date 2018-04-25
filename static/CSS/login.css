@@ -1,0 +1,10 @@
+.login {
+    position: absolute;
+    margin: auto;
+    left: 35%;
+    right: 35%;
+    width: 30%;
+}
+.form-signin-heading {
+    text-align: center;
+}
