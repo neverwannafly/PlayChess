@@ -6,18 +6,18 @@ import re as regex
 
 mod = Blueprint('site', __name__, template_folder='templates')
 
-# Regex expression for email verification!
+# Regex expression for email verification
 EMAIL_PATTERN_COMPILED = regex.compile("^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$")
 
-# Relative imports!
+# Relative imports
 from .. import database
 from . import classes
 
-#initialisation
+# Database initialisation
 db = database.db
 users = db.users # object pointing to users database!
 
-# Custom login_required decorator!
+# Custom login_required decorator
 def login_required(view_function):
     @wraps(view_function)
     def wrapper(*args, **kwargs):
@@ -28,6 +28,7 @@ def login_required(view_function):
             return redirect(url_for('site.login'))
     return wrapper
 
+# Make users to be logged in for 5 days!
 @mod.before_request
 def make_session_permanent():
     session.permanent = True
@@ -38,7 +39,7 @@ def make_session_permanent():
 @mod.route('/')
 @login_required
 def index():
-    return "You're in" + session['username']
+    return "You're in " + session['username']
 
 @mod.route('/login', methods=['GET', 'POST'])
 def login():
@@ -50,6 +51,8 @@ def login():
             if hash_pass.hashpw(request.form['password'], find_user['password'])==find_user['password']:
                 session['username'] = request.form['username'].lower()
                 return redirect(url_for('site.index'))
+            else:
+                render_template('login.html', error_code=-2, script=None)
         else:
             return render_template('login.html', error_code=-1, script=None)
     return render_template('login.html', error_code=0, script=None)

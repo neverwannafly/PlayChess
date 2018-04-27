@@ -66,7 +66,9 @@
             <div class="error"> 
                 <center>
                 {% if error_code==-1 %}
-                    Invalid Credentials!
+                    Invalid username!
+                {% elif error_code==-2 %}
+                    Invalid password!
                 {% endif %}
                 </center>
             </div>
