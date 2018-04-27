@@ -11,7 +11,7 @@ class User:
         self.rating = rating
         self.db_object = db_object
     def addUserToDatabase(self):
-        dict_object = {
+        self.db_object.insert_one({
             "first_name" : self.first_name,
             "last_name" : self.last_name,
             "username" : self.username,
@@ -19,6 +19,5 @@ class User:
             "password" : self.password,
             "image" : self.image,
             "rating" : self.rating
-        }
-        self.db_object.add_one(dict_object)
+        })
         

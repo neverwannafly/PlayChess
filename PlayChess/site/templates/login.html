@@ -11,56 +11,73 @@
 <body>
     <script>
         $(document).ready(function(){
-            $("#register-form").hide();
-            $("#login-form").show();
+            $("#register-form").show();
+            $("#login-form").hide();
         })
     </script>
     <div class="container">
         <div class="form" id="register-form">
-            <form method="POST">
+            <div class="error"> 
+                <center>
+                    {% print(error_code) %}
+                {% if error_code==1 %}
+                    This username already exists!
+                {% elif error_code==2 %}
+                    Account associated with this email ID already exists!
+                {% elif error_code==3 %}
+                    This kind of email ID isnt supported!
+                {% elif error_code==4 %}
+                    Passwords donot match!
+                {% endif %}
+                </center>
+            </div>
+            <form method="POST" action="{{ url_for('site.register') }}">
                 <div class="form-group">
                     <label for="exampleInputEmail1">First Name</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="First Name" required>
+                    <input name="first_name" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="First Name" required>
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Last Name</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Last Name" required>
+                    <input name="last_name"  type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Last Name" required>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Last Name</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Type your Username" required>
+                    <label for="exampleInputEmail1">Username</label>
+                    <input name="username" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Type your Username" required>
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Email</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your Email ID" required>
+                    <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your Email ID" required>
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    <input name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Retype Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Retype your Password">
+                    <input name="confirm_password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Retype your Password">
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button> <br><br>
+                <button type="submit" class="btn btn-primary">Register</button> <br><br>
                 <a href="#" id="signin">Already have an account? Signin!</a>
             </form>
         </div>
         <div class="form" id="login-form">
-            <form method="POST">
+            <div class="error"> 
+                <center>
+                {% if error_code==-1 %}
+                    Invalid Credentials!
+                {% endif %}
+                </center>
+            </div>
+            <form method="POST" action="{{ url_for('site.login') }}">
                 <div class="form-group">
                 <label for="exampleInputEmail1">Username</label>
-                <input type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="Enter your username">
+                <input name="username" type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="Enter your username">
                 </div>
                 <div class="form-group">
                 <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+                <input name="password" type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
                 </div>
-                <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck2">
-                <label class="form-check-label" for="exampleCheck1">Remember Me</label>
-                </div><br>
-                <button type="submit" class="btn btn-primary">Submit</button> <br><br>
+                <button type="submit" class="btn btn-primary">SignIn</button> <br><br>
                 <a href="#" id="signup">Dont have an account? Register!</a>
             </form>
         </div>
