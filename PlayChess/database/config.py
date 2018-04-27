@@ -1,5 +1,5 @@
 # Contains the database username and pass
 configurations = {
-    '_USERNAME' : 'Neverwannafly',
+    '_USERNAME' : 'neverwannafly',
     '_PASSWORD' : 'Shubham123',
 }
