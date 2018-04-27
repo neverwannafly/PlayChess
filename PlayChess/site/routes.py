@@ -59,6 +59,8 @@ def login():
 
 @mod.route('/register', methods=['POST'])
 def register():
+    # Script adds a little js code to login.html so as in to keep registration form
+    # in view after template is rendered again due to invalid register attempt!
     script = """
     <script>
         $(document).ready(function(){
