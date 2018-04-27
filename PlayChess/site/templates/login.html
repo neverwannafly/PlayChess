@@ -11,15 +11,17 @@
 <body>
     <script>
         $(document).ready(function(){
-            $("#register-form").show();
-            $("#login-form").hide();
+            $("#register-form").hide();
+            $("#login-form").show();
         })
     </script>
+    {% if script is not none %}
+        {{ script|safe }}
+    {% endif %}
     <div class="container">
         <div class="form" id="register-form">
             <div class="error"> 
                 <center>
-                    {% print(error_code) %}
                 {% if error_code==1 %}
                     This username already exists!
                 {% elif error_code==2 %}
@@ -70,18 +72,17 @@
             </div>
             <form method="POST" action="{{ url_for('site.login') }}">
                 <div class="form-group">
-                <label for="exampleInputEmail1">Username</label>
-                <input name="username" type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="Enter your username">
+                    <label for="exampleInputEmail1">Username</label>
+                    <input name="username" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Type your Username" required>
                 </div>
                 <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input name="password" type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                 </div>
-                <button type="submit" class="btn btn-primary">SignIn</button> <br><br>
+                <button type="submit" class="btn btn-primary">Sign In</button> <br><br>
                 <a href="#" id="signup">Dont have an account? Register!</a>
             </form>
         </div>
-
     </div>
 </body>
 </html>
