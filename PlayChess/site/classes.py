@@ -20,6 +20,12 @@ class User:
         self.db_object = db_object
 
     def addNewUserToDatabase(self, username, password, email, image, first_name, last_name):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.username = username
+        self.password = password
+        self.email = email
+        self.image = image
         self.db_object.insert_one({
             "first_name" : first_name,
             "last_name" : last_name,
@@ -30,6 +36,10 @@ class User:
             "rating" : 1200,
             "isUserVerified" : False
         })
+        new_user = self.db_object.find_one({
+            'username' : username
+        })
+        self._id = str(new_user['_id'])
     
     def loadUser(self, username):
         user = self.db_object.find_one({
@@ -64,6 +74,15 @@ class User:
             self.db_object.update_one({
                 'username' : self.username,
                 '$set' : {'rating': rating},
+                '$currentDate': {'lastModified': True}
+            })
+            return 1
+        return 0
+    def updateUserVerificationStatus(self):
+        if self.username is not None:
+            self.db_object.update_one({
+                'username': self.username,
+                '$set': {'isUserVerified': True},
                 '$currentDate': {'lastModified': True}
             })
             return 1
