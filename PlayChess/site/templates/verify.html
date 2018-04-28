@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename='CSS/login.css')}}">
+</head>
+<body>
+    <div class="container">
+        <div class="error">
+            {% if error_code==1 %}
+                Invalid verification code!
+            {% endif %}
+        </div>
+        <div class="jumbotron">
+            <form method="POST" action="{{ url_for('site.verify') }}">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Verification Code</label>
+                    <input name="activation_link" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your code" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Verify!</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
