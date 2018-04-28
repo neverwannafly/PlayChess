@@ -8,13 +8,13 @@
 </head>
 <body>
     <div class="container">
-        <div class="error">
-            {% if error_code==1 %}
-                Invalid verification code!
-            {% endif %}
-        </div>
         <div class="jumbotron">
-            <form method="POST" action="{{ url_for('site.verify') }}">
+            <div class="error">
+                {% if error_code==1 %}
+                    Invalid verification code!
+                {% endif %}
+            </div>
+            <form method="POST" action="{{ url_for('site.verify', username=username) }}">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Verification Code</label>
                     <input name="activation_link" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your code" required>

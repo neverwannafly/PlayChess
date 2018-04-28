@@ -40,22 +40,23 @@ class User:
             'username' : username
         })
         self._id = str(new_user['_id'])
+        print(self._id)
     
     def loadUser(self, username):
         user = self.db_object.find_one({
             'username' : username
         })
         if user is not None:
-            if user['isUserVerified']==True:
-                seld._id = str(user['id'])
-                self.first_name = user['first_name']
-                self.last_name = user['last_name']
-                self.username = user['username']
-                self.password = user['password']
-                self.email = user['email']
-                self.image = user['image']
-                self.rating = user['rating']
-                self.isUserVerified = user['isUserVerified']
+            self._id = str(user['_id'])
+            self.first_name = user['first_name']
+            self.last_name = user['last_name']
+            self.username = user['username']
+            self.password = user['password']
+            self.email = user['email']
+            self.image = user['image']
+            self.rating = user['rating']
+            self.isUserVerified = user['isUserVerified']
+            if self.isUserVerified==True:
                 return 1
             return 0
         return -1
@@ -71,19 +72,21 @@ class User:
     ## Future update operations would be carried here if required!
     def updateUserRating(self, rating):
         if self.username is not None:
-            self.db_object.update_one({
-                'username' : self.username,
-                '$set' : {'rating': rating},
-                '$currentDate': {'lastModified': True}
-            })
+            self.db_object.update_one(
+                {'username' : self.username},
+                {'$set' : {'rating': rating}},
+                upsert=False
+            )
             return 1
         return 0
-    def updateUserVerificationStatus(self):
+        
+    def updateUserVerificationStatus(self, username):
+        self.loadUser(username)
         if self.username is not None:
-            self.db_object.update_one({
-                'username': self.username,
-                '$set': {'isUserVerified': True},
-                '$currentDate': {'lastModified': True}
-            })
+            self.db_object.update_one(
+                {'username': self.username},
+                {'$set': {'isUserVerified': True}},
+                upsert=False
+            )
             return 1
         return 0

@@ -21,8 +21,6 @@ obj = users.find_one({
     'username':'neverwannafly'
 })
 
-print(str(obj['_id']))
-
 #initialises a class object, current user that can load, update, read and delete a user data!
 current_user = classes.User(users)
 
@@ -71,20 +69,15 @@ def login():
         if isLoadSuccessful==1:
             if hash_pass.hashpw(request.form['password'], current_user.password)==current_user.password:
                 session['username'] = request.form['username'].lower()
-                print("success")
                 return redirect(url_for('site.index'))
             else:
-                print("-3")
                 return render_template('login.html', error_code=-3, script=None)
         elif isLoadSuccessful==0:
-            print("-2")
-            return render_template('login.html', error_code=-2, script=None)
-        print("-1")
+            return redirect(url_for('site.verify', username=current_user.username))
         return render_template('login.html', error_code=-1, script=None)
-    print("0")
     return render_template('login.html', error_code=0, script=None)
 
-from . import mailings
+from . import mailing
 
 @mod.route('/register', methods=['POST'])
 @logout_required
@@ -121,9 +114,9 @@ def register():
                     request.form['last_name'], 
                 )
                 #Send email verification
-                response = mailings.sendMail(current_user._id, current_user.email)
+                response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
                 if response:
-                    return redirect(url_for('site.verify'))
+                    return redirect(url_for('site.verify', username=current_user.username))
                 else:
                     current_user.deleteUser()
                     return render_template('login.html', error_code=5, script=script)
@@ -137,16 +130,16 @@ def register():
         return render_template('login.html', error_code=1, script=script)
 
 # Link user for verification!
-@mod.route('/verify', methods=['POST', 'GET'])
+@mod.route('/verify/<username>', methods=['GET', 'POST'])
 @logout_required
-def verify():
-    if request.method==POST:
+def verify(username):
+    if request.method=='POST':
+        current_user.updateUserVerificationStatus(username)
         if request.form['activation_link']==current_user._id:
-            current_user.updateUserVerificationStatus()
             session['username'] = current_user.username
-            redirect(url_for('site.index'))
-        return render_template('verify.html', error_code=1)
-    return render_template('verify.html', error_code=0)
+            return redirect(url_for('site.index'))
+        return render_template('verify.html', username=username ,error_code=1)
+    return render_template('verify.html', username=username, error_code=0)
 
 # logout routine
 @mod.route('/logout')
