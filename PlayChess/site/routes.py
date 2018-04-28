@@ -39,6 +39,17 @@ def login_required(view_function):
             return redirect(url_for('site.login'))
     return wrapper
 
+# logout required decorator to access register and login page!
+def logout_required(view_function):
+    @wraps(view_function)
+    def wrapper(*args, **kwargs):
+        username = session.get('username')
+        if username:
+            return redirect(url_for('site.index'))
+        else:
+            return view_function(*args, **kwargs)
+    return wrapper
+
 # Make users to be logged in for 5 days!
 @mod.before_request
 def make_session_permanent():
@@ -53,6 +64,7 @@ def index():
     return "You're in " + session['username'] + " " + current_user.username
 
 @mod.route('/login', methods=['GET', 'POST'])
+@logout_required
 def login():
     if request.method=='POST':
         isLoadSuccessful = current_user.loadUser(request.form['username'].lower())
@@ -72,7 +84,10 @@ def login():
     print("0")
     return render_template('login.html', error_code=0, script=None)
 
+from . import mailings
+
 @mod.route('/register', methods=['POST'])
+@logout_required
 def register():
     # Script adds a little js code to login.html so as in to keep registration form
     # in view after template is rendered again due to invalid register attempt!
@@ -96,7 +111,8 @@ def register():
             if request.form['password']==request.form['confirm_password']:
                 random_image = "use a random_image_url_generator!"
                 hash_password = hash_pass.hashpw(request.form['password'], hash_pass.gensalt())
-                current_user.addNewUserToDatabase(
+                # This method adds an user to database and sends a verification mail!
+                response = current_user.addNewUserToDatabase(
                     request.form['username'].lower(), 
                     hash_password, 
                     request.form['email'], 
@@ -104,7 +120,13 @@ def register():
                     request.form['first_name'], 
                     request.form['last_name'], 
                 )
-                return redirect(url_for('site.verify'))
+                #Send email verification
+                response = mailings.sendMail(current_user._id, current_user.email)
+                if response:
+                    return redirect(url_for('site.verify'))
+                else:
+                    current_user.deleteUser()
+                    return render_template('login.html', error_code=5, script=script)
             else:
                 return render_template('login.html', error_code=4, script=script)
         else:
@@ -115,9 +137,16 @@ def register():
         return render_template('login.html', error_code=1, script=script)
 
 # Link user for verification!
-@mod.route('/verify')
+@mod.route('/verify', methods=['POST', 'GET'])
+@logout_required
 def verify():
-    return "verify your email or enter your verification code below!"
+    if request.method==POST:
+        if request.form['activation_link']==current_user._id:
+            current_user.updateUserVerificationStatus()
+            session['username'] = current_user.username
+            redirect(url_for('site.index'))
+        return render_template('verify.html', error_code=1)
+    return render_template('verify.html', error_code=0)
 
 # logout routine
 @mod.route('/logout')
