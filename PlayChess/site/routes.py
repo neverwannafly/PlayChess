@@ -17,12 +17,17 @@ from . import classes
 db = database.db
 users = db.users # object pointing to users database!
 
+#initialises a class object, current user that can load, update, read and delete a user data!
+current_user = classes.User(users)
+
 # Custom login_required decorator
 def login_required(view_function):
     @wraps(view_function)
     def wrapper(*args, **kwargs):
         username = session.get('username')
         if username:
+            # if there's a user in session, set the current_user to that user!
+            current_user.loadUser(session['username'])
             return view_function(*args, **kwargs)
         else:
             return redirect(url_for('site.login'))
@@ -39,22 +44,26 @@ def make_session_permanent():
 @mod.route('/')
 @login_required
 def index():
-    return "You're in " + session['username']
+    return "You're in " + session['username'] + " " + current_user.username
 
 @mod.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method=='POST':
-        find_user = users.find_one({
-            'username' : request.form['username'].lower(),
-        })
-        if find_user:
-            if hash_pass.hashpw(request.form['password'], find_user['password'])==find_user['password']:
+        isLoadSuccessful = current_user.loadUser(request.form['username'].lower())
+        if isLoadSuccessful==1:
+            if hash_pass.hashpw(request.form['password'], current_user.password)==current_user.password:
                 session['username'] = request.form['username'].lower()
+                print("success")
                 return redirect(url_for('site.index'))
             else:
-                render_template('login.html', error_code=-2, script=None)
-        else:
-            return render_template('login.html', error_code=-1, script=None)
+                print("-3")
+                return render_template('login.html', error_code=-3, script=None)
+        elif isLoadSuccessful==0:
+            print("-2")
+            return render_template('login.html', error_code=-2, script=None)
+        print("-1")
+        return render_template('login.html', error_code=-1, script=None)
+    print("0")
     return render_template('login.html', error_code=0, script=None)
 
 @mod.route('/register', methods=['POST'])
@@ -81,19 +90,15 @@ def register():
             if request.form['password']==request.form['confirm_password']:
                 random_image = "use a random_image_url_generator!"
                 hash_password = hash_pass.hashpw(request.form['password'], hash_pass.gensalt())
-                new_user = classes.User(
+                current_user.addNewUserToDatabase(
                     request.form['username'].lower(), 
                     hash_password, 
                     request.form['email'], 
                     random_image, 
                     request.form['first_name'], 
                     request.form['last_name'], 
-                    1200, 
-                    users
                 )
-                new_user.addUserToDatabase()
-                session['username'] = request.form['username'].lower()
-                return redirect(url_for('site.index'))
+                return redirect(url_for('site.verify'))
             else:
                 return render_template('login.html', error_code=4, script=script)
         else:
@@ -103,6 +108,12 @@ def register():
     elif existing_user:
         return render_template('login.html', error_code=1, script=script)
 
+# Link user for verification!
+@mod.route('/verify')
+def verify():
+    return "verify your email or enter your verification code below!"
+
+# logout routine
 @mod.route('/logout')
 @login_required
 def logout():
