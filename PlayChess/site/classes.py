@@ -4,10 +4,11 @@ class User:
     # Initialises a user class with a database object!
 
     """
-    NOTE - Add a initialiser for user id if need arises in future!
+    NOTE - user id is only used for email verification!
     """
 
     def __init__(self, db_object):
+        self._id = "N/A"
         self.first_name = "N/A"
         self.last_name = "N/A"
         self.username = "N/A"
@@ -36,6 +37,7 @@ class User:
         })
         if user is not None:
             if user['isUserVerified']==True:
+                seld._id = str(user['id'])
                 self.first_name = user['first_name']
                 self.last_name = user['last_name']
                 self.username = user['username']
