@@ -29,3 +29,5 @@ class Admin:
             'password': password, 
             'image': image
         })
+
+    
