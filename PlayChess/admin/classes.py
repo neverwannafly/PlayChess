@@ -27,4 +27,5 @@ class Admin:
             'admin_password': admin_password
         })
 
-    def createUser()
+    # creates a new user to be added to database!
+    def createUser():

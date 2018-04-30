@@ -14,6 +14,8 @@ def login():
         return render_template('admin_login.html', error_code=1)
     return render_template('admin_login.html', error_code=0)
 
+
+# A tabular view of the database exclusively available to admins of the page!
 @mod.route('/dashboard')
 def dashboard():
-    return 
+    return "you're in !"
