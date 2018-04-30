@@ -16,8 +16,8 @@
             </div>
             <form method="POST" action="{{ url_for('site.verify', username=username) }}">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Verification Code</label>
-                    <input name="activation_link" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your code" required>
+                    <label for="code">Verification Code</label>
+                    <input name="activation_link" type="text" class="form-control" id="code" placeholder="Enter your code" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Verify!</button>
             </form>
