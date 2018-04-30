@@ -5,6 +5,8 @@ mod = Blueprint('admin', __name__, template_folder='admin_templates')
 from .. import database
 db = database.db
 
-@mod.route('/')
-def index():
+@mod.route('/', methods=['POST', 'GET'])
+def login():
+    if request.method=='POST':
+        pass
     return render_template('admin_login.html')
