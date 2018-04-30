@@ -36,6 +36,9 @@
                 {% endif %}
                 </center>
             </div>
+            <div class="container header">
+                Register!
+            </div>
             <form method="POST" action="{{ url_for('site.register') }}">
                 <div class="form-group">
                     <label for="firstName">First Name</label>
@@ -66,12 +69,13 @@
             </form>
         </div>
         <div class="form" id="login-form">
+            <div class="header container">
+                Login!
+            </div>
             <div class="error"> 
                 <center>
                 {% if error_code==-1 %}
                     Invalid username!
-                {% elif error_code==-2 %}
-                    You haven't verified your account yet!
                 {% elif error_code==-3 %}
                     Invalid password!
                 {% endif %}
