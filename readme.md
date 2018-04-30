@@ -16,6 +16,13 @@ These are the likely goals I would like to achieve in the near future
     <li><strong>A bit far :</strong> Make home page</li>
 </ul>
 
+## Adding a new admin!
+To add an admin to the database, follow the code below->
+NOTE: You must be in the main directory, the same where run.py is!
+```
+
+```
+
 ## Testing the app
 To test the current implementations of the app-><br>
 --> Download the zip or fork the repo<br>
