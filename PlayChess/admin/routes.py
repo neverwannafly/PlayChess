@@ -1,3 +1,6 @@
+### IMPORTANT NOTE ###
+# Admins should only be created through command line!
+
 from flask import Blueprint, render_template, url_for, request, session, redirect
 import bcrypt as hash_pass
 
@@ -46,8 +49,11 @@ def make_session_permanent():
 @logout_required
 def login():
     if request.method=='POST':
-        if admin.loadAdmin(request.form['admin_username'].lower()):
-            
+        if current_admin.loadAdmin(request.form['admin_username'].lower()):
+            if hash_pass.hashpw(request.form['admin_password'], current_admin.admin_password)==current_admin.admin_password:
+                session['admin_username'] = current_admin.admin_username
+                return redirect(url_for('admin.dashboard'))
+            return render_template('admin_login.html', error_code=2)
         return render_template('admin_login.html', error_code=1)
     return render_template('admin_login.html', error_code=0)
 
@@ -55,7 +61,7 @@ def login():
 @mod.route('/dashboard')
 @login_required
 def dashboard():
-    return "you're in !"
+    return "you're in " + current_admin['admin_username'] + " !!!!"
 
 @mod.rout('/logout')
 @login_required

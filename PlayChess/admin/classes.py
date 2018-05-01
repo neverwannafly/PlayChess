@@ -27,7 +27,7 @@ class Admin:
     def createAdmin(self, admin_username, admin_password):
         self.db.admin.insert_one({
             'admin_username': admin_username,
-            'admin_password': admin_password
+            'admin_password': hash_pass.hashpw(admin_password, hash_pass.gensalt())
         })
 
     # Lets the admin create a new user to be added to database!
