@@ -14,11 +14,12 @@ class Admin:
     def loadAdmin(self, admin_username):
         if admin_username is not None:
             admin = self.db.admin.find_one({
-                'admin_username': username
+                'admin_username': admin_username
             })
             if admin:
-                self.admin_username = admin['username']
-                self.admin_password = admin['password']
+                self.admin_username = admin['admin_username']
+                self.admin_password = admin['admin_password']
+                return 1
             return 0
         return -1
     

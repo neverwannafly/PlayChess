@@ -12,10 +12,10 @@
     <div class="container header">
         Admin Login
     </div>
-    <div class="error">
+    <div class="error container">
         {% if error_code==1 %}
             Invalid username
-        {% elif %}
+        {% elif error_code==2 %}
             Invalid password
         {% endif %}
     </div>
