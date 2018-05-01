@@ -3,6 +3,7 @@
 
 from flask import Blueprint, render_template, url_for, request, session, redirect
 import bcrypt as hash_pass
+from functools import wraps
 
 mod = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -10,7 +11,8 @@ from .. import database
 db = database.db
 
 from . import classes
-current_admin = classes.Admin(db) # initialise an admin object!
+current_admin = classes.Admin(db) # initialise an admin object to be able to load admin!
+new_admin = classes.Admin(db) # initialise an admin object to be able to make a new admin!
 
 # login_required and logout_required decorators that ensure certain url's confront to 
 # respective wanted behaviors!
@@ -63,7 +65,7 @@ def login():
 def dashboard():
     return "you're in " + current_admin['admin_username'] + " !!!!"
 
-@mod.rout('/logout')
+@mod.route('/logout')
 @login_required
 def logout():
     session.pop('admin_username')
