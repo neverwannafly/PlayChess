@@ -18,14 +18,14 @@ def login_required(view_function):
     def wrapper(*args, **kwargs):
         admin_username = session.get('admin_username')
         if admin_username:
-            # if there's a user in session, set the current_user to that user!
+            # if there's an admin in session, set the current_admin to that admin!
             current_admin.loadAdmin(session['admin_username'])
             return view_function(*args, **kwargs)
         else:
             return redirect(url_for('admin.login'))
     return wrapper
 
-# logout required decorator to access register and login page!
+# logout required decorator to access admin login!
 def logout_required(view_function):
     @wraps(view_function)
     def wrapper(*args, **kwargs):
@@ -37,11 +37,10 @@ def logout_required(view_function):
     return wrapper
 
 
-# Make users to be logged in for 5 days!
+# Makes session for an admin expire as soon as he closes down the browser!
 @mod.before_request
 def make_session_permanent():
-    session.permanent = True
-    mod.permanent_session_lifetime = timedelta(days=5)
+    session.permanent = False
 
 @mod.route('/', methods=['POST', 'GET'])
 def login():
