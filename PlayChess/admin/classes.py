@@ -25,10 +25,16 @@ class Admin:
     # creates a new admin for the site!
     # This command is only supported through the commandline!
     def createAdmin(self, admin_username, admin_password):
-        self.db.admin.insert_one({
-            'admin_username': admin_username,
-            'admin_password': hash_pass.hashpw(admin_password, hash_pass.gensalt())
+        doesUserNameExist = self.db.admin.find_one({
+            'admin_username': admin_username
         })
+        if doesUserNameExist is None:
+            self.db.admin.insert_one({
+                'admin_username': admin_username,
+                'admin_password': hash_pass.hashpw(admin_password, hash_pass.gensalt())
+            })
+            return 1
+        return 0
 
     # Lets the admin create a new user to be added to database!
     def createUser(self, username, password, email, image, first_name, last_name):
