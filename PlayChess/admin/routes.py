@@ -43,6 +43,7 @@ def make_session_permanent():
     session.permanent = False
 
 @mod.route('/', methods=['POST', 'GET'])
+@logout_required
 def login():
     if request.method=='POST':
         if admin.loadAdmin(request.form['admin_username'].lower()):
@@ -52,5 +53,12 @@ def login():
 
 # A tabular view of the database exclusively available to admins of the page!
 @mod.route('/dashboard')
+@login_required
 def dashboard():
     return "you're in !"
+
+@mod.rout('/logout')
+@login_required
+def logout():
+    session.pop('admin_username')
+    return redirect(url_for('admin.login'))
