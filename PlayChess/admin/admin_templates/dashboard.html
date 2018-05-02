@@ -18,29 +18,85 @@
 {% endblock %}
 
 {% block body %}
+
+<script>
+    $(document).ready(function(){
+        $("#form").hide();
+        $("#table").show();
+    })
+</script>
+
+{% if script is not none %}
+    {{ script|safe }}
+{% endif %}
+
     <div class="container">
-        <table>
-            <tr>
-                <th>S.No</th>
-                <th>Name</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Rating</th>
-                <th>Image</th>
-                <th>Is User Verified?</th>
-            </tr>
-            {% for data in user_data%}
+        <div id="form">
+            <center>
+            <div class="error">
+                {% if error_code==1 %}
+                    Invalid EmailID
+                {% elif error_code==2 %}
+                    Username already exists!
+                {% endif %}
+            </div>
+            </center>
+            <div class="form-content container">
+                <form method="POST" action="{{ url_for('admin.add_user') }}">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input name="first_name" type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input name="last_name"  type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input name="username" type="text" class="form-control" id="username" placeholder="Type your Username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emailID">Email</label>
+                        <input name="email" type="email" class="form-control" id="emailID" placeholder="Enter your Email ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" required>
+                    </div><br>
+                    <button type="submit" class="btn btn-success btn-block">Add User</button>
+                </form> <br>
+                <button id="cancel" class="btn btn-primary btn-block">Cancel</button>
+            </div>
+        </div>
+
+        <div id="table">
+            <table id="table">
                 <tr>
-                    <td>{{data['_id']}}</td>
-                    <!-- Makes the name of user in proper case! -->
-                    <td>{{data['first_name'][0].upper()+data['first_name'][1:].lower()}} {{data['last_name'][0].upper()+data['last_name'][1:].lower()}}</td>
-                    <td>{{data['username']}}</td>
-                    <td>{{data['email']}}</td>
-                    <td>{{data['rating']}}</td>
-                    <td>{{data['image'].split('/')[3]}}</td> 
-                    <td>{{data['isUserVerified']}}</td>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Rating</th>
+                    <th>Image</th>
+                    <th>Is User Verified?</th>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for data in user_data%}
+                    <tr>
+                        <td>{{data['_id']}}</td>
+                        <!-- Makes the name of user in proper case! -->
+                        <td>{{data['first_name'][0].upper()+data['first_name'][1:].lower()}} {{data['last_name'][0].upper()+data['last_name'][1:].lower()}}</td>
+                        <td>{{data['username']}}</td>
+                        <td>{{data['email']}}</td>
+                        <td>{{data['rating']}}</td>
+                        <td>{{data['image'].split('/')[3]}}</td> 
+                        <td>{{data['isUserVerified']}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        <div class="container">
+            <div class="button-div">
+                <button id="add" type="button" class="btn-success btn btn-block" value="Add user">Add User</button>
+            </div>
+        </div>
     </div>
 {% endblock %}

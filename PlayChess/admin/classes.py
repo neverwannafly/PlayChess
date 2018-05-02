@@ -40,16 +40,22 @@ class Admin:
     # Lets the admin create a new user to be added to database!
     # An user added by admin will always be verified!
     def createUser(self, username, password, email, image, first_name, last_name):
-        self.db.users.insert_one({
-            "first_name" : first_name,
-            "last_name" : last_name,
-            "username" : username,
-            "email" : email,
-            "password" : password,
-            "image" : image,
-            "rating" : 1200,
-            "isUserVerified" : True
+        isUsernameAlreadyTaken = self.db.users.find_one({
+            'username': username
         })
+        if isUsernameAlreadyTaken is None:
+            self.db.users.insert_one({
+                "first_name" : first_name,
+                "last_name" : last_name,
+                "username" : username,
+                "email" : email,
+                "password" : password,
+                "image" : image,
+                "rating" : 1200,
+                "isUserVerified" : True
+            })
+            return 1
+        return 0
     
     # Lets the admin delete a user!
     def deleteUser(self, username):

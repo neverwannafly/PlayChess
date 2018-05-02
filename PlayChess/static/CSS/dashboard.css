@@ -8,3 +8,21 @@ th, td {
     padding: 5px 5px 5px 5px;
     text-align: center;
 }
+
+.button-div {
+    margin-top: 8%;
+}
+
+#form {
+    max-width: 60%;
+    margin-top: 6%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(196, 196, 196);
+    border-radius: 10%;
+}
+.form-content {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    max-width: 40%;
+}
