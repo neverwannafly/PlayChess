@@ -36,6 +36,14 @@ $ (env) python3 new_admin.py <_ADMIN_USERNAME> <_ADMIN_PASSWORD>
 ```
 --> You can type in your desired username followed by your desired password seperated by a space right in front of the python command!<br>
 --> <strong>NOTE: </strong>In case of failure in creating an admin, it will throw an error and abort. It won't go for a reprompt and you'll need to run the command again!
+
+## Different routes
+--> The default url <strong>http://127.0.0.1:5000/</strong> or <strong>http://localhost:5000/</strong> routes to the site.<br>
+--> Use <strong>http://127.0.0.1:5000/admin/</strong> or <strong>http://localhost:5000/admin/</strong> to access the admin interface.<br>
+--> Use <strong>http://127.0.0.1:5000/blog/</strong> or 
+<strong>http://localhost:5000/blog/</strong> to access the blog interface.<br>
+--> <strong> NOTE : blog route is under development and encountering bugs is possible. If you access the blog application. If you encounter any errors, please exit the application and start again! </strong>
+
 ## Testing the app
 To test the current implementations of the app-><br>
 --> Download the zip or fork the repo<br>
@@ -45,6 +53,7 @@ $ source env/bin/activate # if virtual env isn't active
 $ (env) python3 run.py
 ```
 --> goto localhost:5000/ on your browser and mendle around with the app!<br>
+--> To exit the application, press Ctrl+C<br>
 --> Do drop in your suggestions via pull requests <3 <br>
 
 <hr>
