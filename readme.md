@@ -5,12 +5,13 @@
     <li>User registration</li>
     <li>User login</li>
     <li>User verification via emailID</li>
+    <li>Admin login</li>
+    <li>Creating new admin through command line
 </ul>
 
 ## Check Points
 These are the likely goals I would like to achieve in the near future
 <ul>
-    <li>Implement Admin login</li>
     <li>Implement Admin dashboard and master control</li>
     <li>Implement necessary styling till now</li>
     <li><strong>A bit far :</strong> Make home page</li>
@@ -18,7 +19,7 @@ These are the likely goals I would like to achieve in the near future
 
 ## Adding a new admin!
 There are two ways to add a new admin to website's database!
-#### Method 1 (Through the Interactive App):
+### Method 1 (Through the Interactive App):
 --> Go to the home directory (where run.py is) through the terminal and enter the following code
 ```
 $ source env/bin/activate #if virtual env isn't active
@@ -27,7 +28,7 @@ $ python3 new_admin.py
 --> This will prompt you to type in your desired username and password!<br>
 --> <strong>NOTE: </strong>your username can only contain alphanumeric characters and an underscore! Failing to adhere to username restrictions will result in error. However since you're in an interactive app, you will be reprompted to enter yoru username and password!
 
-#### Method 2 (Through the Script):
+### Method 2 (Through the Script):
 --> Go to the home directory (where run.py is) thorugh the terminal and enter the following code
 ```
 $ source env/bin/activate #if virtual env isn't active
