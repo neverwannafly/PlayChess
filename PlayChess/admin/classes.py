@@ -38,6 +38,7 @@ class Admin:
         return 0
 
     # Lets the admin create a new user to be added to database!
+    # An user added by admin will always be verified!
     def createUser(self, username, password, email, image, first_name, last_name):
         self.db.users.insert_one({
             "first_name" : first_name,
