@@ -105,7 +105,7 @@ def register():
             if request.form['password']==request.form['confirm_password']:
                 # Code to randomly assign an image for the user! 
                 # Later add an interface for the users to be able to select their own profile pictures!
-                random_image = "{{ url_for('static', filename='Images/" + str(random.randint(1, 17)) + ".png') }}"
+                random_image = "/static/images/" + str(random.randint(1, 17)) + ".png"
                 hash_password = hash_pass.hashpw(request.form['password'], hash_pass.gensalt())
                 # This method adds an user to database and sends a verification mail!
                 response = current_user.addNewUserToDatabase(

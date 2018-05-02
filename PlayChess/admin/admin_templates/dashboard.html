@@ -34,22 +34,23 @@
     <div class="container">
         <table>
             <tr>
-                <th>ID</th>
+                <th>S.No</th>
                 <th>Name</th>
                 <th>Username</th>
                 <th>Email</th>
                 <th>Rating</th>
                 <th>Image</th>
-                <th>IsUserVerified</th>
+                <th>Is User Verified?</th>
             </tr>
-            {% for data in user_data %}
+            {% for data in user_data%}
                 <tr>
                     <td>{{data['_id']}}</td>
-                    <td>{{data['first_name']}} {{data['last_name']}}</td>
+                    <!-- Makes the name of user in proper case! -->
+                    <td>{{data['first_name'][0].upper()+data['first_name'][1:].lower()}} {{data['last_name'][0].upper()+data['last_name'][1:].lower()}}</td>
                     <td>{{data['username']}}</td>
                     <td>{{data['email']}}</td>
                     <td>{{data['rating']}}</td>
-                    <td>{{data['image']}}</td>
+                    <td>{{data['image'].split('/')[3]}}</td> 
                     <td>{{data['isUserVerified']}}</td>
                 </tr>
             {% endfor %}
