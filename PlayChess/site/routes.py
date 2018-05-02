@@ -3,6 +3,7 @@ from datetime import timedelta
 from functools import wraps
 import bcrypt as hash_pass
 import re as regex
+import random
 
 mod = Blueprint('site', __name__, template_folder='templates')
 
@@ -102,7 +103,9 @@ def register():
         valid_email = bool(regex.match(EMAIL_PATTERN_COMPILED, request.form['email']))
         if valid_email:
             if request.form['password']==request.form['confirm_password']:
-                random_image = "use a random_image_url_generator!"
+                # Code to randomly assign an image for the user! 
+                # Later add an interface for the users to be able to select their own profile pictures!
+                random_image = "{{ url_for('static', filename='Images/" + str(random.randint(1, 17)) + ".png') }}"
                 hash_password = hash_pass.hashpw(request.form['password'], hash_pass.gensalt())
                 # This method adds an user to database and sends a verification mail!
                 response = current_user.addNewUserToDatabase(
