@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 from PlayChess.site.routes import mod
 from PlayChess.admin.routes import mod
+from PlayChess.blog.routes import mod
 
 # makes an instance of admin class that can be used to add new admins!
 
@@ -20,3 +21,4 @@ create_new_admin = new_admin
 
 app.register_blueprint(site.routes.mod)
 app.register_blueprint(admin.routes.mod, url_prefix='/admin')
+app.register_blueprint(blog.routes.mod, url_prefix='/blog')
