@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}
+    Home
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="jumbotron">
+            <h3>Welcome {{user.username}}</h1>
+        </div>
+    </div>
+    <div class="container">
+        <a href="{{url_for('site.logout')}}"><button type="button" class="btn-warning btn btn-block">Logout</button></a>
+    </div>
+{% endblock %}

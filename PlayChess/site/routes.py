@@ -59,7 +59,7 @@ def make_session_permanent():
 @mod.route('/')
 @login_required
 def index():
-    return "You're in " + session['username'] + " " + current_user.username
+    return render_template('index.html', user=current_user)
 
 @mod.route('/login', methods=['GET', 'POST'])
 @logout_required
