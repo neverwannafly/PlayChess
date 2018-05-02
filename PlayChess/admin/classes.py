@@ -56,5 +56,10 @@ class Admin:
             'username': username
         })
 
+    # returns a dictionary of all users registered on the database!
+    def loadAllUsers(self):
+        return self.db.users.find({})
+
+
     # Add editing capabilities using Ajax later!
     ###### EDITING METHODS ######

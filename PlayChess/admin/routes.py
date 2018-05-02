@@ -63,7 +63,8 @@ def login():
 @mod.route('/dashboard')
 @login_required
 def dashboard():
-    return "you're in " + current_admin.admin_username + " !!!!"
+    user_data = current_admin.loadAllUsers()
+    return render_template('dashboard.html', user_data=user_data, admin=current_admin.admin_username)
 
 @mod.route('/logout')
 @login_required
