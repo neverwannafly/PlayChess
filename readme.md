@@ -42,7 +42,7 @@ $ (PlayChess) python3 new_admin.py <_ADMIN_USERNAME> <_ADMIN_PASSWORD>
 --> Use <strong>http://127.0.0.1:5000/admin/</strong> or <strong>http://localhost:5000/admin/</strong> to access the admin interface.<br>
 --> Use <strong>http://127.0.0.1:5000/blog/</strong> or 
 <strong>http://localhost:5000/blog/</strong> to access the blog interface.<br>
---> <strong> NOTE : blog route is under development and encountering bugs is possible. If you access the blog application. If you encounter any errors, please exit the application and start again! </strong>
+--> <strong> NOTE : blog route is under development and encountering bugs is possible if you access the blog application. If you encounter any errors, please exit the application and start again! </strong>
 
 ## Testing the app
 To test the current implementations of the app-><br>
