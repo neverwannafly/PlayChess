@@ -57,7 +57,7 @@ def make_session_permanent():
 def login():
     if request.method=='POST':
         if current_admin.loadAdmin(request.form['admin_username'].lower()):
-            if hash_pass.hashpw(request.form['admin_password'].encode('utf-8'), current_admin.admin_password.encode('utf-8'))==current_admin.admin_password.encode('utf-8'):
+            if hash_pass.hashpw(request.form['admin_password'].encode('utf-8'), current_admin.admin_password)==current_admin.admin_password:
                 session['admin_username'] = current_admin.admin_username
                 return redirect(url_for('admin.dashboard'))
             return render_template('admin_login.html', error_code=2)

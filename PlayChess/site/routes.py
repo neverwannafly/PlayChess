@@ -69,7 +69,7 @@ def login():
     if request.method=='POST':
         isLoadSuccessful = current_user.loadUser(request.form['username'].lower())
         if isLoadSuccessful==1:
-            if hash_pass.hashpw(request.form['password'].encode('utf-8'), current_user.password.encode('utf-8'))==current_user.password.encode('utf-8'):
+            if hash_pass.hashpw(request.form['password'].encode('utf-8'), current_user.password)==current_user.password:
                 session['username'] = request.form['username'].lower()
                 return redirect(url_for('site.index'))
             else:
