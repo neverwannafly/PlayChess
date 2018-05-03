@@ -57,7 +57,7 @@ def make_session_permanent():
 def login():
     if request.method=='POST':
         if current_admin.loadAdmin(request.form['admin_username'].lower()):
-            if hash_pass.hashpw(request.form['admin_password'], current_admin.admin_password)==current_admin.admin_password:
+            if hash_pass.hashpw(request.form['admin_password'].encode('utf-8'), current_admin.admin_password.encode('utf-8'))==current_admin.admin_password.encode('utf-8'):
                 session['admin_username'] = current_admin.admin_username
                 return redirect(url_for('admin.dashboard'))
             return render_template('admin_login.html', error_code=2)
@@ -87,7 +87,7 @@ def add_user():
     if bool(regex.match(EMAIL_PATTERN_COMPILED, request.form['email'])):
         isUserInsertionSuccessful = current_admin.createUser(
             request.form['username'],
-            hash_pass.hashpw(request.form['password'], hash_pass.gensalt()),
+            hash_pass.hashpw(request.form['password'].encode('utf-8'), hash_pass.gensalt()),
             request.form['email'],
             "/static/images/" + str(random.randint(1, 17)) + ".png",
             request.form['first_name'],

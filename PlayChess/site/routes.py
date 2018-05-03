@@ -7,8 +7,9 @@ import random
 
 mod = Blueprint('site', __name__, template_folder='templates')
 
-# Regex expression for email verification
+# Regex expression for email and username verification
 EMAIL_PATTERN_COMPILED = regex.compile("^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$")
+USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]+$")
 
 # Relative imports
 from .. import database
@@ -68,7 +69,7 @@ def login():
     if request.method=='POST':
         isLoadSuccessful = current_user.loadUser(request.form['username'].lower())
         if isLoadSuccessful==1:
-            if hash_pass.hashpw(request.form['password'], current_user.password)==current_user.password:
+            if hash_pass.hashpw(request.form['password'].encode('utf-8'), current_user.password.encode('utf-8'))==current_user.password.encode('utf-8'):
                 session['username'] = request.form['username'].lower()
                 return redirect(url_for('site.index'))
             else:
@@ -106,7 +107,7 @@ def register():
                 # Code to randomly assign an image for the user! 
                 # Later add an interface for the users to be able to select their own profile pictures!
                 random_image = "/static/images/" + str(random.randint(1, 17)) + ".png"
-                hash_password = hash_pass.hashpw(request.form['password'], hash_pass.gensalt())
+                hash_password = hash_pass.hashpw(request.form['password'].encode('utf-8'), hash_pass.gensalt())
                 # This method adds an user to database and sends a verification mail!
                 response = current_user.addNewUserToDatabase(
                     request.form['username'].lower(), 

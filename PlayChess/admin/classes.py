@@ -32,7 +32,7 @@ class Admin:
         if doesUserNameExist is None:
             self.db.admin.insert_one({
                 'admin_username': admin_username,
-                'admin_password': hash_pass.hashpw(admin_password, hash_pass.gensalt())
+                'admin_password': hash_pass.hashpw(admin_password.encode('utf-8'), hash_pass.gensalt())
             })
             return 1
         return 0
