@@ -9,8 +9,9 @@ import random
 
 mod = Blueprint('admin', __name__, template_folder='admin_templates')
 
-# regex to verify email addresses!
+# regex to verify email addresses and usernames!
 EMAIL_PATTERN_COMPILED = regex.compile("^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$")
+USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 
 from .. import database
 db = database.db
@@ -84,7 +85,7 @@ def add_user():
         </script>
     """
     print("working!")
-    if bool(regex.match(EMAIL_PATTERN_COMPILED, request.form['email'])):
+    if bool(regex.match(EMAIL_PATTERN_COMPILED, request.form['email'])) and bool(regex.match(USERNAME_REGEX, request.form['username'])):
         isUserInsertionSuccessful = current_admin.createUser(
             request.form['username'],
             hash_pass.hashpw(request.form['password'].encode('utf-8'), hash_pass.gensalt()),

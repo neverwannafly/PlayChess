@@ -24,15 +24,17 @@
             <div class="error"> 
                 <center>
                 {% if error_code==1 %}
-                    This username already exists!
+                    Invalid Username! Note username must be b/w 3 characters to 30 characters and should only contain alphanumeric characters and underscores.
                 {% elif error_code==2 %}
-                    Account associated with this email ID already exists!
+                    Invalid Email address. Please use a valid email address!
                 {% elif error_code==3 %}
-                    This kind of email ID isnt supported!
+                    Username already taken!
                 {% elif error_code==4 %}
-                    Passwords donot match!
+                    This email ID is already associated with another account!
                 {% elif error_code==5 %}
-                    There was some problem verifying your email!<br>
+                    Passwords donot match!
+                {% elif error_code==6 %}
+                    There was some problem registering you!
                     Please try again later!
                 {% endif %}
                 </center>

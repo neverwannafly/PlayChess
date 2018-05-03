@@ -5,7 +5,7 @@ from PlayChess import create_new_admin
 import re as regex
 import sys
 
-USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]+$")
+USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 
 if len(sys.argv)==3:
     valid_username = bool(regex.match(USERNAME_REGEX, sys.argv[1]))
