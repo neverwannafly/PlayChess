@@ -6,7 +6,8 @@
     <li>User login</li>
     <li>User verification via emailID</li>
     <li>Admin login</li>
-    <li>Creating new admin through command line
+    <li>Creating new admin through command line</li>
+    <li>Allow admins to create users</li>
 </ul>
 
 ## Check Points
@@ -46,38 +47,55 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 ## Adding a new admin!
 There are two ways to add a new admin to website's database!
 #### Method 1 (Through the Interactive App): 
---> Go to the home directory (where run.py is) through the terminal and enter the following code
+<ul>
+<li>Go to the home directory (where run.py is) through the terminal and enter the following code</li>
+</ul>
+
 ```
 $ python new_admin.py
 ```
---> This will prompt you to type in your desired username and password!<br>
---> <strong>NOTE: </strong>your username can only contain alphanumeric characters and an underscore! Failing to adhere to username restrictions will result in error. However since you're in an interactive app, you will be reprompted to enter yoru username and password!
+
+<ul>
+    <li>This will prompt you to type in your desired username and password!</li>
+<li><strong>NOTE: </strong>your username can only contain alphanumeric characters and an underscore! Failing to adhere to username restrictions will result in error. However since you're in an interactive app, you will be reprompted to enter yoru username and password!</li>
+</ul>
 
 #### Method 2 (Through the Script):
---> Go to the home directory (where run.py is) thorugh the terminal and enter the following code
+<ul>
+    <li>Go to the home directory (where run.py is) thorugh the terminal and enter the following code</li>
+</ul>
+
 ```
 $ python new_admin.py <_ADMIN_USERNAME> <_ADMIN_PASSWORD>
 ```
---> You can type in your desired username followed by your desired password seperated by a space right in front of the python command!<br>
---> <strong>NOTE: </strong>In case of failure in creating an admin, it will throw an error and abort. It won't go for a reprompt and you'll need to run the command again!
+
+<ul>
+<li>You can type in your desired username followed by your desired password seperated by a space right in front of the python command!</li>
+<li><strong>NOTE: </strong>In case of failure in creating an admin, it will throw an error and abort. It won't go for a reprompt and you'll need to run the command again!</li>
+</ul>
 
 ## Different routes
---> The default url <strong>http://127.0.0.1:5000/</strong> or <strong>http://localhost:5000/</strong> routes to the site.<br>
---> Use <strong>http://127.0.0.1:5000/admin/</strong> or <strong>http://localhost:5000/admin/</strong> to access the admin interface.<br>
---> Use <strong>http://127.0.0.1:5000/blog/</strong> or 
-<strong>http://localhost:5000/blog/</strong> to access the blog interface.<br>
---> <strong> NOTE : blog route is under development and encountering bugs is possible if you access the blog application. If you encounter any errors, please exit the application and start again! </strong>
+<ul>
+<li>The default url <strong>http://127.0.0.1:5000/</strong> or <strong>http://localhost:5000/</strong> routes to the site.</li>
+<li>Use <strong>http://127.0.0.1:5000/admin/</strong> or <strong>http://localhost:5000/admin/</strong> to access the admin interface</li>
+<li>Use <strong>http://127.0.0.1:5000/blog/</strong> or 
+<strong>http://localhost:5000/blog/</strong> to access the blog interface</li>
+<li><strong> NOTE : blog route is under development and encountering bugs is possible if you access the blog application. If you encounter any errors, please exit the application and start again! </strong></li>
+</ul>
 
 ## Testing the app
 To test the current implementations of the app-><br>
---> Download the zip or fork the repo<br>
---> Go to the home directory(where run.py is) through terminal and run the following commands-><br>
+<ul>
+<li>Download the zip or fork the repo</li>
+<li>Go to the home directory(where run.py is) through terminal and run the following commands-></li>
+
 ```
 $ python run.py
 ```
---> goto localhost:5000/ on your browser and mendle around with the app!<br>
---> To exit the application, press Ctrl+C<br>
---> Do drop in your suggestions via pull requests <3 <br>
+
+<li>goto localhost:5000/ on your browser and mendle around with the app!</li>
+<li>To exit the application, press Ctrl+C</li>
+<li>Do drop in your suggestions via pull requests <3 </li>
 
 <h4><strong> This project is only compatible with python3! </strong> </h4><br>
 
