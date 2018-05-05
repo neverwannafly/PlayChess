@@ -9,7 +9,9 @@ th, td {
     text-align: center;
 }
 .button-div {
-    margin-top: 8%;
+    margin-top: 6%;
+    position: fixed;
+    bottom: 4%;
 }
 a:link {
     text-decoration: none;
