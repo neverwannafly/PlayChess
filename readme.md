@@ -18,12 +18,29 @@ These are the likely goals I would like to achieve in the near future
 </ul>
 
 ## Setting up virtual env
+#### For UNIX based devices(linux/mac)
 To be able to run the project, you should either be having libraries mentioned in requirnments.txt in your PC or you can create your virtual env with all these libraries in few simple steps!<br>
 
 ```
-$ python -m venv <_NAME_OF_YOUR_VIRTUAL_ENV>
-$ source <_NAME_OF_YOUR_VIRTUAL_ENV>/bin/activate
-$ (<_NAME_OF_YOUR_VIRTUAL_ENV>) pip install -r requirnments.txt
+$ python -m venv env # where env is name of our virtual environment
+$ source env/bin/activate
+$ (env) pip install -r requirnments.txt
+```
+<hr></hr>
+
+#### Windows 
+Open windows power shell and change directory to the same as home directory of project (where readme.md is)<br>
+Write in the following commands to set up your virtualenv
+
+```
+> pip install virtualenv # if virtualenv isn't installed
+> virtualenv env # where env is name of virtual env
+> env/Scripts/activate
+> (env) pip install -r requirnments.txt
+```
+<strong>NOTE: If you aren't able to activate the environment, you may need to change your execution policy. It's really simple, open powershell as an admin and write the following command -></strong>
+```
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 ```
 
 ## Adding a new admin!
