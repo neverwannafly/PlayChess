@@ -6,6 +6,7 @@
 
 {% block includes %}
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard.css')}}">
+    <script src="{{ url_for('static', filename='JS/dashboard.js')}}"></script>
 {% endblock %}
 
 {% block admin_username %}
@@ -22,19 +23,15 @@
 
 {% block body %}
     <div class="container">
-        <div id="form">
-            <center>
-            <div class="error">
-                {% if error_code==1 %}
-                    Invalid EmailID or username!
-                {% elif error_code==2 %}
-                    Username already exists!
-                {% endif %}
-            </div>
-            </center>
+        <div class="error">
+            {% if error_code==1 %}
+                Invalid Username or Email
+            {% elif error_code==2 %}
+                Username already exists!
+            {% endif %}
         </div>
-        <div id="table">
-            <table id="table">
+        <div class="table">
+            <table>
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
@@ -42,30 +39,60 @@
                     <th>Email</th>
                     <th>Rating</th>
                     <th>Image</th>
-                    <th>Is User Verified?</th>
+                    <th>IsUserVerified?</th>
                 </tr>
                 {% for data in user_data%}
                     <tr>
-                        <td>{{data['_id']}}</td>
+                        <td class="normal-cell">{{data['_id']}}</td>
                         <!-- Makes the name of user in proper case! -->
-                        <td>{{data['first_name'][0].upper()+data['first_name'][1:].lower()}} {{data['last_name'][0].upper()+data['last_name'][1:].lower()}}</td>
-                        <td>{{data['username']}}</td>
-                        <td>{{data['email']}}</td>
-                        <td>{{data['rating']}}</td>
-                        <td>{{data['image'].split('/')[3]}}</td> 
-                        <td>{{data['isUserVerified']}}</td>
+                        <td class="normal-cell">{{data['first_name'][0].upper()+data['first_name'][1:].lower()}} {{data['last_name'][0].upper()+data['last_name'][1:].lower()}}</td>
+                        <td class="normal-cell">{{data['username']}}</td>
+                        <td class="normal-cell">{{data['email']}}</td>
+                        <td class="normal-cell">{{data['rating']}}</td>
+                        <td class="normal-cell">{{data['image'].split('/')[3]}}</td> 
+                        <td class="normal-cell">{{data['isUserVerified']}}</td>
+                        <td class="hidden-cell">
+                            <button type="button" value="{{data['username']}}" class="deleteButton btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                Delete
+                            </button>
+                        </td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
         <div class="container button-div">
-            <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#exampleModalCenter">
                     Add User
             </button>
         </div>
-      
-      <!-- Modal -->
+        <!-- Delete Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete User?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        This change is permanent and cannot be reverted!
+                        <form method="POST" action="{{ url_for('admin.delete') }}">
+                            <div class="form-group">
+                                <input class="hidden-form" name="username">
+                            </div><br>
+                            <button type="submit" class="btn btn-success btn-block">Delete</button>
+                        </form> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+      <!-- Add Modal -->
       <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -76,7 +103,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ url_for('admin.add_user') }}">
+                <form method="POST" action="{{ url_for('admin.add') }}">
                     <div class="form-group">
                         <label for="firstName">First Name</label>
                         <input name="first_name" type="text" class="form-control" id="firstName" placeholder="First Name" maxlength="30" required>
@@ -106,6 +133,6 @@
           </div>
         </div>
       </div>
-        </div>
+    </div>
     </div>
 {% endblock %}
