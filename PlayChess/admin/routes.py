@@ -72,9 +72,9 @@ def dashboard():
     user_data = current_admin.loadAllUsers()
     return render_template('dashboard.html', error_code=0, user_data=user_data, admin=current_admin.admin_username)
 
-@mod.route('/dashboard/add_user', methods=['POST'])
+@mod.route('/add', methods=['POST'])
 @login_required
-def add_user():
+def add():
     user_data = current_admin.loadAllUsers()
     if bool(regex.match(EMAIL_PATTERN_COMPILED, request.form['email'])) and bool(regex.match(USERNAME_REGEX, request.form['username'])):
         isUserInsertionSuccessful = current_admin.createUser(
@@ -89,6 +89,13 @@ def add_user():
             return redirect(url_for('admin.dashboard'))
         return render_template('add_user.html', error_code=2, admin=current_admin.admin_username)
     return render_template('add_user.html', error_code=1, admin=current_admin.admin_username)
+
+@mod.route('/delete', methods=['POST'])
+@login_required
+def delete():
+    current_admin.deleteUser(request.form['username'])
+    return redirect(url_for('admin.dashboard'))
+
 @mod.route('/logout')
 @login_required
 def logout():
