@@ -20,7 +20,7 @@ These are the likely goals I would like to achieve in the near future
 
 ## Setting up virtual env
 #### For UNIX based devices(linux/mac)
-To be able to run the project, you should either be having libraries mentioned in requirnments.txt in your PC or you can create your virtual env with all these libraries in few simple steps!<br>
+To be able to run the project, you should either be having libraries mentioned in requirnments.txt in your PC(The same version) or you can create your virtual env with all these libraries in few simple steps! (Recommended)<br>
 
 ```
 $ python -m venv env # where env is name of our virtual environment
