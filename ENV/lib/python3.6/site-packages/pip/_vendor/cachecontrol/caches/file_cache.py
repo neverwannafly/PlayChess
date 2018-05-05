@@ -1,15 +1,11 @@
 import hashlib
 import os
-from textwrap import dedent
+
+from pip._vendor.lockfile import LockFile
+from pip._vendor.lockfile.mkdirlockfile import MkdirLockFile
 
 from ..cache import BaseCache
 from ..controller import CacheController
-
-try:
-    FileNotFoundError
-except NameError:
-    # py2.X
-    FileNotFoundError = OSError
 
 
 def _secure_open_write(filename, fmode):
@@ -59,28 +55,18 @@ class FileCache(BaseCache):
         if use_dir_lock is not None and lock_class is not None:
             raise ValueError("Cannot use use_dir_lock and lock_class together")
 
-        try:
-            from pip._vendor.lockfile import LockFile
-            from pip._vendor.lockfile.mkdirlockfile import MkdirLockFile
-        except ImportError:
-            notice = dedent("""
-            NOTE: In order to use the FileCache you must have
-            lockfile installed. You can install it via pip:
-              pip install lockfile
-            """)
-            raise ImportError(notice)
-        else:
-            if use_dir_lock:
-                lock_class = MkdirLockFile
+        if use_dir_lock:
+            lock_class = MkdirLockFile
 
-            elif lock_class is None:
-                lock_class = LockFile
+        if lock_class is None:
+            lock_class = LockFile
 
         self.directory = directory
         self.forever = forever
         self.filemode = filemode
         self.dirmode = dirmode
         self.lock_class = lock_class
+
 
     @staticmethod
     def encode(x):
@@ -118,10 +104,7 @@ class FileCache(BaseCache):
     def delete(self, key):
         name = self._fn(key)
         if not self.forever:
-            try:
-                os.remove(name)
-            except FileNotFoundError:
-                pass
+            os.remove(name)
 
 
 def url_to_file_path(url, filecache):

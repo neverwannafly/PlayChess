@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013-2017 Vinay Sajip.
+# Copyright (C) 2013-2016 Vinay Sajip.
 # Licensed to the Python Software Foundation under a contributor agreement.
 # See LICENSE.txt and CONTRIBUTORS.txt.
 #
@@ -12,7 +12,7 @@ import sys
 
 try:
     import ssl
-except ImportError:  # pragma: no cover
+except ImportError:
     ssl = None
 
 if sys.version_info[0] < 3:  # pragma: no cover
@@ -272,7 +272,7 @@ from zipfile import ZipFile as BaseZipFile
 
 if hasattr(BaseZipFile, '__enter__'):  # pragma: no cover
     ZipFile = BaseZipFile
-else:  # pragma: no cover
+else:
     from zipfile import ZipExtFile as BaseZipExtFile
 
     class ZipExtFile(BaseZipExtFile):
@@ -329,13 +329,7 @@ try:
     fsencode = os.fsencode
     fsdecode = os.fsdecode
 except AttributeError:  # pragma: no cover
-    # Issue #99: on some systems (e.g. containerised),
-    # sys.getfilesystemencoding() returns None, and we need a real value,
-    # so fall back to utf-8. From the CPython 2.7 docs relating to Unix and
-    # sys.getfilesystemencoding(): the return value is "the user’s preference
-    # according to the result of nl_langinfo(CODESET), or None if the
-    # nl_langinfo(CODESET) failed."
-    _fsencoding = sys.getfilesystemencoding() or 'utf-8'
+    _fsencoding = sys.getfilesystemencoding()
     if _fsencoding == 'mbcs':
         _fserrors = 'strict'
     else:
@@ -365,7 +359,7 @@ except ImportError: # pragma: no cover
     from codecs import BOM_UTF8, lookup
     import re
 
-    cookie_re = re.compile(r"coding[:=]\s*([-\w.]+)")
+    cookie_re = re.compile("coding[:=]\s*([-\w.]+)")
 
     def _get_normal_name(orig_enc):
         """Imitates get_normal_name in tokenizer.c."""
@@ -614,20 +608,17 @@ except ImportError: # pragma: no cover
             self.maps[0].clear()
 
 try:
-    from importlib.util import cache_from_source  # Python >= 3.4
-except ImportError:  # pragma: no cover
-    try:
-        from imp import cache_from_source
-    except ImportError:  # pragma: no cover
-        def cache_from_source(path, debug_override=None):
-            assert path.endswith('.py')
-            if debug_override is None:
-                debug_override = __debug__
-            if debug_override:
-                suffix = 'c'
-            else:
-                suffix = 'o'
-            return path + suffix
+    from imp import cache_from_source
+except ImportError: # pragma: no cover
+    def cache_from_source(path, debug_override=None):
+        assert path.endswith('.py')
+        if debug_override is None:
+            debug_override = __debug__
+        if debug_override:
+            suffix = 'c'
+        else:
+            suffix = 'o'
+        return path + suffix
 
 try:
     from collections import OrderedDict

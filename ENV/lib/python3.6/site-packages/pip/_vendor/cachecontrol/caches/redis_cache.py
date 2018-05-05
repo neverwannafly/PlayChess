@@ -1,20 +1,19 @@
 from __future__ import division
 
 from datetime import datetime
-from pip._vendor.cachecontrol.cache import BaseCache
 
 
 def total_seconds(td):
     """Python 2.6 compatability"""
     if hasattr(td, 'total_seconds'):
-        return int(td.total_seconds())
+        return td.total_seconds()
 
     ms = td.microseconds
     secs = (td.seconds + td.days * 24 * 3600)
-    return int((ms + secs * 10**6) / 10**6)
+    return (ms + secs * 10**6) / 10**6
 
 
-class RedisCache(BaseCache):
+class RedisCache(object):
 
     def __init__(self, conn):
         self.conn = conn
@@ -26,7 +25,7 @@ class RedisCache(BaseCache):
         if not expires:
             self.conn.set(key, value)
         else:
-            expires = expires - datetime.utcnow()
+            expires = expires - datetime.now()
             self.conn.setex(key, total_seconds(expires), value)
 
     def delete(self, key):
@@ -39,5 +38,4 @@ class RedisCache(BaseCache):
             self.conn.delete(key)
 
     def close(self):
-        """Redis uses connection pooling, no need to close the connection."""
-        pass
+        self.conn.disconnect()

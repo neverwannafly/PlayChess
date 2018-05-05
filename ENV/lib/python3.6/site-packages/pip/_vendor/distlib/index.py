@@ -49,6 +49,7 @@ class PackageIndex(object):
         self.ssl_verifier = None
         self.gpg = None
         self.gpg_home = None
+        self.rpc_proxy = None
         with open(os.devnull, 'w') as sink:
             # Use gpg by default rather than gpg2, as gpg2 insists on
             # prompting for passwords
@@ -509,8 +510,6 @@ class PackageIndex(object):
     def search(self, terms, operator=None):
         if isinstance(terms, string_types):
             terms = {'name': terms}
-        rpc_proxy = ServerProxy(self.url, timeout=3.0)
-        try:
-            return rpc_proxy.search(terms, operator or 'and')
-        finally:
-            rpc_proxy('close')()
+        if self.rpc_proxy is None:
+            self.rpc_proxy = ServerProxy(self.url, timeout=3.0)
+        return self.rpc_proxy.search(terms, operator or 'and')

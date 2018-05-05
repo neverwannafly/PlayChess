@@ -83,9 +83,9 @@ else:
     ]
     _FillConsoleOutputAttribute.restype = wintypes.BOOL
 
-    _SetConsoleTitleW = windll.kernel32.SetConsoleTitleW
+    _SetConsoleTitleW = windll.kernel32.SetConsoleTitleA
     _SetConsoleTitleW.argtypes = [
-        wintypes.LPCWSTR
+        wintypes.LPCSTR
     ]
     _SetConsoleTitleW.restype = wintypes.BOOL
 
@@ -94,14 +94,12 @@ else:
         STDERR: _GetStdHandle(STDERR),
     }
 
-    def _winapi_test(handle):
+    def winapi_test():
+        handle = handles[STDOUT]
         csbi = CONSOLE_SCREEN_BUFFER_INFO()
         success = _GetConsoleScreenBufferInfo(
             handle, byref(csbi))
         return bool(success)
-
-    def winapi_test():
-        return any(_winapi_test(h) for h in handles.values())
 
     def GetConsoleScreenBufferInfo(stream_id=STDOUT):
         handle = handles[stream_id]
