@@ -70,35 +70,27 @@ def login():
 @login_required
 def dashboard():
     user_data = current_admin.loadAllUsers()
-    return render_template('dashboard.html', error_code=0, user_data=user_data, admin=current_admin.admin_username, script=None)
+    return render_template('dashboard.html', error_code=0, user_data=user_data, admin=current_admin.admin_username)
 
-@mod.route('/dashboard/add_user', methods=['POST'])
+@mod.route('/dashboard/add_user', methods=['GET', 'POST'])
 @login_required
 def add_user():
-    user_data = current_admin.loadAllUsers()
-    script = """
-        <script>
-            $(document).ready(function(){
-                $("#form").show();
-                $("#table").hide();
-            })
-        </script>
-    """
-    print("working!")
-    if bool(regex.match(EMAIL_PATTERN_COMPILED, request.form['email'])) and bool(regex.match(USERNAME_REGEX, request.form['username'])):
-        isUserInsertionSuccessful = current_admin.createUser(
-            request.form['username'],
-            hash_pass.hashpw(request.form['password'].encode('utf-8'), hash_pass.gensalt()),
-            request.form['email'],
-            "/static/images/" + str(random.randint(1, 17)) + ".png",
-            request.form['first_name'],
-            request.form['last_name']
-        )
-        if isUserInsertionSuccessful:
-            return redirect(url_for('admin.dashboard'))
-        return render_template('dashboard.html', error_code=2, user_data=user_data, admin=current_admin.admin_username, script=script)
-    return render_template('dashboard.html', error_code=1, user_data=user_data, admin=current_admin.admin_username, script=script)
-
+    if request.method=='POST':
+        user_data = current_admin.loadAllUsers()
+        if bool(regex.match(EMAIL_PATTERN_COMPILED, request.form['email'])) and bool(regex.match(USERNAME_REGEX, request.form['username'])):
+            isUserInsertionSuccessful = current_admin.createUser(
+                request.form['username'],
+                hash_pass.hashpw(request.form['password'].encode('utf-8'), hash_pass.gensalt()),
+                request.form['email'],
+                "/static/images/" + str(random.randint(1, 17)) + ".png",
+                request.form['first_name'],
+                request.form['last_name']
+            )
+            if isUserInsertionSuccessful:
+                return redirect(url_for('admin.dashboard'))
+            return render_template('add_user.html', error_code=2, admin=current_admin.admin_username)
+        return render_template('add_user.html', error_code=1, admin=current_admin.admin_username)
+    return render_template('add_user.html', error_code=0, admin=current_admin.admin_username)
 @mod.route('/logout')
 @login_required
 def logout():

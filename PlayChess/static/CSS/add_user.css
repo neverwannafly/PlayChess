@@ -1,15 +1,15 @@
-table {
-    margin-top: 10%;
+#form {
+    max-width: 60%;
+    margin-top: 6%;
     margin-left: auto;
     margin-right: auto;
+    background-color: rgb(196, 196, 196);
+    border-radius: 10%;
 }
-th, td {
-    border: 1px solid black;
-    padding: 5px 5px 5px 5px;
-    text-align: center;
-}
-.button-div {
-    margin-top: 8%;
+.form-content {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    max-width: 40%;
 }
 a:link {
     text-decoration: none;
