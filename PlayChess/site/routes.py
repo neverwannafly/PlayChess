@@ -142,7 +142,7 @@ def register():
 def verify(username):
     if request.method=='POST':
         current_user.updateUserVerificationStatus(username)
-        if request.form['activation_link']==current_user._id:
+        if request.form['activation_link'].strip(' ')==current_user._id:
             session['username'] = current_user.username
             return redirect(url_for('site.index'))
         return render_template('verify.html', username=username ,error_code=1)

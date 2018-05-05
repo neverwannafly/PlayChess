@@ -50,7 +50,7 @@ def logout_required(view_function):
 
 # Makes session for an admin expire as soon as he closes down the browser!
 @mod.before_request
-def make_session_permanent():
+def disable_permanent_session():
     session.permanent = False
 
 @mod.route('/', methods=['POST', 'GET'])
