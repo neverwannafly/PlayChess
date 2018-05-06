@@ -47,14 +47,29 @@
                 {% for data in user_data%}
                     <tr>
                         <td class="normal-cell">{{loop.index}}</td>
-                        <!-- Makes the name of user in proper case! -->
-                        <td class="normal-cell">{{data['first_name']|title}} {{data['last_name']|title}}</td>
-                        <td class="normal-cell">{{data['username']}}</td>
-                        <td class="normal-cell">{{data['email']}}</td>
-                        <td class="normal-cell">{{data['rating']}}</td>
-                        <td class="normal-cell">{{data['image'].split('/')[3]}}</td> 
-                        <td class="normal-cell">{{data['isUserVerified']}}</td>
+                        <td class="normal-cell">
+                            {{data['first_name']|title}} {{data['last_name']|title}}
+                        </td>
+                        <td class="normal-cell">
+                            {{data['username']}}
+                        </td>
+                        <td class="normal-cell">
+                            {{data['email']}}
+                        </td>
+                        <td class="normal-cell">
+                            {{data['rating']}}
+                        </td>
+                        <td class="normal-cell">
+                            {{data['image'].split('/')[3]}}
+                        </td> 
+                        <td class="normal-cell">
+                            {{data['isUserVerified']}}
+                        </td>
                         <td class="hidden-cell">
+                            <button type="button" class="updateButton btn-primary btn">
+                                Edit
+                            </button>
+                            &nbsp;
                             <button type="button" value="{{data['username']}}" class="deleteButton btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                 Delete
                             </button>
