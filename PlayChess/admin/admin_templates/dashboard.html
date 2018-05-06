@@ -32,15 +32,18 @@
         </div>
         <div class="table">
             <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Rating</th>
-                    <th>Image</th>
-                    <th>IsUserVerified?</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Rating</th>
+                        <th>Image</th>
+                        <th>IsUserVerified?</th>
+                    </tr>
+                </thead>
+                <tbody>
                 {% for data in user_data%}
                     <tr>
                         <td class="normal-cell">{{data['_id']}}</td>
@@ -58,6 +61,7 @@
                         </td>
                     </tr>
                 {% endfor %}
+                </tbody>
             </table>
         </div>
         <div class="container button-div">

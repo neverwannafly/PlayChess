@@ -12,4 +12,5 @@ $(document).ready(function(){
         $(".hidden-form").val(username);
         $("#exampleModalLabel").text("Delete user " + username + " ?");
     })
+
 });

@@ -87,8 +87,8 @@ def add():
         )
         if isUserInsertionSuccessful:
             return redirect(url_for('admin.dashboard'))
-        return render_template('add_user.html', error_code=2, admin=current_admin.admin_username)
-    return render_template('add_user.html', error_code=1, admin=current_admin.admin_username)
+        return render_template('dashboard.html', user_data=user_data, error_code=2, admin=current_admin.admin_username)
+    return render_template('dashboard.html', user_data=user_data, error_code=1, admin=current_admin.admin_username)
 
 @mod.route('/delete', methods=['POST'])
 @login_required
