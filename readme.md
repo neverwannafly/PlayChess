@@ -97,13 +97,14 @@ $ python run.py
 <li>goto localhost:5000/ on your browser and mendle around with the app!</li>
 <li>To exit the application, press Ctrl+C</li>
 <li>Do drop in your suggestions via pull requests <3 </li>
+</ul>
 
 ## Import Closures
 
 <ul>
-<li> <h3>This project is only compatible with python3!</h3></li>
-<li> <h3>If you encounter any bugs related to bcrypt library, make sure to have the same version as in requirnments.txt </h3></li>
-<li> <h3><strong>NOTE: It's highly recommended to set up the virtual environment as described <a href="#venv">here</a></h3></strong></li>
+<li> <h4>This project is only compatible with python3!</h4></li>
+<li> <h4>If you encounter any bugs related to bcrypt library, make sure to have the same version as in requirnments.txt </h4></li>
+<li> <h4><strong>NOTE: It's highly recommended to set up the virtual environment as described [here](#setting-up-virtual-env) </h4></strong></li>
 </ul>
 
 <hr>
