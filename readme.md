@@ -7,7 +7,7 @@
     <li>User verification via emailID</li>
     <li>Admin login</li>
     <li>Creating new admin through command line</li>
-    <li>Allow admins to create users</li>
+    <li>Allow admins to create and delete users</li>
 </ul>
 
 ## Check Points
@@ -15,11 +15,12 @@ These are the likely goals I would like to achieve in the near future
 <ul>
     <li>Implement Admin dashboard and master control</li>
     <li>Implement necessary styling till now</li>
-    <li><strong>A bit far :</strong> Make home page</li>
+    <li><strong>Doing: </strong> Make Chessboard class</li>
 </ul>
 
 ## Setting up virtual env
 #### For UNIX based devices(linux/mac)
+<a id="#venv"></a>
 To be able to run the project, you should either be having libraries mentioned in requirnments.txt in your PC(The same version) or you can create your virtual env with all these libraries in few simple steps! (Recommended)<br>
 
 ```
@@ -97,7 +98,13 @@ $ python run.py
 <li>To exit the application, press Ctrl+C</li>
 <li>Do drop in your suggestions via pull requests <3 </li>
 
-<h4><strong> This project is only compatible with python3! </strong> </h4><br>
+## Import Closures
+
+<ul>
+<li> <h3>This project is only compatible with python3!</h3></li>
+<li> <h3>If you encounter any bugs related to bcrypt library, make sure to have the same version as in requirnments.txt </h3></li>
+<li> <h3><strong>NOTE: It's highly recommended to set up the virtual environment as described <a href="#venv">here</a></h3></strong></li>
+</ul>
 
 <hr>
 
