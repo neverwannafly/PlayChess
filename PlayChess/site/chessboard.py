@@ -1,3 +1,12 @@
+# Defines a blank class to identify blank sqaures on chessboard!
+
+class Blank:
+    def __init__(self):
+        self.label = "Blank"
+
+    def returnLabel(self):
+        return self.label
+
 # Define a class for chessboard pieces with necessary members and methods.
 # This would serve as the parent class for other pieces.
 
@@ -8,13 +17,13 @@ class Piece:
         self.current_position = ""
         self.color = ""
         self.legal_moves = []
-        self.isPieceCaptured = False
+        self.label = Piece
     
     def makeMove(self, move):    
         self.current_position = move
-    
-    def pieceCaptured(self):
-        self.isPieceCaptured = True
+
+    def returnLabel(self):
+        return self.label
     
 class Pawn(Piece):
     def __init__(self, current_position, color):
@@ -23,7 +32,6 @@ class Pawn(Piece):
         self.current_position = current_position
         self.color = color
         self.legal_moves = self.generate_legal_moves(current_position)
-        self.isPieceCaptured = False
 
     def generate_legal_moves(self, position):
         pass
@@ -35,7 +43,6 @@ class Knight(Piece):
         self.current_position = current_position
         self.color = color
         self.legal_moves = self.generate_legal_moves(current_position)
-        self.isPieceCaptured = False
 
     def generate_legal_moves(self, position):
         pass
@@ -47,7 +54,6 @@ class Bishop(Piece):
         self.current_position = current_position
         self.color = color
         self.legal_moves = self.generate_legal_moves(current_position)
-        self.isPieceCaptured = False
 
     def generate_legal_moves(self, position):
         pass
@@ -59,7 +65,6 @@ class Rook(Piece):
         self.current_position = current_position
         self.color = color
         self.legal_moves = self.generate_legal_moves(current_position)
-        self.isPieceCaptured = False
 
     def generate_legal_moves(self, position):
         pass
@@ -71,7 +76,6 @@ class Queen(Piece):
         self.current_position = current_position
         self.color = color
         self.legal_moves = self.generate_legal_moves(current_position)
-        self.isPieceCaptured = False
 
     def generate_legal_moves(self, position):
         pass
@@ -83,7 +87,6 @@ class King(Piece):
         self.current_position = current_position
         self.color = color
         self.legal_moves = self.generate_legal_moves(current_position)
-        self.isPieceCaptured = False
 
     def generate_legal_moves(self, position):
         pass
