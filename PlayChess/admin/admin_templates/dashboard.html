@@ -45,30 +45,30 @@
                 </thead>
                 <tbody>
                 {% for data in user_data%}
-                    <tr>
+                    <tr class="{{data['username']}}">
                         <form action="{{ url_for('admin.update', username=data['username']) }}" method="POST">
                             <td class="normal-cell">
                                 {{loop.index}}
                             </td>
                             <td class="normal-cell">
                                 <input name="name" type="text" class="form-control hidden-form" value="{{data['first_name']}} {{data['last_name']}}" maxlength="30" required>
-                                {{data['first_name']|title}} {{data['last_name']|title}}
+                                <div class="detail">{{data['first_name']|title}} {{data['last_name']|title}}</div>
                             </td>
                             <td class="normal-cell">
                                 <input name="username" disabled type="text" class="form-control hidden-form" value="{{data['username']}}" maxlength="30" required>
-                                {{data['username']}}
+                                <div class="detail">{{data['username']}}</div>
                             </td>
                             <td class="normal-cell">
                                 <input name="email" type="text" class="form-control hidden-form" value="{{data['email']}}" maxlength="30" required>
-                                {{data['email']}}
+                                <div class="detail">{{data['email']}}</div>
                             </td>
                             <td class="normal-cell">
                                 <input name="rating" type="text" class="form-control hidden-form" value="{{data['rating']}}" maxlength="30" required>
-                                {{data['rating']}}
+                                <div class="detail">{{data['rating']}}</div>
                             </td>
                             <td class="normal-cell">
                                 <input name="image" type="text" class="form-control hidden-form" value="{{data['image'].split('/')[3]}}" maxlength="30" required>
-                                {{data['image'].split('/')[3]}}
+                                <div class="detail">{{data['image'].split('/')[3]}}</div>
                             </td> 
                             <td class="normal-cell">
                                 <select name="authentication" class="hidden-form">
@@ -80,7 +80,7 @@
                                         <option value="True">Yes</option>
                                     {% endif %}
                                 </select>
-                                {{data['isUserVerified']}}
+                                <div class="detail">{{data['isUserVerified']}}</div>
                             </td>
                             <td class="hidden-cell">
                                 <button type="button" value="{{data['username']}}" class="deleteButton btn btn-primary" data-toggle="modal" data-target="#exampleModal">
