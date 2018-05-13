@@ -46,30 +46,51 @@
                 <tbody>
                 {% for data in user_data%}
                     <tr>
-                        <td class="normal-cell">{{loop.index}}</td>
-                        <td class="normal-cell">
-                            {{data['first_name']|title}} {{data['last_name']|title}}
-                        </td>
-                        <td class="normal-cell">
-                            {{data['username']}}
-                        </td>
-                        <td class="normal-cell">
-                            {{data['email']}}
-                        </td>
-                        <td class="normal-cell">
-                            {{data['rating']}}
-                        </td>
-                        <td class="normal-cell">
-                            {{data['image'].split('/')[3]}}
-                        </td> 
-                        <td class="normal-cell">
-                            {{data['isUserVerified']}}
-                        </td>
-                        <td class="hidden-cell">
-                            <button type="button" value="{{data['username']}}" class="deleteButton btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                Delete
-                            </button>
-                        </td>
+                        <form action="{{ url_for('admin.update', username=data['username']) }}" method="POST">
+                            <td class="normal-cell">
+                                {{loop.index}}
+                            </td>
+                            <td class="normal-cell">
+                                <input name="name" type="text" class="form-control hidden-form" value="{{data['first_name']}} {{data['last_name']}}" maxlength="30" required>
+                                {{data['first_name']|title}} {{data['last_name']|title}}
+                            </td>
+                            <td class="normal-cell">
+                                <input name="username" disabled type="text" class="form-control hidden-form" value="{{data['username']}}" maxlength="30" required>
+                                {{data['username']}}
+                            </td>
+                            <td class="normal-cell">
+                                <input name="email" type="text" class="form-control hidden-form" value="{{data['email']}}" maxlength="30" required>
+                                {{data['email']}}
+                            </td>
+                            <td class="normal-cell">
+                                <input name="rating" type="text" class="form-control hidden-form" value="{{data['rating']}}" maxlength="30" required>
+                                {{data['rating']}}
+                            </td>
+                            <td class="normal-cell">
+                                <input name="image" type="text" class="form-control hidden-form" value="{{data['image'].split('/')[3]}}" maxlength="30" required>
+                                {{data['image'].split('/')[3]}}
+                            </td> 
+                            <td class="normal-cell">
+                                <select name="authentication" class="hidden-form">
+                                    {% if data['isUserVerified'] == true %}
+                                        <option value="True">Yes</option>
+                                        <option value="False">No</option>
+                                    {% else %}
+                                        <option value="False">No</option>
+                                        <option value="True">Yes</option>
+                                    {% endif %}
+                                </select>
+                                {{data['isUserVerified']}}
+                            </td>
+                            <td class="hidden-cell">
+                                <button type="button" value="{{data['username']}}" class="deleteButton btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                    Delete
+                                </button>
+                                <button type="button" value="{{data['username']}}" class="editButton btn btn-primary">
+                                    Edit
+                                </button>
+                            </td>
+                        </form>
                     </tr>
                 {% endfor %}
                 </tbody>

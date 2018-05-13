@@ -96,6 +96,11 @@ def delete():
     current_admin.deleteUser(request.form['username'])
     return redirect(url_for('admin.dashboard'))
 
+@mod.route('/update/<username>')
+@login_required
+def update(username):
+    pass
+
 @mod.route('/logout')
 @login_required
 def logout():
