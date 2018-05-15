@@ -63,10 +63,25 @@ class Admin:
             'username': username
         })
 
-    # returns a dictionary of all users registered on the database!
+    # Returns a dictionary of all users registered on the database!
     def loadAllUsers(self):
         return self.db.users.find({})
 
 
-    # Add editing capabilities using Ajax later!
-    ###### EDITING METHODS ######
+    # Edits user details
+    def updateUserDetails(self, username, email, image, first_name, last_name, rating, isUserVerified):
+        userUpdate = self.db.users.update_one(
+            {"username": username},
+            {"$set": {
+                "first_name": first_name,
+                "last_name": last_name,
+                "email": email,
+                "image": image,
+                "rating": rating,
+                "isUserVerified": isUserVerified
+            },
+            "$currentDate": {"lastModified": True}}
+        )
+        if userUpdate:
+            return True
+        return False
