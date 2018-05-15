@@ -55,7 +55,7 @@ class User:
             self.email = user['email']
             self.image = user['image']
             self.rating = user['rating']
-            self.isUserVerified = user['isUserVerified']
+            self.isUserVerified = bool(user['isUserVerified'])
             if self.isUserVerified==True:
                 return 1
             return 0
