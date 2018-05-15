@@ -7,7 +7,7 @@
     <li>User verification via emailID</li>
     <li>Admin login</li>
     <li>Creating new admin through command line</li>
-    <li>Allow admins to create and delete users</li>
+    <li>Allow admins to create, delete and update users</li>
 </ul>
 
 ## Check Points
@@ -53,7 +53,7 @@ There are two ways to add a new admin to website's database!
 </ul>
 
 ```
-$ python new_admin.py
+$ python manage.py
 ```
 
 <ul>
@@ -67,7 +67,7 @@ $ python new_admin.py
 </ul>
 
 ```
-$ python new_admin.py <_ADMIN_USERNAME> <_ADMIN_PASSWORD>
+$ python manage.py <_ADMIN_USERNAME> <_ADMIN_PASSWORD>
 ```
 
 <ul>
