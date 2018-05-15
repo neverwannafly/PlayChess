@@ -48,47 +48,63 @@
                     <tr class="{{data['username']}}">
                         <form action="{{ url_for('admin.update', username=data['username']) }}" method="POST">
                             <td class="normal-cell">
-                                {{loop.index}}
+                                <div class="table-cell">
+                                    {{loop.index}}
+                                </div>
                             </td>
                             <td class="normal-cell">
-                                <input name="name" type="text" class="form-control hidden-form" value="{{data['first_name']}} {{data['last_name']}}" maxlength="30" required>
-                                <div class="detail">{{data['first_name']|title}} {{data['last_name']|title}}</div>
+                                <div class="table-cell">
+                                    <input name="name" type="text" class="form-control hidden-form" value="{{data['first_name']}} {{data['last_name']}}" maxlength="30" required>
+                                    <div class="detail">{{data['first_name']|title}} {{data['last_name']|title}}</div>
+                                </div>
                             </td>
                             <td class="normal-cell">
-                                <input name="username" disabled type="text" class="form-control hidden-form" value="{{data['username']}}" maxlength="30" required>
-                                <div class="detail">{{data['username']}}</div>
+                                <div class="table-cell">
+                                    <input name="username" disabled type="text" class="form-control hidden-form" value="{{data['username']}}" maxlength="30" required>
+                                    <div class="detail">{{data['username']}}</div>
+                                </div>
                             </td>
                             <td class="normal-cell">
-                                <input name="email" type="text" class="form-control hidden-form" value="{{data['email']}}" maxlength="30" required>
-                                <div class="detail">{{data['email']}}</div>
+                                <div class="table-cell">
+                                    <input name="email" type="text" class="form-control hidden-form" value="{{data['email']}}" maxlength="30" required>
+                                    <div class="detail">{{data['email']}}</div>
+                                </div>
                             </td>
                             <td class="normal-cell">
-                                <input name="rating" type="text" class="form-control hidden-form" value="{{data['rating']}}" maxlength="30" required>
-                                <div class="detail">{{data['rating']}}</div>
+                                <div class="table-cell">
+                                    <input name="rating" type="text" class="form-control hidden-form" value="{{data['rating']}}" maxlength="30" required>
+                                    <div class="detail">{{data['rating']}}</div>
+                                </div>
                             </td>
                             <td class="normal-cell">
-                                <input name="image" type="text" class="form-control hidden-form" value="{{data['image'].split('/')[3]}}" maxlength="30" required>
-                                <div class="detail">{{data['image'].split('/')[3]}}</div>
+                                <div class="table-cell">
+                                    <input name="image" type="text" class="form-control hidden-form" value="{{data['image'].split('/')[3]}}" maxlength="30" required>
+                                    <div class="detail">{{data['image'].split('/')[3]}}</div>
+                                </div>
                             </td> 
                             <td class="normal-cell">
-                                <select name="authentication" class="hidden-form">
-                                    {% if data['isUserVerified'] == true %}
-                                        <option value="True">Yes</option>
-                                        <option value="False">No</option>
-                                    {% else %}
-                                        <option value="False">No</option>
-                                        <option value="True">Yes</option>
-                                    {% endif %}
-                                </select>
-                                <div class="detail">{{data['isUserVerified']}}</div>
+                                <div class="table-cell">
+                                    <select name="authentication" class="hidden-form">
+                                        {% if data['isUserVerified'] == true %}
+                                            <option value="True">Yes</option>
+                                            <option value="False">No</option>
+                                        {% else %}
+                                            <option value="False">No</option>
+                                            <option value="True">Yes</option>
+                                        {% endif %}
+                                    </select>
+                                    <div class="detail">{{data['isUserVerified']}}</div>
+                                </div>
                             </td>
                             <td class="hidden-cell">
-                                <button type="button" value="{{data['username']}}" class="deleteButton btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                    Delete
-                                </button>
-                                <button type="button" value="{{data['username']}}" class="editButton btn btn-primary">
-                                    Edit
-                                </button>
+                                <div class="table-cell">
+                                    <button type="button" value="{{data['username']}}" class="deleteButton btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                        Delete
+                                    </button>
+                                    <button type="button" value="{{data['username']}}" class="editButton btn btn-primary">
+                                        Edit
+                                    </button>
+                                </div>
                             </td>
                         </form>
                     </tr>
