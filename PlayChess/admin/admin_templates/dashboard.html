@@ -46,7 +46,7 @@
                 <tbody>
                 {% for data in user_data%}
                     <tr class="{{data['username']}}">
-                        <form action="{{ url_for('admin.update', username=data['username']) }}" method="POST">
+                        <form id="{{data['username']}}-form" action="{{ url_for('admin.update', username=data['username']) }}" method="POST">
                             <td class="normal-cell">
                                 <div class="table-cell">
                                     {{loop.index}}
@@ -103,6 +103,9 @@
                                     </button>
                                     <button type="button" value="{{data['username']}}" class="editButton btn btn-primary">
                                         Edit
+                                    </button>
+                                    <button type="submit" value="{{data['username']}}" class="updateButton btn btn-primary">
+                                        Update
                                     </button>
                                 </div>
                             </td>
