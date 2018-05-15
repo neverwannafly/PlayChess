@@ -4,6 +4,9 @@
 .hidden-form {
     display: none;
 }
+.updateButton {
+    display: none;
+}
 table {
     margin-top: 10%;
     margin-left: auto;
