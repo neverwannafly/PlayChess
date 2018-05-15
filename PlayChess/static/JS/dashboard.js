@@ -1,3 +1,5 @@
+"user strict";
+
 // Event listeners and response handlers
 
 $(document).ready(function(){
