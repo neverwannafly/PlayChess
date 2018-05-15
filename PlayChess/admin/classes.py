@@ -1,5 +1,6 @@
 # Add necessary imports!
 import bcrypt as hash_pass
+from flask import session
 
 class Admin:
 
@@ -62,6 +63,8 @@ class Admin:
         self.db.users.delete_one({
             'username': username
         })
+        if session.get("username") == username:
+            session.pop("username")
 
     # Returns a dictionary of all users registered on the database!
     def loadAllUsers(self):
