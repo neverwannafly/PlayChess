@@ -1,11 +1,6 @@
 $(document).ready(function(){
-    $("tr").hover(function(){
-        $(this).children(".normal-cell").css("background-color", "pink");
-        $(this).children(".hidden-cell").css("visibility", "visible");
-    }, function() {
-        $(this).children(".hidden-cell").css("visibility", "hidden");
-        $(this).children(".normal-cell").css("background-color", "white");
-    });
+
+    $("tr").hover(mouseIn, mouseOut);
 
     $(".deleteButton").click(function(){
         var username = $(this).val();
@@ -52,6 +47,16 @@ $(document).ready(function(){
     })
 
 });
+
+function mouseIn() {
+    $(this).children(".normal-cell").css("background-color", "pink");
+    $(this).children(".hidden-cell").css("visibility", "visible");
+}
+
+function mouseOut() {
+    $(this).children(".hidden-cell").css("visibility", "hidden");
+    $(this).children(".normal-cell").css("background-color", "white");
+}
 
 function editButtonPressed(button, event) {
     $(button).find(".detail").hide();

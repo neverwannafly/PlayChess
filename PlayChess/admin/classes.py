@@ -70,6 +70,12 @@ class Admin:
 
     # Edits user details
     def updateUserDetails(self, username, email, image, first_name, last_name, rating, isUserVerified):
+        
+        if isUserVerified=="True":
+            authStatus = True
+        elif isUserVerified=="False": 
+            authStatus = False
+
         userUpdate = self.db.users.update_one(
             {"username": username},
             {"$set": {
@@ -78,7 +84,7 @@ class Admin:
                 "email": email,
                 "image": image,
                 "rating": rating,
-                "isUserVerified": isUserVerified
+                "isUserVerified": authStatus
             },
             "$currentDate": {"lastModified": True}}
         )
