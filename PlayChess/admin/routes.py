@@ -1,7 +1,7 @@
 ### IMPORTANT NOTE ###
 # Admins should only be created through command line!
 
-from flask import Blueprint, render_template, url_for, request, session, redirect
+from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 import bcrypt as hash_pass
 from functools import wraps
 import re as regex
@@ -47,12 +47,6 @@ def logout_required(view_function):
             return view_function(*args, **kwargs)
     return wrapper
 
-
-# Makes session for an admin expire as soon as he closes down the browser!
-@mod.before_request
-def disable_permanent_session():
-    session.permanent = False
-
 @mod.route('/', methods=['POST', 'GET'])
 @logout_required
 def login():
@@ -96,10 +90,26 @@ def delete():
     current_admin.deleteUser(request.form['username'])
     return redirect(url_for('admin.dashboard'))
 
-@mod.route('/update/<username>', methods=['POST'])
+@mod.route('/update', methods=['POST'])
 @login_required
-def update(username):
-    return redirect(url_for('admin.dashboard'))
+def update():
+    current_admin.updateUserDetails(
+        request.form["username"], 
+        request.form["email"], 
+        "/static/images/" + str(request.form["image"]), 
+        request.form["name"].split(' ')[0], 
+        request.form["name"].split(' ')[1],
+        request.form["rating"],
+        request.form["authentication"]
+    )
+    return jsonify({
+        "name": str(request.form["name"].split(' ')[0]) + " " + str(request.form["name"].split(' ')[1]),
+        "username": request.form["username"],
+        "email": request.form["email"],
+        "rating": request.form["rating"],
+        "image": request.form["image"],
+        "authentication": request.form["authentication"], 
+    })
 
 @mod.route('/logout')
 @login_required
