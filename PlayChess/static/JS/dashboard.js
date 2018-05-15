@@ -64,6 +64,7 @@ function editButtonPressed(button, event) {
     $(button).find(".editButton").hide();
     $(button).find(".hidden-form").show();
     $(button).find(".updateButton").show();
+    $("tr").off("mouseenter mouseleave");
 }
 
 function updateButtonPressed(button, event) {
@@ -72,4 +73,8 @@ function updateButtonPressed(button, event) {
     $(button).find(".detail").show();
     $(button).find(".deleteButton").show();
     $(button).find(".editButton").show();
+    $("tr").on({
+        mouseenter: mouseIn,
+        mouseleave: mouseOut
+    });
 }
