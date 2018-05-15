@@ -1,3 +1,5 @@
+// Event listeners and response handlers
+
 $(document).ready(function(){
 
     $("tr").hover(mouseIn, mouseOut);
@@ -47,6 +49,8 @@ $(document).ready(function(){
     })
 
 });
+
+// functions to handle specific events or handle reponses!
 
 function mouseIn() {
     $(this).children(".normal-cell").css("background-color", "pink");
