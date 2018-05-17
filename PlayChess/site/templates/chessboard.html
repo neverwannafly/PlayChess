@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block includes %}
+    <script src="{{ url_for('static', filename='JS/chessboard.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/chessboard.css')}}"></link>
+{% endblock %}
+
+{% block title %}
+    Chessboard
+{% endblock %}
+
+{% block body %}
+    <table>
+        <tbody>
+        {% for row in range(8) %}
+            <tr>
+                {% for column in range(8) %}
+                    {% if (column+row)%2==0 %}
+                        <td>
+                            <div class="square light">
+                                
+                            </div>
+                        </td>
+                    {% else %}
+                        <td>
+                            <div class="square dark">
+                                
+                            </div>
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
