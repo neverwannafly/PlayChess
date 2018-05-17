@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function(){
     $(".flipButton").click(function(){
         $.ajax({
