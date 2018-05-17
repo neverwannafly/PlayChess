@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, request, session, redirect
+from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 from datetime import timedelta
 from functools import wraps
 import bcrypt as hash_pass
@@ -15,6 +15,7 @@ USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 # Relative imports
 from .. import database
 from . import classes
+from . import chessboard as chess
 
 # Database initialisation
 db = database.db
@@ -148,9 +149,18 @@ def verify(username):
         return render_template('verify.html', username=username ,error_code=1)
     return render_template('verify.html', username=username, error_code=0)
 
+# Initialises a chessboard
+chessboard = chess.Chessboard()
+
 @mod.route('/board')
-def chessboard():
-    return render_template('chessboard.html')
+def board():
+    new_chess_board = chessboard.createBoardForWhite()
+    return render_template('chessboard.html', chessboard=new_chess_board)
+
+@mod.route('/board/flip')
+def flipBoard():
+    flipped_board = chessboard.swapBoard()
+    return jsonify({"board": flipped_board})
 
 # logout routine
 @mod.route('/logout')

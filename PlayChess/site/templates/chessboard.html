@@ -12,25 +12,8 @@
 {% block body %}
     <table>
         <tbody>
-        {% for row in range(8) %}
-            <tr>
-                {% for column in range(8) %}
-                    {% if (column+row)%2==0 %}
-                        <td>
-                            <div class="square light">
-                                
-                            </div>
-                        </td>
-                    {% else %}
-                        <td>
-                            <div class="square dark">
-                                
-                            </div>
-                        </td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-        {% endfor %}
+            {{chessboard|safe}}
         </tbody>
     </table>
+    <button type="button" class="btn-primary btn btn-block flipButton">Flip</button>
 {% endblock %}

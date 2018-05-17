@@ -50,7 +50,7 @@ table {
 }
 
 body {
-    background-color: pink;
+    background-color: whitesmoke;
 }
 .square {
     display: block;
@@ -62,4 +62,7 @@ body {
 }
 .dark {
     background-color: rgb(134, 165, 105);
+}
+.flipButton {
+    margin-top: 4%;
 }

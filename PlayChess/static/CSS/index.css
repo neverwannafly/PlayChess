@@ -12,7 +12,7 @@ a:active {
 }
 iframe {
     width: 607px;
-    height: 607px;
+    height: 672px;
 }
 .chessboard {
     position: absolute;
@@ -27,6 +27,6 @@ iframe {
     width: 30%;
 }
 .button {
-    margin-top: 4%;
+    margin-top: 0%;
 }
 
