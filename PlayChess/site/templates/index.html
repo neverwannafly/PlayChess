@@ -4,6 +4,7 @@
 {% endblock %}
 {% block includes %}
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/index.css')}}">
+    <script src="{{ url_for('static', filename='JS/index.js')}}"></script>
 {% endblock %}
 {% block body %}
     <div class="user">
@@ -19,6 +20,7 @@
     </div>
     <div class="chessboard">
         <iframe scrolling="no" src="{{url_for('site.chessboard')}}" frameborder="0"></iframe>
+        <button class="btn btn-success btn-block button">Find Game</button>
     </div>
 
 {% endblock %}

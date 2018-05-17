@@ -17,7 +17,7 @@ iframe {
 .chessboard {
     position: absolute;
     right: 12%;
-    top: 10%;
+    top: 6%;
     float: right;
 }
 .user {
@@ -25,5 +25,8 @@ iframe {
     margin-left: 5%;
     margin-top: 10%;
     width: 30%;
+}
+.button {
+    margin-top: 4%;
 }
 
