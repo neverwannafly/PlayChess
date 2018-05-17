@@ -1,4 +1,4 @@
-"user strict";
+"use strict";
 
 // Event listeners and response handlers
 
