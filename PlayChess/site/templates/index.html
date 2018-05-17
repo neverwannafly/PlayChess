@@ -15,4 +15,11 @@
     <div class="container">
         <a href="{{url_for('site.logout')}}"><button type="button" class="btn-warning btn btn-block">Logout</button></a>
     </div>
+    <hr>
+    <center>
+        <div class="chessboard">
+            <iframe src="{{url_for('site.chessboard')}}" frameborder="2"></iframe>
+        </div>
+    </center>
+    
 {% endblock %}
