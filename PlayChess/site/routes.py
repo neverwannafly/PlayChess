@@ -148,6 +148,10 @@ def verify(username):
         return render_template('verify.html', username=username ,error_code=1)
     return render_template('verify.html', username=username, error_code=0)
 
+@mod.route('/board')
+def chessboard():
+    return render_template('chessboard.html')
+
 # logout routine
 @mod.route('/logout')
 @login_required
