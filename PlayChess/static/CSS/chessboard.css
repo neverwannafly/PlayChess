@@ -43,27 +43,23 @@ q:before, q:after {
     content: none;
 }
 table {
+    border: 2px solid black;
     border-collapse: collapse;
-    border-spacing: 0;
+    padding: 0px;
+    table-layout: fixed;
 }
 
 body {
     background-color: pink;
 }
 .square {
-    display: table;
-    height: 75px;
-    width: 75px;
+    display: block;
+    height: 75px !important;
+    width: 75px !important;
 }
 .light {
     background-color: rgb(255, 254, 223);
 }
 .dark {
     background-color: rgb(134, 165, 105);
-}
-table, tbody {
-    padding: 0px;
-    border-spacing: 0px;
-    border: 0px;
-    table-layout: fixed;
 }
