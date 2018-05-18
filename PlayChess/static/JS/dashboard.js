@@ -41,9 +41,9 @@ $(document).ready(function(){
             var divs = $(username_class).find(".detail");
 
             var counter = 0;
-            for (element in data) {
-                forms.eq(counter).val(data[element]);
-                divs.eq(counter).text(data[element]);
+            for (var info in data) {
+                forms.eq(counter).val(data[info]);
+                divs.eq(counter).text(data[info]);
                 counter += 1;
             }
         })
