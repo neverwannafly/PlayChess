@@ -15,7 +15,7 @@ td, th {
 .hidden-cell {
     padding-left: 5px;
     visibility: hidden;
-    border: none;
+    border: none !important;
 }
 .button-div {
     margin-top: 6%;
@@ -79,6 +79,7 @@ iframe {
 } 
 .table td{
     overflow-x: auto;
+   
 }
 .table-div {
     min-width: 1200px;
