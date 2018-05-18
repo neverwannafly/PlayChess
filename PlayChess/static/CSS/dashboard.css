@@ -83,3 +83,7 @@ iframe {
 .table-div {
     min-width: 1200px;
 }
+.modal-backdrop {
+    background-color: white;
+    opacity: 0.1;
+}
