@@ -38,115 +38,26 @@
             {% endif %}
         </div>
         <div class="table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>S.No</th>
-                        <th>Name</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Rating</th>
-                        <th>Image</th>
-                        <th>IsUserVerified?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for data in user_data%}
-                    <tr class="{{data['username']}}">
-                        <form id="{{data['username']}}-form" action="{{ url_for('admin.update', username=data['username']) }}" method="POST">
-                            <td class="normal-cell">
-                                <div class="table-cell">
-                                    {{loop.index}}
-                                </div>
-                            </td>
-                            <td class="normal-cell">
-                                <div class="table-cell">
-                                    <input name="name" type="text" class="form-control hidden-form" value="{{data['first_name']}} {{data['last_name']}}" maxlength="30" required>
-                                    <div class="detail">{{data['first_name']|title}} {{data['last_name']|title}}</div>
-                                </div>
-                            </td>
-                            <td class="normal-cell">
-                                <div class="table-cell">
-                                    <input name="username" disabled type="text" class="form-control hidden-form" value="{{data['username']}}" maxlength="30" required>
-                                    <div class="detail">{{data['username']}}</div>
-                                </div>
-                            </td>
-                            <td class="normal-cell">
-                                <div class="table-cell">
-                                    <input name="email" type="text" class="form-control hidden-form" value="{{data['email']}}" maxlength="30" required>
-                                    <div class="detail">{{data['email']}}</div>
-                                </div>
-                            </td>
-                            <td class="normal-cell">
-                                <div class="table-cell">
-                                    <input name="rating" type="text" class="form-control hidden-form" value="{{data['rating']}}" maxlength="30" required>
-                                    <div class="detail">{{data['rating']}}</div>
-                                </div>
-                            </td>
-                            <td class="normal-cell">
-                                <div class="table-cell">
-                                    <input name="image" type="text" class="form-control hidden-form" value="{{data['image'].split('/')[3]}}" maxlength="30" required>
-                                    <div class="detail">{{data['image'].split('/')[3]}}</div>
-                                </div>
-                            </td> 
-                            <td class="normal-cell">
-                                <div class="table-cell">
-                                    <select name="authentication" class="hidden-form">
-                                        {% if data['isUserVerified'] == true %}
-                                            <option value="True">Yes</option>
-                                            <option value="False">No</option>
-                                        {% else %}
-                                            <option value="False">No</option>
-                                            <option value="True">Yes</option>
-                                        {% endif %}
-                                    </select>
-                                    <div class="detail">{{data['isUserVerified']}}</div>
-                                </div>
-                            </td>
-                            <td class="hidden-cell">
-                                <div class="table-cell">
-                                    <button type="button" value="{{data['username']}}" class="deleteButton btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                        Delete
-                                    </button>
-                                    <button type="button" value="{{data['username']}}" class="editButton btn btn-primary">
-                                        Edit
-                                    </button>
-                                    <button type="submit" value="{{data['username']}}" class="updateButton btn btn-primary">
-                                        Update
-                                    </button>
-                                </div>
-                            </td>
-                        </form>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <!-- Delete Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Delete User?</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        This change is permanent and cannot be reverted!
-                        <form method="POST" action="{{ url_for('admin.delete') }}">
-                            <div class="form-group">
-                                <input class="hidden-form" name="username">
-                            </div><br>
-                            <button type="submit" class="btn btn-success btn-block">Delete</button>
-                        </form> 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    </div>
-                </div>
+            <div class="table-head">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Rating</th>
+                            <th>Image</th>
+                            <th>IsUserVerified?</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="table-body">
+                <iframe src="{{url_for('admin.table')}}" frameborder="0"></iframe>
             </div>
         </div>
+    </div>
 
 
       <!-- Add Modal -->
