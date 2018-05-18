@@ -1,11 +1,102 @@
+
+
+
 .header
 {
-  font-size: 40px;
+  font-size: 50px !important;
   text-align: center;
-  margin-bottom: 10%;
+  margin-bottom: 10px;
+}
+
+.btn{
+  margin-left: 150px !important;
 }
 
 .container {
-    margin-top: none ;
+    margin-top: 100px ;
     max-width: 40%;
+    width: 100%;
+    padding: 10px;
+    max-width: 400px;
+    border-radius: 2px;
+    box-shadow:  0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) ;
+    background-color: rgba(0,0,0,0.2);
+}
+body  {
+    background-image: url("../Images/bg.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+
+
+
+*, *:before, *:after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.form-control {
+  width: 100% !important;
+  border: none !important;
+  outline: none!important;
+  display: block !important;
+  font-weight: 300 !important;
+  letter-spacing: 1px !important;
+  background-color: transparent !important;
+  font-size: 22px !important;
+	position: relative !important;
+	border-radius: 4px !important;
+	margin-bottom: 10px !important;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24) !important;
+
+
+}
+.form-group {
+	font-size: 22px !important;
+	position: relative !important;
+	border-radius: 2px !important;
+	margin-bottom: 10px !important;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24) !important;
+	background-color: rgba(0,0,0,0.1);
+
+	label {
+		top: 30px;
+		left: 10px;
+		opacity: 0.7;
+		font-weight: 100;
+		position: absolute;
+		letter-spacing: 2px;
+		pointer-events: none;
+		transition: all 0.2s ease-in;
+	}
+
+	}
+  input[type=text] {
+      color: white !important;
+  }
+  input[type=password] {
+      color: white !important;
+  }
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #fff !important;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #fff !important;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #fff !important;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #fff !important;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+   color:    #fff !important;
+}
+
+::placeholder { /* Most modern browsers support this now. */
+   color:    #fff !important;
 }
