@@ -4,10 +4,6 @@
 .updateButton {
     display: none;
 }
-table {
-    margin-left: auto;
-    margin-right: auto;
-}
 th {
     background-color: lightcoral;
 }
@@ -37,9 +33,53 @@ a:active {
     text-decoration: none;
 }
 iframe {
-    height: 544.5px;
+    height: 504.5px;
     width: 1200px;
 }
-.table {
+.table-head {
     margin-top: 7%;
+}
+.sno {
+    width: 70px;
+    height: 50px;
+    overflow: hidden;
+}
+.name {
+    width: 200px;
+    height: 50px;
+    overflow: hidden;
+}
+.user {
+    width: 180px;
+    height: 50px;
+    overflow: hidden;
+}
+.email {
+    width: 220px;
+    height: 50px;
+    overflow: hidden;
+}
+.rtg {
+    width: 100px;
+    height: 50px;
+    overflow: hidden;
+}
+.img {
+    width: 100px;
+    height: 50px;
+    overflow: hidden;
+}
+.auth {
+    width: 160px;
+    height: 50px;
+    overflow: hidden;
+}
+.table{
+    table-layout: fixed;
+} 
+.table td{
+    overflow-x: auto;
+}
+.table-div {
+    min-width: 1200px;
 }

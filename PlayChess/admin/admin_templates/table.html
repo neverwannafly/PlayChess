@@ -14,47 +14,47 @@
 </head>
 
 <body>
-    <table>
+    <table class="table">
         <tbody>
         {% for data in user_data%}
             <tr class="{{data['username']}}">
                 <form id="{{data['username']}}-form" action="{{ url_for('admin.update', username=data['username']) }}" method="POST">
-                    <td class="normal-cell">
+                    <td class="normal-cell sno">
                         <div class="table-cell">
                             {{loop.index}}
                         </div>
                     </td>
-                    <td class="normal-cell">
+                    <td class="normal-cell name">
                         <div class="table-cell">
                             <input name="name" type="text" class="form-control hidden-form" value="{{data['first_name']}} {{data['last_name']}}" maxlength="30" required>
                             <div class="detail">{{data['first_name']|title}} {{data['last_name']|title}}</div>
                         </div>
                     </td>
-                    <td class="normal-cell">
+                    <td class="normal-cell user">
                         <div class="table-cell">
                             <input name="username" disabled type="text" class="form-control hidden-form" value="{{data['username']}}" maxlength="30" required>
                             <div class="detail">{{data['username']}}</div>
                         </div>
                     </td>
-                    <td class="normal-cell">
+                    <td class="normal-cell email">
                         <div class="table-cell">
                             <input name="email" type="text" class="form-control hidden-form" value="{{data['email']}}" maxlength="30" required>
                             <div class="detail">{{data['email']}}</div>
                         </div>
                     </td>
-                    <td class="normal-cell">
+                    <td class="normal-cell rtg">
                         <div class="table-cell">
                             <input name="rating" type="text" class="form-control hidden-form" value="{{data['rating']}}" maxlength="30" required>
                             <div class="detail">{{data['rating']}}</div>
                         </div>
                     </td>
-                    <td class="normal-cell">
+                    <td class="normal-cell img">
                         <div class="table-cell">
                             <input name="image" type="text" class="form-control hidden-form" value="{{data['image'].split('/')[3]}}" maxlength="30" required>
                             <div class="detail">{{data['image'].split('/')[3]}}</div>
                         </div>
                     </td> 
-                    <td class="normal-cell">
+                    <td class="normal-cell auth">
                         <div class="table-cell">
                             <select name="authentication" class="hidden-form">
                                 {% if data['isUserVerified'] == true %}
