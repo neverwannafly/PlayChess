@@ -33,7 +33,7 @@ a:active {
     text-decoration: none;
 }
 iframe {
-    height: 504.5px;
+    height: 512.5px;
     width: 1200px;
 }
 .table-head {
@@ -41,37 +41,37 @@ iframe {
 }
 .sno {
     width: 70px;
-    height: 50px;
+    height: 64px;
     overflow: hidden;
 }
 .name {
     width: 200px;
-    height: 50px;
+    height: 64px;
     overflow: hidden;
 }
 .user {
     width: 180px;
-    height: 50px;
+    height: 64px;
     overflow: hidden;
 }
 .email {
     width: 220px;
-    height: 50px;
+    height: 64px;
     overflow: hidden;
 }
 .rtg {
     width: 100px;
-    height: 50px;
+    height: 64px;
     overflow: hidden;
 }
 .img {
     width: 100px;
-    height: 50px;
+    height: 64px;
     overflow: hidden;
 }
 .auth {
     width: 160px;
-    height: 50px;
+    height: 64px;
     overflow: hidden;
 }
 .table{
@@ -79,7 +79,6 @@ iframe {
 } 
 .table td{
     overflow-x: auto;
-   
 }
 .table-div {
     min-width: 1200px;
