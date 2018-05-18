@@ -85,7 +85,7 @@ def add():
             request.form['last_name']
         )
         if isUserInsertionSuccessful:
-            return redirect(url_for('admin.table'))
+            return redirect(url_for('admin.dashboard'))
         return render_template('dashboard.html', error_code=2, admin=current_admin.admin_username)
     return render_template('dashboard.html', error_code=1, admin=current_admin.admin_username)
 
