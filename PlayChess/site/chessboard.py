@@ -20,7 +20,7 @@ class Chessboard:
                 if (column+row)%2==0:
                     self.board = self.board + """
                     <td>
-                        <div class="square dark" id="#{id}">
+                        <div class="square dark" id="{id}">
 
                         </div>
                     </td>
@@ -28,7 +28,7 @@ class Chessboard:
                 else:
                     self.board = self.board + """
                     <td>
-                        <div class="square light" id="#{id}">
+                        <div class="square light" id="{id}">
 
                         </div>
                     </td>
@@ -47,7 +47,7 @@ class Chessboard:
                 if (column+row)%2==0:
                     self.board = self.board + """
                     <td>
-                        <div class="square light" id="#{id}">
+                        <div class="square light" id="{id}">
 
                         </div>
                     </td>
@@ -55,7 +55,7 @@ class Chessboard:
                 else:
                     self.board = self.board + """
                     <td>
-                        <div class="square dark" id="#{id}">
+                        <div class="square dark" id="{id}">
 
                         </div>
                     </td>
