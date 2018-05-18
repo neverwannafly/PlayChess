@@ -153,11 +153,13 @@ def verify(username):
 chessboard = chess.Chessboard()
 
 @mod.route('/board')
+@login_required
 def board():
     new_chess_board = chessboard.createBoardForWhite()
     return render_template('chessboard.html', chessboard=new_chess_board)
 
 @mod.route('/board/flip')
+@login_required
 def flipBoard():
     flipped_board = chessboard.swapBoard()
     return jsonify({"board": flipped_board})
