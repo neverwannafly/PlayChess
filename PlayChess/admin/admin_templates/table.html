@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard.css')}}">
+    <script src="{{ url_for('static', filename='JS/dashboard.js')}}"></script>
+    <title>Table</title>
+</head>
+
+<body>
+    <table>
+        <tbody>
+        {% for data in user_data%}
+            <tr class="{{data['username']}}">
+                <form id="{{data['username']}}-form" action="{{ url_for('admin.update', username=data['username']) }}" method="POST">
+                    <td class="normal-cell">
+                        <div class="table-cell">
+                            {{loop.index}}
+                        </div>
+                    </td>
+                    <td class="normal-cell">
+                        <div class="table-cell">
+                            <input name="name" type="text" class="form-control hidden-form" value="{{data['first_name']}} {{data['last_name']}}" maxlength="30" required>
+                            <div class="detail">{{data['first_name']|title}} {{data['last_name']|title}}</div>
+                        </div>
+                    </td>
+                    <td class="normal-cell">
+                        <div class="table-cell">
+                            <input name="username" disabled type="text" class="form-control hidden-form" value="{{data['username']}}" maxlength="30" required>
+                            <div class="detail">{{data['username']}}</div>
+                        </div>
+                    </td>
+                    <td class="normal-cell">
+                        <div class="table-cell">
+                            <input name="email" type="text" class="form-control hidden-form" value="{{data['email']}}" maxlength="30" required>
+                            <div class="detail">{{data['email']}}</div>
+                        </div>
+                    </td>
+                    <td class="normal-cell">
+                        <div class="table-cell">
+                            <input name="rating" type="text" class="form-control hidden-form" value="{{data['rating']}}" maxlength="30" required>
+                            <div class="detail">{{data['rating']}}</div>
+                        </div>
+                    </td>
+                    <td class="normal-cell">
+                        <div class="table-cell">
+                            <input name="image" type="text" class="form-control hidden-form" value="{{data['image'].split('/')[3]}}" maxlength="30" required>
+                            <div class="detail">{{data['image'].split('/')[3]}}</div>
+                        </div>
+                    </td> 
+                    <td class="normal-cell">
+                        <div class="table-cell">
+                            <select name="authentication" class="hidden-form">
+                                {% if data['isUserVerified'] == true %}
+                                    <option value="True">Yes</option>
+                                    <option value="False">No</option>
+                                {% else %}
+                                    <option value="False">No</option>
+                                    <option value="True">Yes</option>
+                                {% endif %}
+                            </select>
+                            <div class="detail">{{data['isUserVerified']}}</div>
+                        </div>
+                    </td>
+                    <td class="hidden-cell">
+                        <div class="table-cell">
+                            <button type="button" value="{{data['username']}}" class="deleteButton btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                Delete
+                            </button>
+                            <button type="button" value="{{data['username']}}" class="editButton btn btn-primary">
+                                Edit
+                            </button>
+                            <button type="submit" value="{{data['username']}}" class="updateButton btn btn-primary">
+                                Update
+                            </button>
+                        </div>
+                    </td>
+                </form>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete User?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                This change is permanent and cannot be reverted!
+                <form method="POST" action="{{ url_for('admin.delete') }}">
+                    <div class="form-group">
+                        <input class="hidden-form" name="username">
+                    </div><br>
+                    <button type="submit" class="btn btn-success btn-block">Delete</button>
+                </form> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
