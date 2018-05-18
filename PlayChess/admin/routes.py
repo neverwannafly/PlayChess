@@ -60,11 +60,16 @@ def login():
     return render_template('admin_login.html', error_code=0)
 
 # A tabular view of the database exclusively available to admins of the page!
-@mod.route('/dashboard', methods=['POST', 'GET'])
+@mod.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
+    return render_template('dashboard.html', error_code=0, admin=current_admin.admin_username)
+
+@mod.route('/table')
+@login_required
+def table():
     user_data = current_admin.loadAllUsers()
-    return render_template('dashboard.html', error_code=0, user_data=user_data, admin=current_admin.admin_username)
+    return render_template('table.html', user_data=user_data)
 
 @mod.route('/add', methods=['POST'])
 @login_required
@@ -80,15 +85,15 @@ def add():
             request.form['last_name']
         )
         if isUserInsertionSuccessful:
-            return redirect(url_for('admin.dashboard'))
-        return render_template('dashboard.html', user_data=user_data, error_code=2, admin=current_admin.admin_username)
-    return render_template('dashboard.html', user_data=user_data, error_code=1, admin=current_admin.admin_username)
+            return redirect(url_for('admin.table'))
+        return render_template('dashboard.html', error_code=2, admin=current_admin.admin_username)
+    return render_template('dashboard.html', error_code=1, admin=current_admin.admin_username)
 
 @mod.route('/delete', methods=['POST'])
 @login_required
 def delete():
     current_admin.deleteUser(request.form['username'])
-    return redirect(url_for('admin.dashboard'))
+    return redirect(url_for('admin.table'))
 
 @mod.route('/update', methods=['POST'])
 @login_required
