@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>Let's begin!</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/login.css')}}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -21,76 +25,102 @@
     {% endif %}
     <div class="container">
         <div class="form" id="register-form">
-            <div class="error"> 
+            <div class="error">
                 <center>
                 {% if error_code==1 %}
-                    Invalid Username! Note username must be b/w 3 characters to 30 characters and should only contain alphanumeric characters and underscores.
+                <div class="alert alert-danger alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Invalid Username! Note username must be b/w 3 characters to 30 characters and should only contain alphanumeric characters and underscores.
+               </div>
                 {% elif error_code==2 %}
-                    Invalid Email address. Please use a valid email address!
+                <div class="alert alert-danger alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Invalid Email address. Please use a valid email address!
+               </div>
                 {% elif error_code==3 %}
-                    Username already taken!
+                <div class="alert alert-danger alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Username already taken!
+               </div>
                 {% elif error_code==4 %}
-                    This email ID is already associated with another account!
+                <div class="alert alert-danger alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                This email ID is already associated with another account!
+               </div>
                 {% elif error_code==5 %}
-                    Passwords donot match!
+                <div class="alert alert-danger alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Passwords donot match!
+               </div>
                 {% elif error_code==6 %}
-                    There was some problem registering you!
-                    Please try again later!
+                <div class="alert alert-danger alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                There was some problem registering you!
+                     Please try again later!
+               </div>
                 {% endif %}
                 </center>
             </div>
-            <div class="container header">
+            <div class="header">
                 Register!
             </div>
             <form method="POST" action="{{ url_for('site.register') }}">
                 <div class="form-group">
-                    <label for="firstName">First Name</label>
+
                     <input name="first_name" type="text" class="form-control" id="firstName" placeholder="First Name" maxlength="30" required>
                 </div>
                 <div class="form-group">
-                    <label for="lastName">Last Name</label>
+
                     <input name="last_name"  type="text" class="form-control" id="lastName" placeholder="Last Name" maxlength="30"  required>
                 </div>
                 <div class="form-group">
-                    <label for="username">Username</label>
+
                     <input name="username" type="text" class="form-control" id="username" placeholder="Type your Username" maxlength="30" required>
                 </div>
                 <div class="form-group">
-                    <label for="emailID">Email</label>
+
                     <input name="email" type="email" class="form-control" id="emailID" placeholder="Enter your Email ID" maxlength="50" required>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
+
                     <input name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" maxlength="50" required>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword2">Retype Password</label>
+
                     <input name="confirm_password" type="password" class="form-control" id="exampleInputPassword2" placeholder="Retype your Password" maxlength="50" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Register</button> <br><br>
                 <a href="#" id="signin">Already have an account? Signin!</a>
+                <br>
+                <br>
             </form>
         </div>
         <div class="form" id="login-form">
-            <div class="header container">
+            <div class="header">
                 Login!
             </div>
-            <div class="error"> 
+            <div class="error">
                 <center>
                 {% if error_code==-1 %}
-                    Invalid username!
+                <div class="alert alert-danger alert-dismissible fade show">
+                 <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  Invalid Username
+                 </div>
                 {% elif error_code==-3 %}
-                    Invalid password!
+                <div class="alert alert-danger alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Invalid Password
+                </div>
                 {% endif %}
                 </center>
             </div>
             <form method="POST" action="{{ url_for('site.login') }}">
                 <div class="form-group">
-                    <label for="exampleInputEmail">Username</label>
-                    <input name="username" type="text" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Type your Username" maxlength="30" required>
+
+                    <input name="username" type="text" class="form-control" id="exampleInputEmail" placeholder="Username" aria-describedby="emailHelp" maxlength="30" required>
+
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword">Password</label>
                     <input name="password" type="password" class="form-control" id="exampleInputPassword" placeholder="Password" maxlength="50">
                 </div>
                 <button type="submit" class="btn btn-primary">Sign In</button> <br><br>
