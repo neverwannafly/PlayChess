@@ -53,7 +53,9 @@ class Admin:
                 "password" : password,
                 "image" : image,
                 "rating" : 1200,
-                "isUserVerified" : True
+                "isUserVerified" : True,
+                "createdBy" : self.admin_username,
+                "updatedBy" : "none"
             })
             return 1
         return 0
@@ -87,7 +89,8 @@ class Admin:
                 "email": email,
                 "image": image,
                 "rating": rating,
-                "isUserVerified": authStatus
+                "isUserVerified": authStatus,
+                "updatedBy": self.admin_username
             },
             "$currentDate": {"lastModified": True}}
         )

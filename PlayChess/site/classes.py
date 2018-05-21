@@ -17,6 +17,7 @@ class User:
         self.image = "N/A"
         self.rating = 1200
         self.isUserVerified = False
+        self.addedBy = "self"
         self.db_object = db_object
 
     def addNewUserToDatabase(self, username, password, email, image, first_name, last_name):
@@ -34,7 +35,9 @@ class User:
             "password" : password,
             "image" : image,
             "rating" : 1200,
-            "isUserVerified" : False
+            "isUserVerified" : False,
+            "addedBy": "self",
+            "updatedBy" : "none"
         })
         new_user = self.db_object.find_one({
             'username' : username
@@ -56,6 +59,8 @@ class User:
             self.image = user['image']
             self.rating = user['rating']
             self.isUserVerified = bool(user['isUserVerified'])
+            self.addedBy = user['addedBy']
+            self.updatedBy = user['updatedBy']
             if self.isUserVerified==True:
                 return 1
             return 0
@@ -72,8 +77,10 @@ class User:
     ## Future update operations would be carried here if required!
     def updateUserRating(self, rating):
         if self.username is not None:
-            self.db_object.update_one(
-                {'username' : self.username},
+            self.db_object.update_one({
+                'username' : self.username,
+                'updatedBy': "self"
+                },
                 {'$set' : {'rating': rating}},
                 upsert=False
             )
@@ -83,8 +90,10 @@ class User:
     def updateUserVerificationStatus(self, username):
         self.loadUser(username)
         if self.username is not None:
-            self.db_object.update_one(
-                {'username': self.username},
+            self.db_object.update_one({
+                'username': self.username,
+                'updatedBy': "self"
+                },
                 {'$set': {'isUserVerified': True}},
                 upsert=False
             )
