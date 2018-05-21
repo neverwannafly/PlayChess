@@ -80,7 +80,7 @@ def add():
             request.form['username'],
             hash_pass.hashpw(request.form['password'].encode('utf-8'), hash_pass.gensalt()),
             request.form['email'],
-            "/static/images/profile_pics/" + str(random.randint(1, 17)) + ".png",
+            "/static/Images/profile_pics/" + str(random.randint(1, 17)) + ".png",
             request.form['first_name'],
             request.form['last_name']
         )
@@ -101,7 +101,7 @@ def update():
     current_admin.updateUserDetails(
         request.form["username"], 
         request.form["email"], 
-        "/static/images/profile_pics/" + str(request.form["image"]), 
+        "/static/Images/profile_pics/" + str(request.form["image"]), 
         request.form["name"].split(' ')[0], 
         request.form["name"].split(' ')[1],
         request.form["rating"],
