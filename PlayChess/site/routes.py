@@ -149,6 +149,11 @@ def verify(username):
         return render_template('verify.html', username=username ,error_code=1)
     return render_template('verify.html', username=username, error_code=0)
 
+@mod.route('/verify/retry', methods=["POST"])
+def retry():
+    response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
+    return jsonify({response: response})
+
 # Initialises a chessboard
 chessboard = chess.Chessboard()
 
