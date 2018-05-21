@@ -17,7 +17,7 @@ class User:
         self.image = "N/A"
         self.rating = 1200
         self.isUserVerified = False
-        self.addedBy = "self"
+        self.createdBy = "self"
         self.db_object = db_object
 
     def addNewUserToDatabase(self, username, password, email, image, first_name, last_name):
@@ -36,7 +36,7 @@ class User:
             "image" : image,
             "rating" : 1200,
             "isUserVerified" : False,
-            "addedBy": "self",
+            "createdBy": "self",
             "updatedBy" : "none"
         })
         new_user = self.db_object.find_one({
@@ -59,7 +59,7 @@ class User:
             self.image = user['image']
             self.rating = user['rating']
             self.isUserVerified = bool(user['isUserVerified'])
-            self.addedBy = user['createdBy']
+            self.createdBy = user['createdBy']
             self.updatedBy = user['updatedBy']
             if self.isUserVerified==True:
                 return 1
