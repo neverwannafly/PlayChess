@@ -59,7 +59,7 @@ class User:
             self.image = user['image']
             self.rating = user['rating']
             self.isUserVerified = bool(user['isUserVerified'])
-            self.addedBy = user['addedBy']
+            self.addedBy = user['createdBy']
             self.updatedBy = user['updatedBy']
             if self.isUserVerified==True:
                 return 1
