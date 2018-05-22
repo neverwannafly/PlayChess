@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function() {
     // On click signup, hide login and show registration form!
     $("#signup").click(function(){
