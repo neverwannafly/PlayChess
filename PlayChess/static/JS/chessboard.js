@@ -7,7 +7,6 @@ $(document).ready(function(){
             url: "board/flip"
         })
         .done(function(data){
-            console.log(data.board);
             $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
         })
     });
