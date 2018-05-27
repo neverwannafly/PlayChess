@@ -2,8 +2,7 @@
 
 ## Current Features
 <ul>
-    <li>User registration</li>
-    <li>User login</li>
+    <li>User registration and login</li>
     <li>User verification via emailID</li>
     <li>Admin login</li>
     <li>Creating new admin through command line</li>
@@ -16,6 +15,10 @@ These are the likely goals I would like to achieve in the near future
     <li>Implement necessary styling till now</li>
     <li><strong>Doing: </strong> Make Chessboard class</li>
 </ul>
+
+## Hosting
+Curently the live view of application is hosted on https://aqueous-lake-70097.herokuapp.com/<br>
+Feel free to check it out. 
 
 ## <a name="env"></a>Setting up virtual env
 #### For UNIX based devices(linux/mac)
