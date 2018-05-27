@@ -3,10 +3,19 @@
   font-size: 50px !important;
   text-align: center;
   margin-bottom: 10px;
+  color: aliceblue;
 }
 .btn{
   margin-left: auto !important;
   margin-right: auto !important;
+}
+body, html {
+    height: 100%;
+    background-color: black;
+}
+.login-handler {
+    margin-top: 5%!important;
+    margin-left: 55%!important;
 }
 .container {
     margin-top: 100px ;
@@ -19,9 +28,11 @@
     background-color: rgba(0,0,0,0.2);
 }
 body  {
-    background-image: url("../Images/backgrounds/test1.jpg");
+    background-image: url("../Images/backgrounds/bg.jpg");
+    height: 100%; 
+    background-position: center;
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: cover;
 }
 *, *:before, *:after {
 	margin: 0;
