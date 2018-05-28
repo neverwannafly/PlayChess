@@ -142,11 +142,13 @@ def register():
 @logout_required
 def verify(username):
     if request.method=='POST':
-        current_user.updateUserVerificationStatus(username)
         if request.form['activation_link'].strip(' ')==current_user._id:
             session['username'] = current_user.username
+            current_user.updateUserVerificationStatus(username)
             return redirect(url_for('site.index'))
         return render_template('verify.html', username=username ,error_code=1)
+    if current_user.username!=username:
+        current_user.loadUser(username)
     return render_template('verify.html', username=username, error_code=0)
 
 # Route to resend verification mail to user
