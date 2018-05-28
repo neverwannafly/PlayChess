@@ -65,7 +65,7 @@ body  {
     min-width: 40%!important;
     width: 40%!important;
 }
-input[type=text] {
+input[type=text], input[type=email] {
     color: white !important;
 }
 input[type=password] {
