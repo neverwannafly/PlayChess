@@ -67,165 +67,78 @@ body {
     margin-top: 4%;
 }
 
-/** Provisional CSS, delete after use **/
-
-#a1 {
-    background-image: url("../Images/white_pieces/rook-dark.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#b1 {
-    background-image: url("../Images/white_pieces/knight-light.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#c1 {
-    background-image: url("../Images/white_pieces/bishop-dark.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#d1 {
-    background-image: url("../Images/white_pieces/queen.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#e1 {
+/** CSS for chess pieces **/
+/** White Pieces **/
+.white-K {
     background-image: url("../Images/white_pieces/king.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#f1 {
-    background-image: url("../Images/white_pieces/bishop-light.png");
+.white-B {
+    background-image: url("../Images/white_pieces/bishop.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#g1 {
-    background-image: url("../Images/white_pieces/knight-dark.png");
+.white-Q {
+    background-image: url("../Images/white_pieces/queen.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#h1 {
-    background-image: url("../Images/white_pieces/rook-light.png");
+.white-R {
+    background-image: url("../Images/white_pieces/rook.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#a2{
-    background-image: url("../Images/white_pieces/pawn-light.png");
+.white-N {
+    background-image: url("../Images/white_pieces/knight.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#b2{
-    background-image: url("../Images/white_pieces/pawn-dark.png");
+.white-p {
+    background-image: url("../Images/white_pieces/pawn.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#c2{
-    background-image: url("../Images/white_pieces/pawn-light.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#d2{
-    background-image: url("../Images/white_pieces/pawn-dark.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#e2{
-    background-image: url("../Images/white_pieces/pawn-light.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#f2{
-    background-image: url("../Images/white_pieces/pawn-dark.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#g2{
-    background-image: url("../Images/white_pieces/pawn-light.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#h2{
-    background-image: url("../Images/white_pieces/pawn-dark.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#a8 {
-    background-image: url("../Images/black_pieces/rook-light.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#b8 {
-    background-image: url("../Images/black_pieces/knight-dark.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#c8 {
-    background-image: url("../Images/black_pieces/bishop-light.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#d8 {
-    background-image: url("../Images/black_pieces/queen.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#e8 {
+/** Black Pieces **/
+.black-K {
     background-image: url("../Images/black_pieces/king.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#f8 {
-    background-image: url("../Images/black_pieces/bishop-dark.png");
+.black-B {
+    background-image: url("../Images/black_pieces/bishop.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#g8 {
-    background-image: url("../Images/black_pieces/knight-light.png");
+.black-Q {
+    background-image: url("../Images/black_pieces/queen.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#h8 {
-    background-image: url("../Images/black_pieces/rook-dark.png");
+.black-R {
+    background-image: url("../Images/black_pieces/rook.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#a7{
-    background-image: url("../Images/black_pieces/pawn-dark.png");
+.black-N {
+    background-image: url("../Images/black_pieces/knight.png");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
-#b7{
-    background-image: url("../Images/black_pieces/pawn-light.png");
+.black-p {
+    background-image: url("../Images/black_pieces/pawn.png");
     background-repeat: no-repeat;
-    background-size: 100%;
-}
-#c7{
-    background-image: url("../Images/black_pieces/pawn-dark.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#d7{
-    background-image: url("../Images/black_pieces/pawn-light.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#e7{
-    background-image: url("../Images/black_pieces/pawn-dark.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#f7{
-    background-image: url("../Images/black_pieces/pawn-light.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#g7{
-    background-image: url("../Images/black_pieces/pawn-dark.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-#h7{
-    background-image: url("../Images/black_pieces/pawn-light.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 80%;
+    background-position: center;
 }
