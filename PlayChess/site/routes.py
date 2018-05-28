@@ -15,7 +15,7 @@ USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 # Relative imports
 from .. import database
 from . import classes
-from . import chessboard as chess
+from . import chessboard
 
 # Database initialisation
 db = database.db
@@ -158,18 +158,21 @@ def retry():
     return jsonify({response: response})
 
 # Initialises a chessboard
-chessboard = chess.Chessboard()
+chessboard = chessboard.Chessboard()
 
 @mod.route('/board')
 @login_required
 def board():
-    new_chess_board = chessboard.createBoardForWhite()
+    if chessboard.configuration==1:
+        new_chess_board = chessboard.draw_chessboard_for_white()
+    else:
+        new_chess_board = chessboard.draw_chessboard_for_black()
     return render_template('chessboard.html', chessboard=new_chess_board)
 
 @mod.route('/board/flip')
 @login_required
 def flipBoard():
-    flipped_board = chessboard.swapBoard()
+    flipped_board = chessboard.swap_board()
     return jsonify({"board": flipped_board})
 
 # logout routine
