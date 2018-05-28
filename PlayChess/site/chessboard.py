@@ -105,8 +105,8 @@ class LightSquare(Square):
 class Chessboard:
     def __init__(self):
         self.configuration = 1
-        # config of 1 means chessboard is drawn for white player at bottom!
-        # config of 2 means chessboard is drawn for black player at bottom!
+        # config of 2 means chessboard is drawn for white player at bottom!
+        # config of 1 means chessboard is drawn for black player at bottom!
         self.chessboard = self.create_chessboard()
         self.initialise_board()
 
@@ -160,11 +160,12 @@ class Chessboard:
 
     def swap_board(self):
         if self.configuration == 1:
-            self.configuration = 2
             return self.draw_chessboard_for_black()
         else:
-            self.configuration = 1
             return self.draw_chessboard_for_white()
+
+    def change(self):
+        self.configuration += 1
 
     def draw_chessboard_for_white(self):
         board_html_view = "<tr>"
@@ -181,5 +182,5 @@ class Chessboard:
             for j in range(7, -1, -1):
                 board_html_view += self.chessboard[i][j].css
             board_html_view = board_html_view + "</tr>"
-        self.configuration = 1
+        self.configuration = 2
         return board_html_view
