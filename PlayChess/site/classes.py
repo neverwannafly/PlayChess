@@ -90,12 +90,15 @@ class User:
     def updateUserVerificationStatus(self, username):
         self.loadUser(username)
         if self.username is not None:
-            self.db_object.update_one({
-                'username': self.username,
-                'updatedBy': "self"
+            status = self.db_object.update_one({
+                'username': self.username
                 },
-                {'$set': {'isUserVerified': True}},
-                upsert=False
+                {'$set': {
+                    'isUserVerified': True,
+                    'updatedBy': "self"
+                },
+                "$currentDate": {"lastModified": True}}
             )
+            print(status)
             return 1
         return 0
