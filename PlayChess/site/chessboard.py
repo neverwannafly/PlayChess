@@ -2,6 +2,7 @@
 
 # Define a class for chessboard pieces with necessary members and methods.
 # This would serve as the parent class for other pieces.
+
 class Piece:
     # Initialises the basic component of every piece
     def __init__(self):
@@ -164,8 +165,31 @@ class Chessboard:
         else:
             return self.draw_chessboard_for_white()
 
-    def change(self):
-        self.configuration += 1
+    def convert_to_index(self, notation):
+        return self.chessboard[ord('8')-ord(notation[1])][ord(notation[0])-ord('a')]
+
+        # piece = {
+        #     "white-K": King("white", notation),
+        #     "white-Q": King("white", notation),
+        #     "white-R": Rook("white", notation),
+        #     "white-B": Rook("white", notation),
+        #     "white-N": Rook("white", notation),
+        #     "white-p": Pawn("white", notation),
+        #     "black-K": King("black", notation),
+        #     "black-Q": Queen("black", notation),
+        #     "black-R": Rook("black", notation),
+        #     "black-B": Bishop("black", notation),
+        #     "black-N": Knight("black", notation),
+        #     "black-p": Pawn("black", notation),
+        # }.get(piece)
+
+    def make_move(self, initial_pos, final_pos):
+        obj = self.convert_to_index(notation)
+        temp_piece = obj.piece
+        obj.piece = Blank(notation)
+        obj.html_class = obj.html_class.strip("white-K white-Q white-R white-B white-N white-p black-K black-Q black-R black-B black-N black-p")
+        obj.piece = temp_piece
+        obj.html_class += " " + obj.piece.label
 
     def draw_chessboard_for_white(self):
         board_html_view = "<tr>"
