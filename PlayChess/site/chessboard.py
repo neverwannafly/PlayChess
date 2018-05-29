@@ -189,6 +189,7 @@ class Chessboard:
         obj.piece = Blank(initial_pos)
         obj.html_class = obj.html_class.strip("white-K white-Q white-R white-B white-N white-p black-K black-Q black-R black-B black-N black-p")
         obj = self.convert_to_index(final_pos)
+        obj.html_class = obj.html_class.strip("white-K white-Q white-R white-B white-N white-p black-K black-Q black-R black-B black-N black-p")
         obj.piece = temp_piece
         obj.html_class += " " + obj.piece.label
 
