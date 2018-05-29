@@ -184,10 +184,11 @@ class Chessboard:
         # }.get(piece)
 
     def make_move(self, initial_pos, final_pos):
-        obj = self.convert_to_index(notation)
+        obj = self.convert_to_index(initial_pos)
         temp_piece = obj.piece
-        obj.piece = Blank(notation)
+        obj.piece = Blank(initial_pos)
         obj.html_class = obj.html_class.strip("white-K white-Q white-R white-B white-N white-p black-K black-Q black-R black-B black-N black-p")
+        obj = self.convert_to_index(final_pos)
         obj.piece = temp_piece
         obj.html_class += " " + obj.piece.label
 
