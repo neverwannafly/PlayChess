@@ -66,6 +66,10 @@ body {
 .flipButton {
     margin-top: 4%;
 }
+/** Provisional cell highlighting css. Should be used to highlight Legal moves!! **/
+td:hover {
+    filter: brightness(85%);
+  }
 
 /** CSS for chess pieces **/
 /** White Pieces **/
