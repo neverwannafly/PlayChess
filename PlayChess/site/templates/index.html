@@ -17,9 +17,33 @@
         <div class="container">
             <a href="{{url_for('site.logout')}}"><button type="button" class="btn-warning btn btn-block">Logout</button></a>
         </div>
+        <div class="container">
+            <br>
+                The make move text-based interface is only for testing 
+                purposes and will be removed as soon as graphical user 
+                interface for moving pieces is ready!
+                Currently there is no protection against illegal moves or
+                any check on which side is supposed to move!
+                To make a move, enter initial position of piece and final position
+                of the piece sepertaed by a hyphen '-'. For eg -> 
+            <li>
+                If I want to play e4, I'll write "e2-e4" in text interface.
+            </li>
+            <li>
+                    If I want to play Nf6, I'll write "g8-f6" in text interface.
+            </li>
+        </div>
     </div>
     <div class="chessboard">
-        <iframe scrolling="no" src="{{url_for('site.board')}}" frameborder="0"></iframe>
+        <iframe scrolling="no" src="{{url_for('site.board')}}" frameborder="0"></iframe><br>
+        <div class="make-move-input-div">
+            Enter your move! &nbsp;&nbsp;
+            <input id="makemoveinput" type="text">
+        </div>
+        <div class="make-move-button-div">
+            <button type="button" class="btn-primary btn btn-block btn-danger makeMove">Make Move</button>
+        </div>
+        <br><br>
         <button class="btn btn-success btn-block button">Find Game</button>
     </div>
 

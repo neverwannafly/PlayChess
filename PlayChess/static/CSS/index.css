@@ -10,6 +10,15 @@ a:hover {
 a:active {
     text-decoration: none;
 }
+.make-move-button-div {
+    width: 40%;
+    height: 29.6px;
+    float: right;
+}
+.make-move-input-div {
+    float: left;
+}
+
 iframe {
     width: 607px;
     height: 672px;
