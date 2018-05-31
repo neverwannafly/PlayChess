@@ -163,6 +163,7 @@ chessboard = chessboard.Chessboard()
 @mod.route('/board')
 @login_required
 def board():
+    chessboard.make_move("e2", "e4")
     new_chess_board = chessboard.draw_chessboard_for_white()
     return render_template('chessboard.html', chessboard=new_chess_board)
 
