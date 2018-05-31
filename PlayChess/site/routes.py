@@ -163,7 +163,6 @@ chessboard = chessboard.Chessboard()
 @mod.route('/board')
 @login_required
 def board():
-    chessboard.make_move("e2", "e4")
     new_chess_board = chessboard.draw_chessboard_for_white()
     return render_template('chessboard.html', chessboard=new_chess_board)
 
@@ -172,6 +171,14 @@ def board():
 def flipBoard():
     flipped_board = chessboard.swap_board()
     return jsonify({"board": flipped_board})
+
+@mod.route('/makemove/<move>')
+@login_required
+def make_move(move):
+    positions = move.split('-')
+    chessboard.make_move(positions[0], positions[1])
+    board = chessboard.draw_chessboard()
+    return jsonify({'board': board})
 
 # logout routine
 @mod.route('/logout')
