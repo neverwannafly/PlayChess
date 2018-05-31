@@ -159,6 +159,12 @@ class Chessboard:
             chessboard.append(chess_row)
         return chessboard
 
+    def draw_chessboard(self):
+        if self.configuration==1:
+            return self.draw_chessboard_for_white()
+        else:
+            return self.draw_chessboard_for_black()
+
     def swap_board(self):
         if self.configuration == 1:
             return self.draw_chessboard_for_black()
