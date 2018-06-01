@@ -225,7 +225,7 @@ class Chessboard:
         self.configuration = 2
         return board_html_view
 
-    def reset_chessboard():
+    def reset_chessboard(self):
         self.configuration = 1
         self.chessboard = self.create_chessboard()
         self.initialise_board()
