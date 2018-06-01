@@ -185,4 +185,5 @@ def make_move(move):
 @login_required
 def logout():
     session.pop('username')
+    chessboard.reset_chessboard()
     return redirect(url_for('site.login'))
