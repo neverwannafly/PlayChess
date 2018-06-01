@@ -224,3 +224,8 @@ class Chessboard:
             board_html_view = board_html_view + "</tr>"
         self.configuration = 2
         return board_html_view
+
+    def reset_chessboard():
+        self.configuration = 1
+        self.chessboard = self.create_chessboard()
+        self.initialise_board()
