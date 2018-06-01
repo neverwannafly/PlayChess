@@ -8,14 +8,12 @@
     <link rel="icon" href="{{ url_for('static', filename='Images/favicons/favicon.ico') }}" type="image/x-icon">
     <!-- Favicons end -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{url_for('static', filename='CSS/loadingGIF.css')}}">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/login.css')}}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="{{ url_for('static', filename='JS/login.js')}}"></script>
-	<script src="{{url_for('static',filename='JS/progress_bar.js)}}"></script>
 </head>
 <body>
     <script>
@@ -88,13 +86,26 @@
                     <input name="confirm_password" type="password" class="form-control" id="exampleInputPassword2" placeholder="Retype your Password" maxlength="50" required>
                 </div>
                 <center>
-					<img src="../../static/Images/loading_gifs/loading7.gif" id="loading7" height="100" width="100">															  
-              		<button type="submit" id="reg_submit" class="btn btn-primary">Register</button> <br><br>
+																			  
+              		<button type="submit" class="btn btn-primary" onclick="loadingGif()">REGISTER</button> <br><br>
                     <a href="#" id="signin">Already have an account? Signin!</a>
                 </center>
                 <br>
                 <br>
             </form>
+			
+					<div id="loading" style="display:none;">
+						<img id="loadinggif" src="../../static/Images/loading_gifs/loading7.gif" />	
+						<br><br>
+						<p id="loadingtext">Sending a Verification E-Mail..Please Wait...</p>
+					</div>
+					
+					<script>
+						function loadingGif(){
+							$("#loading").show();
+						}
+					</script>
+							
         </div>
         <div class="form" id="login-form">
             <div class="header">
