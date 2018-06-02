@@ -12,8 +12,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/login.css')}}">
+    <link rel="stylesheet" href="../../static/CSS/loadingGIF.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="{{ url_for('static', filename='JS/login.js')}}"></script>
+    <script src="../../static/JS/loadingGIF.js"></script>
 </head>
 <body>
     <script>
@@ -28,37 +30,42 @@
     <div class="container login-handler">
         <div class="form" id="register-form">
             <div class="error">
-                <center>
-                {% if error_code==1 %}
-               <div class="alert alert-danger alert-dismissible fade show">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
-                Invalid Username! Note username must be b/w 3 characters to 30 characters and should only contain alphanumeric characters and underscores.
+			     <center>
+                 {% if error_code==1 %}
+                 <div class="alert alert-danger alert-dismissible fade show">
+                     <button type="button" class="close" data-dismiss="alert">&times;</button>
+                      Invalid Username! Note username must be b/w 3 characters to 30 characters and should only contain alphanumeric characters and underscores.
                 </div>
+                     
                 {% elif error_code==2 %}
                 <div class="alert alert-danger alert-dismissible fade show">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                Invalid Email address. Please use a valid email address!
-               </div>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    Invalid Email address. Please use a valid email address!
+                </div>
+                     
                 {% elif error_code==3 %}
                 <div class="alert alert-danger alert-dismissible fade show">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                Username already taken!
-               </div>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    Username already taken!
+                </div>
+                     
                 {% elif error_code==4 %}
                 <div class="alert alert-danger alert-dismissible fade show">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                This email ID is already associated with another account!
-               </div>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    This email ID is already associated with another account!
+                </div>
+                     
                 {% elif error_code==5 %}
                 <div class="alert alert-danger alert-dismissible fade show">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
-                Passwords do not match!
+				    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    Passwords do not match!
                 </div>
+                     
                 {% elif error_code==6 %}
                 <div class="alert alert-danger alert-dismissible fade show">	
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                There was some problem registering you!
-                Please try again later!
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    There was some problem registering you!
+                    Please try again later!
                	</div>
                 {% endif %}
                 </center>
@@ -94,37 +101,14 @@
                 <br>
             </form>
 			
-					<div id="loading" style="display:none;">
-						<img id="loadinggif" src="../../static/Images/loading_gifs/loading7.gif" />	
-						<br><br>
-						<p id="loadingtext">Sending a Verification E-Mail..Please Wait...</p>
-					</div>
-				
-					 
-					<script>
-						function loadingGif(){
-							var a=document.getElementById("firstName").value;
-							var b=document.getElementById("lastName").value;
-							var c=document.getElementById("username").value;
-							var d=document.getElementById("emailID").value;
-							var e=document.getElementById("exampleInputPassword1").value;
-							var f=document.getElementById("exampleInputPassword2").value;
-							var valid_emailID=1;
-							var x = d;
-    						var atpos = x.indexOf("@");
-    						var dotpos = x.lastIndexOf(".");
-							
-    						if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
-        					valid_emailID=0;
-    						}
-							
-							if(a!="" && b!="" && c!="" && d!="" && e!="" && f!="" && valid_emailID==1){
-							$("#loading").show();
-							}
-						}
-					</script>
-					
+			<div id="loading">
+			    <img id="loadinggif" src="../../static/Images/loading_gifs/loading7.gif" />	
+				<br><br>
+				<p id="loadingtext">Sending a Verification E-Mail..Please Wait...</p>
+			</div>
+	
         </div>
+        
         <div class="form" id="login-form">
             <div class="header">
                 Login!

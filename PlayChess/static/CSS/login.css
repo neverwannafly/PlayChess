@@ -96,17 +96,5 @@ input[type=password] {
    color:    #fff !important;
 }
 
-#loadinggif {
-   	width:150px;
-	height:33px;
-	/*margin-left:245px;
-	margin-top:-250px;*/	
-	margin-top:-75px;
-	margin-left:120px;
-}	
-#loadingtext {
-   	font-size:20px;
-   	color:#ffffff;
-	margin-top:-45px;
-}
+
 
