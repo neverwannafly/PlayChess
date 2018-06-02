@@ -12,10 +12,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/login.css')}}">
-    <link rel="stylesheet" href="../../static/CSS/loadingGIF.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='CSS/loadingGIF.css')}}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="{{ url_for('static', filename='JS/login.js')}}"></script>
-    <script src="../../static/JS/loadingGIF.js"></script>
+    <script src="{{ url_for('static', filename='JS/loadingGIF.js')}}"></script>
 </head>
 <body>
     <script>
@@ -102,7 +102,7 @@
             </form>
 			
 			<div id="loading">
-			    <img id="loadinggif" src="../../static/Images/loading_gifs/loading7.gif" />	
+			    <img id="loadinggif" src="{{url_for('static', filename='Images/loading_gifs/loading7.gif')}}" />	
 				<br><br>
 				<p id="loadingtext">Sending a Verification E-Mail..Please Wait...</p>
 			</div>
