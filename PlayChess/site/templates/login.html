@@ -30,10 +30,10 @@
             <div class="error">
                 <center>
                 {% if error_code==1 %}
-                <div class="alert alert-danger alert-dismissible fade show">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
+               <div class="alert alert-danger alert-dismissible fade show">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
                 Invalid Username! Note username must be b/w 3 characters to 30 characters and should only contain alphanumeric characters and underscores.
-               </div>
+                </div>
                 {% elif error_code==2 %}
                 <div class="alert alert-danger alert-dismissible fade show">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -51,15 +51,15 @@
                </div>
                 {% elif error_code==5 %}
                 <div class="alert alert-danger alert-dismissible fade show">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                Passwords donot match!
-               </div>
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+                Passwords do not match!
+                </div>
                 {% elif error_code==6 %}
-                <div class="alert alert-danger alert-dismissible fade show">
+                <div class="alert alert-danger alert-dismissible fade show">	
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 There was some problem registering you!
                 Please try again later!
-               </div>
+               	</div>
                 {% endif %}
                 </center>
             </div>
@@ -99,13 +99,31 @@
 						<br><br>
 						<p id="loadingtext">Sending a Verification E-Mail..Please Wait...</p>
 					</div>
-					
+				
+					 
 					<script>
 						function loadingGif(){
+							var a=document.getElementById("firstName").value;
+							var b=document.getElementById("lastName").value;
+							var c=document.getElementById("username").value;
+							var d=document.getElementById("emailID").value;
+							var e=document.getElementById("exampleInputPassword1").value;
+							var f=document.getElementById("exampleInputPassword2").value;
+							var valid_emailID=1;
+							var x = d;
+    						var atpos = x.indexOf("@");
+    						var dotpos = x.lastIndexOf(".");
+							
+    						if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length) {
+        					valid_emailID=0;
+    						}
+							
+							if(a!="" && b!="" && c!="" && d!="" && e!="" && f!="" && valid_emailID==1){
 							$("#loading").show();
+							}
 						}
 					</script>
-							
+					
         </div>
         <div class="form" id="login-form">
             <div class="header">
