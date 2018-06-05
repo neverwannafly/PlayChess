@@ -15,22 +15,20 @@ $(document).ready(function(){
 
     $(document).on('click', '.square', function(e){
         var target = $(e.target), article;
-        console.log("clicked!");
         if(incrementClick()%2!=0) {
             initial_pos = $(target).attr('id');
-            console.log(initial_pos);
         }
         else {
             final_pos = $(target).attr('id');
-            console.log(final_pos);
             var url = "makemove/" + initial_pos + "-" + final_pos;
-            console.log(url);
             $.ajax({
                 url: url,
+                error : function(xhr, status, error) {
+                    alert("Please enter a valid move!");
+                },
             })
             .done(function(data){
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-                console.log("done");
             })
         }
     });
