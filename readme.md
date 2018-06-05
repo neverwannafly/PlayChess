@@ -19,8 +19,6 @@ These are the likely goals I would like to achieve in the near future
 ## Hosting
 Curently the live view of application is hosted on https://playchesswebsite.herokuapp.com/<br>
 Feel free to check it out. <br>
-NOTE - The live view is currently experiencing some bugs in chessboard functionality. It would be
-fixed as soon as possible!
 
 ## <a name="env"></a>Setting up virtual env
 #### For UNIX based devices(linux/mac)
