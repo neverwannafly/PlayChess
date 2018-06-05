@@ -15,6 +15,7 @@ $(document).ready(function() {
     $("#registerButton").click(function(event){
         event.preventDefault();
         $(".loader").show();
+        $("#register-header").text("Registering....");
         $("#load-registration-form").submit();
     })
 });
