@@ -19,9 +19,12 @@
 <body>
     <div class="container verify login-handler">
         <div class="form">
-            <form method="POST" action="{{ url_for('site.verify', username=username) }}">
+            <form class="send-form-data" method="POST" action="{{ url_for('site.verify', username=username) }}">
                 <div class="header">
-                    Verification Code
+                    <span id="header-text">Verification Code</span>
+                    <span class="loader">
+                        <img id="loading-gif" src="{{url_for('static', filename='Images/loading_gifs/loading.gif')}}">
+                    </span>
                 </div>
                 <div class="error">
                     {% if error_code==1 %}
