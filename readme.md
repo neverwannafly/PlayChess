@@ -4,23 +4,23 @@
 <ul>
     <li>User registration and login</li>
     <li>User verification via emailID</li>
-    <li>Admin login</li>
+    <li>Admin dashboard</li>
     <li>Creating new admin through command line</li>
-    <li>Allow admins to create, delete and update users</li>
-    <li>Functional chessboard (making moves only possible through CLI right now)
+    <li>Functional chessboard (Click based moves)</li>
 </ul>
 
 ## Check Points
 These are the likely goals I would like to achieve in the near future
 <ul>
     <li>Implement necessary styling till now</li>
-    <li>Add check for legal/illegal moves</li>
-    <li>Make chessboard functional through user clicks</li>
+    <li><strong>Add check for legal/illegal moves</strong></li>
 </ul>
 
 ## Hosting
 Curently the live view of application is hosted on https://playchesswebsite.herokuapp.com/<br>
-Feel free to check it out. 
+Feel free to check it out. <br>
+NOTE - The live view is currently experiencing some bugs in chessboard functionality. It would be
+fixed as soon as possible!
 
 ## <a name="env"></a>Setting up virtual env
 #### For UNIX based devices(linux/mac)
