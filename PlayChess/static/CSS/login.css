@@ -1,5 +1,11 @@
-.header
-{
+#loading-gif {
+    height: 10%;
+    width: 10%;
+}
+.loader {
+    display: none;
+}
+.header {
   font-size: 50px !important;
   text-align: center;
   margin-bottom: 10px;

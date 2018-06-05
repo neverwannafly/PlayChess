@@ -12,4 +12,9 @@ $(document).ready(function() {
             $("#login-form").slideDown("slow");
         });
     });
+    $("#registerButton").click(function(event){
+        event.preventDefault();
+        $(".loader").show();
+        $("#load-registration-form").submit();
+    })
 });

@@ -65,8 +65,11 @@
             </div>
             <div class="header">
                 Register!
+                <span class="loader">
+                    <img id="loading-gif" src="{{url_for('static', filename='Images/loading_gifs/loading.gif')}}">
+                </span>
             </div>
-            <form method="POST" action="{{ url_for('site.register') }}">
+            <form id="load-registration-form" method="POST" action="{{ url_for('site.register') }}">
                 <div class="form-group">
                     <input name="first_name" type="text" class="form-control" id="firstName" placeholder="First Name" maxlength="30" required>
                 </div>
@@ -86,7 +89,7 @@
                     <input name="confirm_password" type="password" class="form-control" id="exampleInputPassword2" placeholder="Retype your Password" maxlength="50" required>
                 </div>
                 <center>
-                    <button type="submit" class="btn btn-primary">Register</button> <br><br>
+                    <button id="registerButton" type="submit" class="btn btn-primary">Register</button> <br><br>
                     <a href="#" id="signin">Already have an account? Signin!</a>
                 </center>
                 <br>
