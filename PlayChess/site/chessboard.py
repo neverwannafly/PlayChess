@@ -71,7 +71,8 @@ class Blank(Piece):
     def __init__(self, current_position):
         super().__init__()
         self.current_position = current_position
-        self.label = "_"
+        self.color = "none"
+        self.label = self.color + "-" + "_"
 
 class Square:
     def __init__(self):
@@ -82,13 +83,14 @@ class Square:
         self.css = ""
 
     def __str__(self):
-        return self.html_id
+        return self.html_id + "-" + self.piece.label
 
     __repr__ = __str__
     
 class DarkSquare(Square):
     def __init__(self):
         super().__init__()
+        self.label = "dark-square"
         self.html_class += " dark "
 
     def set_html_id(self, html_id):
@@ -97,6 +99,7 @@ class DarkSquare(Square):
 class LightSquare(Square):
     def __init__(self):
         super().__init__()
+        self.label = "light-square"
         self.html_class += " light "
 
     def set_html_id(self, html_id):
@@ -174,6 +177,9 @@ class Chessboard:
     def convert_to_index(self, notation):
         return self.chessboard[ord('8')-ord(notation[1])][ord(notation[0])-ord('a')]
 
+    def return_index_as_touple(self, notation):
+        return (ord('8')-ord(notation[1]), ord(notation[0])-ord('a'))
+
     def make_move(self, initial_pos, final_pos):
         obj = self.convert_to_index(initial_pos)
         temp_piece = obj.piece
@@ -191,6 +197,28 @@ class Chessboard:
             html_class = obj.html_class,
             html_id = obj.html_id
         )
+
+    def is_move_legal(self, initial_pos, final_pos):
+        # Will make use of generate legal move only.
+        pass
+
+    def generate_legal_moves(self, initial_pos):
+        piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
+        # returns a dictionary of valid final positions for a particular piece
+        if piece_label=="K":
+            pass
+        elif piece_label=="Q":
+            pass
+        elif piece_label=="R":
+            pass
+        elif piece_label=="B":
+            pass
+        elif piece_label=="N":
+            pass
+        elif piece_label=="p":
+            pass
+        else:
+            return []
 
     def draw_chessboard_for_white(self):
         board_html_view = "<tr>"
