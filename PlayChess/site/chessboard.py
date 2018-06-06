@@ -3,6 +3,8 @@
 # Define a class for chessboard pieces with necessary members and methods.
 # This would serve as the parent class for other pieces.
 
+from .exceptions import InvalidMoveError
+
 class Piece:
     # Initialises the basic component of every piece
     def __init__(self):
@@ -181,22 +183,24 @@ class Chessboard:
         return (ord('8')-ord(notation[1]), ord(notation[0])-ord('a'))
 
     def make_move(self, initial_pos, final_pos):
-        obj = self.convert_to_index(initial_pos)
-        temp_piece = obj.piece
-        obj.piece = Blank(initial_pos)
-        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
-        obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
-            html_class = obj.html_class,
-            html_id = obj.html_id
-        )
-        obj = self.convert_to_index(final_pos)
-        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
-        obj.piece = temp_piece
-        obj.html_class += " " + obj.piece.label
-        obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
-            html_class = obj.html_class,
-            html_id = obj.html_id
-        )
+        if self.is_move_legal(initial_pos, final_pos):
+            obj = self.convert_to_index(initial_pos)
+            temp_piece = obj.piece
+            obj.piece = Blank(initial_pos)
+            obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
+            obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
+                html_class = obj.html_class,
+                html_id = obj.html_id
+            )
+            obj = self.convert_to_index(final_pos)
+            obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
+            obj.piece = temp_piece
+            obj.html_class += " " + obj.piece.label
+            obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
+                html_class = obj.html_class,
+                html_id = obj.html_id
+            )
+        return InvalidMoveError("Invalid Move!")
 
     def move_top(self, initial_pos, limit=10):
         indexes = self.return_index_as_touple(initial_pos)
