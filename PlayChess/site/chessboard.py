@@ -198,7 +198,7 @@ class Chessboard:
             html_id = obj.html_id
         )
 
-    def move_forward(self, initial_pos, limit=10):
+    def move_top(self, initial_pos, limit=10):
         indexes = self.return_index_as_touple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
@@ -215,7 +215,7 @@ class Chessboard:
                 limit -= 1
         return move_list
 
-    def move_backward(self, initial_pos, limit=10):
+    def move_bottom(self, initial_pos, limit=10):
         indexes = self.return_index_as_touple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
@@ -257,6 +257,78 @@ class Chessboard:
         if init_piece_color!="none":
             while Y<7 and Y>=0 and limit>0:
                 Y += 1
+                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                    break
+                if self.chessboard[X][Y].piece.color != "none":
+                    move_list.append(self.chessboard[X][Y].html_id)
+                    break
+                move_list.append(self.chessboard[X][Y].html_id)
+                limit -= 1
+        return move_list
+
+    def move_top_right(self, initial_pos, limit=10):
+        indexes = self.return_index_as_touple(initial_pos)
+        X, Y = indexes[0], indexes[1]
+        init_piece_color = self.chessboard[X][Y].piece.color
+        move_list = []
+        if init_piece_color!="none":
+            while X<=7 and X>0 and Y<7 and Y>=0 limit>0:
+                X -= 1
+                Y += 1
+                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                    break
+                if self.chessboard[X][Y].piece.color != "none":
+                    move_list.append(self.chessboard[X][Y].html_id)
+                    break
+                move_list.append(self.chessboard[X][Y].html_id)
+                limit -= 1
+        return move_list
+
+    def move_bottom_right(self, initial_pos, limit=10):
+        indexes = self.return_index_as_touple(initial_pos)
+        X, Y = indexes[0], indexes[1]
+        init_piece_color = self.chessboard[X][Y].piece.color
+        move_list = []
+        if init_piece_color!="none":
+            while X<7 and X>=0 and Y<7 and Y>=0 limit>0:
+                X += 1
+                Y += 1
+                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                    break
+                if self.chessboard[X][Y].piece.color != "none":
+                    move_list.append(self.chessboard[X][Y].html_id)
+                    break
+                move_list.append(self.chessboard[X][Y].html_id)
+                limit -= 1
+        return move_list
+
+    def move_top_left(self, initial_pos, limit=10):
+        indexes = self.return_index_as_touple(initial_pos)
+        X, Y = indexes[0], indexes[1]
+        init_piece_color = self.chessboard[X][Y].piece.color
+        move_list = []
+        if init_piece_color!="none":
+            while Y<=7 and Y>0 and X<=7 and X>0 limit>0:
+                Y -= 1
+                X -= 1
+                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                    break
+                if self.chessboard[X][Y].piece.color != "none":
+                    move_list.append(self.chessboard[X][Y].html_id)
+                    break
+                move_list.append(self.chessboard[X][Y].html_id)
+                limit -= 1
+        return move_list
+
+    def move_bottom_left(self, initial_pos, limit=10):
+        indexes = self.return_index_as_touple(initial_pos)
+        X, Y = indexes[0], indexes[1]
+        init_piece_color = self.chessboard[X][Y].piece.color
+        move_list = []
+        if init_piece_color!="none":
+            while Y<7 and Y>=0 and X<=7 and X>0 limit>0:
+                Y -= 1
+                X += 1
                 if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
                     break
                 if self.chessboard[X][Y].piece.color != "none":
