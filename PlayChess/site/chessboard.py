@@ -203,15 +203,16 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        while X<=7 and X>0 and limit>0:
-            X -= 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self.chessboard[X][Y].piece.color != "none":
+        if init_piece_color!="none":
+            while X<=7 and X>0 and limit>0:
+                X -= 1
+                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                    break
+                if self.chessboard[X][Y].piece.color != "none":
+                    move_list.append(self.chessboard[X][Y].html_id)
+                    break
                 move_list.append(self.chessboard[X][Y].html_id)
-                break
-            move_list.append(self.chessboard[X][Y].html_id)
-            limit -= 1
+                limit -= 1
         return move_list
 
     def move_backward(self, initial_pos, limit=10):
@@ -219,15 +220,16 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        while X<7 and X>=0 and limit>0:
-            X += 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self.chessboard[X][Y].piece.color != "none":
+        if init_piece_color!="none":
+            while X<7 and X>=0 and limit>0:
+                X += 1
+                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                    break
+                if self.chessboard[X][Y].piece.color != "none":
+                    move_list.append(self.chessboard[X][Y].html_id)
+                    break
                 move_list.append(self.chessboard[X][Y].html_id)
-                break
-            move_list.append(self.chessboard[X][Y].html_id)
-            limit -= 1
+                limit -= 1
         return move_list
 
     def move_left(self, initial_pos, limit=10):
@@ -235,15 +237,16 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        while Y<=7 and Y>0 and limit>0:
-            Y -= 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self.chessboard[X][Y].piece.color != "none":
+        if init_piece_color!="none":
+            while Y<=7 and Y>0 and limit>0:
+                Y -= 1
+                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                    break
+                if self.chessboard[X][Y].piece.color != "none":
+                    move_list.append(self.chessboard[X][Y].html_id)
+                    break
                 move_list.append(self.chessboard[X][Y].html_id)
-                break
-            move_list.append(self.chessboard[X][Y].html_id)
-            limit -= 1
+                limit -= 1
         return move_list
 
     def move_right(self, initial_pos, limit=10):
@@ -251,15 +254,16 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        while Y<7 and Y>=0 and limit>0:
-            Y += 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self.chessboard[X][Y].piece.color != "none":
+        if init_piece_color!="none":
+            while Y<7 and Y>=0 and limit>0:
+                Y += 1
+                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                    break
+                if self.chessboard[X][Y].piece.color != "none":
+                    move_list.append(self.chessboard[X][Y].html_id)
+                    break
                 move_list.append(self.chessboard[X][Y].html_id)
-                break
-            move_list.append(self.chessboard[X][Y].html_id)
-            limit -= 1
+                limit -= 1
         return move_list
 
     def is_move_legal(self, initial_pos, final_pos):
