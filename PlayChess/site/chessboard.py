@@ -203,16 +203,15 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        if init_piece_color!="none":
-            while X<=7 and X>0 and limit>0:
-                X -= 1
-                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                    break
-                if self.chessboard[X][Y].piece.color != "none":
-                    move_list.append(self.chessboard[X][Y].html_id)
-                    break
+        while X<=7 and X>0 and limit>0:
+            X -= 1
+            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                break
+            if self.chessboard[X][Y].piece.color != "none":
                 move_list.append(self.chessboard[X][Y].html_id)
-                limit -= 1
+                break
+            move_list.append(self.chessboard[X][Y].html_id)
+            limit -= 1
         return move_list
 
     def move_bottom(self, initial_pos, limit=10):
@@ -220,16 +219,15 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        if init_piece_color!="none":
-            while X<7 and X>=0 and limit>0:
-                X += 1
-                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                    break
-                if self.chessboard[X][Y].piece.color != "none":
-                    move_list.append(self.chessboard[X][Y].html_id)
-                    break
+        while X<7 and X>=0 and limit>0:
+            X += 1
+            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                break
+            if self.chessboard[X][Y].piece.color != "none":
                 move_list.append(self.chessboard[X][Y].html_id)
-                limit -= 1
+                break
+            move_list.append(self.chessboard[X][Y].html_id)
+            limit -= 1
         return move_list
 
     def move_left(self, initial_pos, limit=10):
@@ -237,16 +235,15 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        if init_piece_color!="none":
-            while Y<=7 and Y>0 and limit>0:
-                Y -= 1
-                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                    break
-                if self.chessboard[X][Y].piece.color != "none":
-                    move_list.append(self.chessboard[X][Y].html_id)
-                    break
+        while Y<=7 and Y>0 and limit>0:
+            Y -= 1
+            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                break
+            if self.chessboard[X][Y].piece.color != "none":
                 move_list.append(self.chessboard[X][Y].html_id)
-                limit -= 1
+                break
+            move_list.append(self.chessboard[X][Y].html_id)
+            limit -= 1
         return move_list
 
     def move_right(self, initial_pos, limit=10):
@@ -254,16 +251,15 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        if init_piece_color!="none":
-            while Y<7 and Y>=0 and limit>0:
-                Y += 1
-                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                    break
-                if self.chessboard[X][Y].piece.color != "none":
-                    move_list.append(self.chessboard[X][Y].html_id)
-                    break
+        while Y<7 and Y>=0 and limit>0:
+            Y += 1
+            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                break
+            if self.chessboard[X][Y].piece.color != "none":
                 move_list.append(self.chessboard[X][Y].html_id)
-                limit -= 1
+                break
+            move_list.append(self.chessboard[X][Y].html_id)
+            limit -= 1
         return move_list
 
     def move_top_right(self, initial_pos, limit=10):
@@ -271,17 +267,16 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        if init_piece_color!="none":
-            while X<=7 and X>0 and Y<7 and Y>=0 and limit>0:
-                X -= 1
-                Y += 1
-                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                    break
-                if self.chessboard[X][Y].piece.color != "none":
-                    move_list.append(self.chessboard[X][Y].html_id)
-                    break
+        while X<=7 and X>0 and Y<7 and Y>=0 and limit>0:
+            X -= 1
+            Y += 1
+            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                break
+            if self.chessboard[X][Y].piece.color != "none":
                 move_list.append(self.chessboard[X][Y].html_id)
-                limit -= 1
+                break
+            move_list.append(self.chessboard[X][Y].html_id)
+            limit -= 1
         return move_list
 
     def move_bottom_right(self, initial_pos, limit=10):
@@ -289,17 +284,16 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        if init_piece_color!="none":
-            while X<7 and X>=0 and Y<7 and Y>=0 and limit>0:
-                X += 1
-                Y += 1
-                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                    break
-                if self.chessboard[X][Y].piece.color != "none":
-                    move_list.append(self.chessboard[X][Y].html_id)
-                    break
+        while X<7 and X>=0 and Y<7 and Y>=0 and limit>0:
+            X += 1
+            Y += 1
+            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                break
+            if self.chessboard[X][Y].piece.color != "none":
                 move_list.append(self.chessboard[X][Y].html_id)
-                limit -= 1
+                break
+            move_list.append(self.chessboard[X][Y].html_id)
+            limit -= 1
         return move_list
 
     def move_top_left(self, initial_pos, limit=10):
@@ -307,17 +301,16 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        if init_piece_color!="none":
-            while Y<=7 and Y>0 and X<=7 and X>0 and limit>0:
-                Y -= 1
-                X -= 1
-                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                    break
-                if self.chessboard[X][Y].piece.color != "none":
-                    move_list.append(self.chessboard[X][Y].html_id)
-                    break
+        while Y<=7 and Y>0 and X<=7 and X>0 and limit>0:
+            Y -= 1
+            X -= 1
+            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                break
+            if self.chessboard[X][Y].piece.color != "none":
                 move_list.append(self.chessboard[X][Y].html_id)
-                limit -= 1
+                break
+            move_list.append(self.chessboard[X][Y].html_id)
+            limit -= 1
         return move_list
 
     def move_bottom_left(self, initial_pos, limit=10):
@@ -325,17 +318,16 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        if init_piece_color!="none":
-            while Y<7 and Y>=0 and X<=7 and X>0 and limit>0:
-                Y -= 1
-                X += 1
-                if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                    break
-                if self.chessboard[X][Y].piece.color != "none":
-                    move_list.append(self.chessboard[X][Y].html_id)
-                    break
+        while Y<7 and Y>=0 and X<=7 and X>0 and limit>0:
+            Y -= 1
+            X += 1
+            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                break
+            if self.chessboard[X][Y].piece.color != "none":
                 move_list.append(self.chessboard[X][Y].html_id)
-                limit -= 1
+                break
+            move_list.append(self.chessboard[X][Y].html_id)
+            limit -= 1
         return move_list
 
     def make_diagonal_moves(self, initial_pos, limit=10):
@@ -348,25 +340,69 @@ class Chessboard:
         move_list += self.move_left(initial_pos, limit=limit) + self.move_right(initial_pos, limit=limit) + self.move_top(initial_pos, limit=limit) + self.move_bottom(initial_pos, limit=limit)
         return move_list
 
+    def generate_pawn_moves(self, initial_pos):
+        move_list = []
+        indexes = self.return_index_as_touple(initial_pos)
+        X, Y = indexes[0], indexes[1]
+        piece_color = self.convert_to_index(initial_pos).piece.color
+        if piece_color == "white":
+            if int(self.convert_to_index(initial_pos).html_id[1])==2:
+                limit=2
+            else:
+                limit=1
+            while X<=7 and X>0 and limit>0:
+                X -= 1
+                if self.chessboard[X][Y].piece.color !="none":
+                    break
+                move_list.append(self.chessboard[X][Y].html_id)
+                limit -= 1
+            # check for captures at top-right and top-left
+            if self.chessboard[X-1][Y+1].piece.color == "black":
+                move_list.append(self.chessboard[X-1][Y+1].html_id)
+            if self.chessboard[X-1][Y-1].piece.color == "black":
+                move_left.append(self.chessboard[X-1][Y-1].html_id)
+        else:
+            if int(self.convert_to_index(initial_pos).html_id[1])==7:
+                limit=2
+            else:
+                limit=1
+            while X<7 and X>=0 and limit>0:
+                X += 1
+                if self.chessboard[X][Y].piece.color !="none":
+                    break
+                move_list.append(self.chessboard[X][Y].html_id)
+                limit -= 1
+            # check for captures at bottom-right and bottom-left
+            if self.chessboard[X+1][Y-1].piece.color == "white":
+                move_list.append(self.chessboard[X+1][Y-1].html_id)
+            if self.chessboard[X+1][Y+1].piece.color == "white":
+                move_left.append(self.chessboard[X+1][Y+1].html_id)
+        return move_list
+
+    def generate_knight_moves(self, initial_pos):
+        return []
+
     def is_move_legal(self, initial_pos, final_pos):
         # Will make use of generate legal move only.
-        pass
+        if final_pos in self.generate_legal_moves(initial_pos):
+            return True
+        return False
 
     def generate_legal_moves(self, initial_pos):
         piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
         # returns a dictionary of valid final positions for a particular piece
         if piece_label=="K":
-            pass
+            return self.make_orthogonal_moves(initial_pos, limit=1)
         elif piece_label=="Q":
-            pass
+            return self.make_diagonal_moves(initial_pos) + self.make_orthogonal_moves(initial_pos)
         elif piece_label=="R":
-            pass
+            return self.make_orthogonal_moves(initial_pos)
         elif piece_label=="B":
-            pass
+            return self.make_diagonal_moves(initial_pos)
         elif piece_label=="N":
-            pass
+            return self.generate_knight_moves(initial_pos)
         elif piece_label=="p":
-            pass
+            return self.generate_pawn_moves(initial_pos)
         else:
             return []
 
