@@ -4,5 +4,5 @@ configurations = {
     'host': 'smtp.gmail.com',
     'port': 587,
     'username': 'playchesswebsite@gmail.com',
-    'password': 'Shubham123',
+    'password': '10p17fs0008',
 }
