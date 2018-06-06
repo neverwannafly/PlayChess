@@ -198,6 +198,24 @@ class Chessboard:
             html_id = obj.html_id
         )
 
+    def move_forward(self, initial_pos, limit=10):
+        indexes = self.return_index_as_touple(initial_pos)
+        X, Y = indexes[0], indexes[1]
+        print(X, Y)
+        init_piece_color = self.chessboard[X][Y].piece.color
+        print(self.chessboard[X][Y])
+        move_list = []
+        while X<=7 and X>0 and limit>0:
+            X -= 1
+            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+                break
+            if self.chessboard[X][Y].piece.color != "none":
+                move_list.append(self.chessboard[X][Y].html_id)
+                break
+            move_list.append(self.chessboard[X][Y].html_id)
+            limit -= 1
+        return move_list
+
     def is_move_legal(self, initial_pos, final_pos):
         # Will make use of generate legal move only.
         pass
