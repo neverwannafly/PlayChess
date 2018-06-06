@@ -338,6 +338,16 @@ class Chessboard:
                 limit -= 1
         return move_list
 
+    def make_diagonal_moves(self, initial_pos, limit=10):
+        move_list = []
+        move_list += self.move_bottom_left(initial_pos, limit=limit) + self.move_bottom_right(initial_pos, limit=limit) + self.move_top_left(initial_pos, limit=limit) + self.move_top_right(initial_pos, limit=limit)
+        return move_list 
+
+    def make_orthogonal_moves(self, initial_pos, limit=10):
+        move_list = []
+        move_list += self.move_left(initial_pos, limit=limit) + self.move_right(initial_pos, limit=limit) + self.move_top(initial_pos, limit=limit) + self.move_bottom(initial_pos, limit=limit)
+        return move_list
+
     def is_move_legal(self, initial_pos, final_pos):
         # Will make use of generate legal move only.
         pass
