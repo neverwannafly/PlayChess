@@ -344,39 +344,40 @@ class Chessboard:
         move_list = []
         indexes = self.return_index_as_touple(initial_pos)
         X, Y = indexes[0], indexes[1]
+        tempX, tempY = X, Y
         piece_color = self.convert_to_index(initial_pos).piece.color
         if piece_color == "white":
             if int(self.convert_to_index(initial_pos).html_id[1])==2:
                 limit=2
             else:
                 limit=1
-            while X<=7 and X>0 and limit>0:
-                X -= 1
-                if self.chessboard[X][Y].piece.color !="none":
+            while tempX<=7 and tempX>0 and limit>0:
+                tempX -= 1
+                if self.chessboard[tempX][tempY].piece.color !="none":
                     break
-                move_list.append(self.chessboard[X][Y].html_id)
+                move_list.append(self.chessboard[tempX][tempY].html_id)
                 limit -= 1
             # check for captures at top-right and top-left
             if self.chessboard[X-1][Y+1].piece.color == "black":
                 move_list.append(self.chessboard[X-1][Y+1].html_id)
             if self.chessboard[X-1][Y-1].piece.color == "black":
-                move_left.append(self.chessboard[X-1][Y-1].html_id)
+                move_list.append(self.chessboard[X-1][Y-1].html_id)
         else:
             if int(self.convert_to_index(initial_pos).html_id[1])==7:
                 limit=2
             else:
                 limit=1
-            while X<7 and X>=0 and limit>0:
-                X += 1
-                if self.chessboard[X][Y].piece.color !="none":
+            while tempX<7 and tempX>=0 and limit>0:
+                tempX += 1
+                if self.chessboard[tempX][tempY].piece.color !="none":
                     break
-                move_list.append(self.chessboard[X][Y].html_id)
+                move_list.append(self.chessboard[tempX][tempY].html_id)
                 limit -= 1
             # check for captures at bottom-right and bottom-left
             if self.chessboard[X+1][Y-1].piece.color == "white":
                 move_list.append(self.chessboard[X+1][Y-1].html_id)
             if self.chessboard[X+1][Y+1].piece.color == "white":
-                move_left.append(self.chessboard[X+1][Y+1].html_id)
+                move_list.append(self.chessboard[X+1][Y+1].html_id)
         return move_list
 
     def generate_knight_moves(self, initial_pos):
