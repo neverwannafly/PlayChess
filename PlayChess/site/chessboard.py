@@ -272,7 +272,7 @@ class Chessboard:
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
         if init_piece_color!="none":
-            while X<=7 and X>0 and Y<7 and Y>=0 limit>0:
+            while X<=7 and X>0 and Y<7 and Y>=0 and limit>0:
                 X -= 1
                 Y += 1
                 if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
@@ -290,7 +290,7 @@ class Chessboard:
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
         if init_piece_color!="none":
-            while X<7 and X>=0 and Y<7 and Y>=0 limit>0:
+            while X<7 and X>=0 and Y<7 and Y>=0 and limit>0:
                 X += 1
                 Y += 1
                 if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
@@ -308,7 +308,7 @@ class Chessboard:
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
         if init_piece_color!="none":
-            while Y<=7 and Y>0 and X<=7 and X>0 limit>0:
+            while Y<=7 and Y>0 and X<=7 and X>0 and limit>0:
                 Y -= 1
                 X -= 1
                 if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
@@ -326,7 +326,7 @@ class Chessboard:
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
         if init_piece_color!="none":
-            while Y<7 and Y>=0 and X<=7 and X>0 limit>0:
+            while Y<7 and Y>=0 and X<=7 and X>0 and limit>0:
                 Y -= 1
                 X += 1
                 if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
