@@ -183,23 +183,60 @@ class Chessboard:
         return (ord('8')-ord(notation[1]), ord(notation[0])-ord('a'))
 
     def make_move(self, initial_pos, final_pos):
+        indexes = self.return_index_as_touple(initial_pos)
+        X, Y = indexes[0], indexes[1]
+        # Check for special king moves!
+        if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
+            print("in1")
+            if self.convert_to_index(initial_pos).piece.color=="white":
+                print("in2")
+                # King side castle
+                if initial_pos=="e1" and final_pos=="g1":
+                    print("in4")
+                    if self.chessboard[X][Y+1].piece.color=="none" and self.chessboard[X][Y+2].piece.color=="none":
+                        print("int5")
+                        self.force_move_private("e1", "g1")
+                        self.force_move_private("h1", "f1")
+                # Queen side castle
+                if initial_pos=="e1" and final_pos=="c1":
+                    if self.chessboard[X][Y-1].piece.color=="none" and self.chessboard[X][Y-2].piece.color=="none":
+                        self.force_move_private("e1", "c1")
+                        self.force_move_private("a1", "d1")
+            if self.convert_to_index(initial_pos).piece.color=="black":
+                # King side castle
+                if initial_pos=="e8" and final_pos=="g8":
+                    if self.chessboard[X][Y+1].piece.color=="none" and self.chessboard[X][Y+2].piece.color=="none":
+                        self.force_move_private("e8", "g8")
+                        self.force_move_private("h8", "f8")
+                # Queen side castle
+                if initial_pos=="e8" and final_pos=="c8":
+                    if self.chessboard[X][Y-1].piece.color=="none" and self.chessboard[X][Y-2].piece.color=="none":
+                        self.force_move_private("e8", "c8")
+                        self.force_move_private("a8", "d8")
+        else:
+            self.make_move_private(initial_pos, final_pos)
+
+    def force_move_private(self, initial_pos, final_pos):
+        obj = self.convert_to_index(initial_pos)
+        temp_piece = obj.piece
+        obj.piece = Blank(initial_pos)
+        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
+        obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
+            html_class = obj.html_class,
+            html_id = obj.html_id
+        )
+        obj = self.convert_to_index(final_pos)
+        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
+        obj.piece = temp_piece
+        obj.html_class += " " + obj.piece.label
+        obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
+            html_class = obj.html_class,
+            html_id = obj.html_id
+        )
+
+    def make_move_private(self, initial_pos, final_pos):
         if self.is_move_legal(initial_pos, final_pos):
-            obj = self.convert_to_index(initial_pos)
-            temp_piece = obj.piece
-            obj.piece = Blank(initial_pos)
-            obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
-            obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
-                html_class = obj.html_class,
-                html_id = obj.html_id
-            )
-            obj = self.convert_to_index(final_pos)
-            obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
-            obj.piece = temp_piece
-            obj.html_class += " " + obj.piece.label
-            obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
-                html_class = obj.html_class,
-                html_id = obj.html_id
-            )
+            self.force_move_private(initial_pos, final_pos)
         else:
             raise InvalidMoveError("Invalid Move!")
 
@@ -386,7 +423,7 @@ class Chessboard:
         return move_list
 
     def generate_knight_moves(self, initial_pos):
-        return []
+        return ["f3", "c3", "c6", "f6"]
 
     def is_move_legal(self, initial_pos, final_pos):
         # Will make use of generate legal move only.
@@ -398,7 +435,7 @@ class Chessboard:
         piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
         # returns a dictionary of valid final positions for a particular piece
         if piece_label=="K":
-            return self.make_orthogonal_moves(initial_pos, limit=1)
+            return self.make_orthogonal_moves(initial_pos, limit=1) + self.make_diagonal_moves(initial_pos, limit=1)
         elif piece_label=="Q":
             return self.make_diagonal_moves(initial_pos) + self.make_orthogonal_moves(initial_pos)
         elif piece_label=="R":
