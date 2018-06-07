@@ -176,10 +176,7 @@ def flipBoard():
 @login_required
 def make_move(move):
     positions = move.split('-')
-    try:
-        chessboard.make_move(positions[0], positions[1])
-    except:
-        return 
+    chessboard.make_move(positions[0], positions[1])
     board = chessboard.draw_chessboard()
     return jsonify({'board': board})
 
