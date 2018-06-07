@@ -425,7 +425,16 @@ class Chessboard:
         return move_list
 
     def generate_knight_moves(self, initial_pos):
-        return ["f3", "c3", "c6", "f6"]
+        move_list = []
+        possible_skew_moves = [(2, 1), (-2, 1), (2, -1), (-2, -1), (1, 2), (-1, 2), (1, -2), (-1, -2)]
+        indexes = self.return_index_as_touple(initial_pos)
+        X, Y = indexes[0], indexes[1]
+        for move in possible_skew_moves:
+            if X+move[0] <=7 and X+move[0]>=0 and Y+move[1] <= 7 and Y+move[1]>=0:
+                if self.chessboard[X+move[0]][Y+move[1]].piece.color != self.convert_to_index(initial_pos).piece.color:
+                    move_list.append(self.chessboard[X+move[0]][Y+move[1]].html_id)
+        print(move_list)
+        return move_list
 
     def is_move_legal(self, initial_pos, final_pos):
         # Will make use of generate legal move only.
