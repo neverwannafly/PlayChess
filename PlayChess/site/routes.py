@@ -178,9 +178,7 @@ def make_move(move):
     positions = move.split('-')
     try:
         chessboard.make_move(positions[0], positions[1])
-        print("me!!")
     except:
-        print("me!!!")
         return 
     board = chessboard.draw_chessboard()
     return jsonify({'board': board})
