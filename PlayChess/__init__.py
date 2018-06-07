@@ -22,3 +22,7 @@ create_new_admin = new_admin
 app.register_blueprint(site.routes.mod)
 app.register_blueprint(admin.routes.mod, url_prefix='/admin')
 app.register_blueprint(blog.routes.mod, url_prefix='/blog')
+
+# Makes chess board easily accessible thorugh terminal
+
+from PlayChess.site.chessboard import Chessboard
