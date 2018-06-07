@@ -200,7 +200,8 @@ class Chessboard:
                 html_class = obj.html_class,
                 html_id = obj.html_id
             )
-        return InvalidMoveError("Invalid Move!")
+        else:
+            raise InvalidMoveError("Invalid Move!")
 
     def move_top(self, initial_pos, limit=10):
         indexes = self.return_index_as_touple(initial_pos)
@@ -322,7 +323,7 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
-        while Y<7 and Y>=0 and X<=7 and X>0 and limit>0:
+        while Y<=7 and Y>0 and X<7 and X>=0 and limit>0:
             Y -= 1
             X += 1
             if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
