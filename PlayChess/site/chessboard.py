@@ -187,14 +187,10 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         # Check for special king moves!
         if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
-            print("in1")
             if self.convert_to_index(initial_pos).piece.color=="white":
-                print("in2")
                 # King side castle
                 if initial_pos=="e1" and final_pos=="g1":
-                    print("in4")
                     if self.chessboard[X][Y+1].piece.color=="none" and self.chessboard[X][Y+2].piece.color=="none":
-                        print("int5")
                         self.force_move_private("e1", "g1")
                         self.force_move_private("h1", "f1")
                 # Queen side castle

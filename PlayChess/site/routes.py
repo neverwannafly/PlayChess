@@ -21,10 +21,6 @@ from . import chessboard
 db = database.db
 users = db.users # object pointing to users database!
 
-obj = users.find_one({
-    'username':'neverwannafly'
-})
-
 #initialises a class object, current user that can load, update, read and delete a user data!
 current_user = classes.User(users)
 
