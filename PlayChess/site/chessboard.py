@@ -433,7 +433,6 @@ class Chessboard:
             if X+move[0] <=7 and X+move[0]>=0 and Y+move[1] <= 7 and Y+move[1]>=0:
                 if self.chessboard[X+move[0]][Y+move[1]].piece.color != self.convert_to_index(initial_pos).piece.color:
                     move_list.append(self.chessboard[X+move[0]][Y+move[1]].html_id)
-        print(move_list)
         return move_list
 
     def is_move_legal(self, initial_pos, final_pos):
