@@ -24,7 +24,7 @@ $(document).ready(function(){
             $.ajax({
                 url: url,
                 error : function(xhr, status, error) {
-                    alert("Please enter a valid move!");
+                    console.log("Please enter valid move!");
                 },
             })
             .done(function(data){
