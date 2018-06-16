@@ -149,6 +149,7 @@ def verify(username):
 
 # Route to resend verification mail to user
 @mod.route('/verify/retry', methods=["POST"])
+@logout_required
 def retry():
     response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
     return jsonify({response: response})
