@@ -5,8 +5,14 @@ Makes the web application modular!
 """
 
 from flask import Flask
+from .config import configurations
 
 app = Flask(__name__)
+
+# Add configurations
+
+app.secret_key = configurations['_SECRET_KEY']
+app.config['JSON_SORT_KEYS'] = False
 
 from PlayChess.site.routes import mod
 from PlayChess.admin.routes import mod
