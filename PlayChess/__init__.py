@@ -32,3 +32,7 @@ app.register_blueprint(blog.routes.mod, url_prefix='/blog')
 # Makes chess board easily accessible thorugh terminal
 
 from PlayChess.site.chessboard import Chessboard
+
+# Make database accessible for unit testing
+
+from PlayChess.database import db
