@@ -6,14 +6,17 @@
     <li>User verification via emailID</li>
     <li>Admin dashboard</li>
     <li>Creating new admin through command line</li>
-    <li>Functional chessboard (Click based moves)</li>
+    <li>Functional chessboard with basic legal move check</li>
+    <li>Unit testing</li>
 </ul>
 
 ## Check Points
 These are the likely goals I would like to achieve in the near future
 <ul>
     <li>Implement necessary styling till now</li>
-    <li><strong>Add check for legal/illegal moves</strong></li>
+    <li>Make user profile page for logged in users</li>
+    <li><strong>Castling/Enpassant/Pawn promotion</strong></li>
+    <li><strong>Game room stacks for playing game</strong></li>
 </ul>
 
 ## Hosting
