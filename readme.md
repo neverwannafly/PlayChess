@@ -105,6 +105,7 @@ This would run all the unit tests present in files starting with prefix test*.py
 ```python
 from .client import login
 from .client import client
+
 def test_your_custom_view(client):
     login(client)
     # Now proceed with your tests
@@ -116,6 +117,7 @@ def test_your_custom_view(client):
 ```python
 from PlayChess import Chessboard
 from .client import client
+
 def test_chessboard(client):
     chessboard = Chessboard()
     # Now proceed testing this instance of Chessboard class
@@ -127,6 +129,7 @@ def test_chessboard(client):
 ```python
 from PlayChess import db
 from .client import client
+
 def test_database(client):
     # Now proceed with your tests.
     # To access database, just use this db instance (db is a PyMongo instance)
@@ -149,6 +152,11 @@ $ python run.py
 <li>goto localhost:5000/ on your browser and mendle around with the app!</li>
 <li>To exit the application, press Ctrl+C</li>
 <li>Do drop in your suggestions via pull requests <3 </li>
+<li>You can also run the app from gunicorn by using the following command and going to http://127.0.0.1:8000
+    
+```shell
+$ gunicorn run:app
+```
 </ul>
 
 ## Import Closures
