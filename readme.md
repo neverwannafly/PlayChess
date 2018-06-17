@@ -86,8 +86,46 @@ $ python manage.py <_ADMIN_USERNAME> <_ADMIN_PASSWORD>
 <li><strong> NOTE : blog route is under development and encountering bugs is possible if you access the blog application. If you encounter any errors, please exit the application and start again! </strong></li>
 </ul>
 
-## Testing the app
-To test the current implementations of the app-><br>
+## Testing
+Unit tests are written in Tests folder. You're free to add your own unit tests and improve app's
+vulnerability to unwanted bugs on changes. To run unit tests, simply write the following 
+command in command line -><br>
+```
+$ pytest
+```
+This would run all the unit tests present in files starting with prefix test*.py.<br>
+#### Important notes while making unit tests
+<ul>
+<li> It's important for the test file and the testing methods to start with the prefix "test" for pytest to detect them and run the tests. </li>
+<li> If you want to test on protected views, import login from client.py and and call login method before writing tests.</li>
+```
+from .client import login
+from .client import client
+def test_your_custom_view(client):
+    login(client)
+    # Now proceed with your tests
+```
+<li>If you want to test some functionality of chessboard which doesnt have a route, you can just import the chessboard class and perform tests on it</li>
+```
+from PlayChess import Chessboard
+from .client import client
+def test_chessboard(client):
+    chessboard = Chessboard()
+    # Now proceed testing this instance of Chessboard class
+```
+<li>You can also access the database in testing. Just import the db instance from PlayChess module</li>
+```
+from PlayChess import db
+from .client import client
+def test_database(client):
+    # Now proceed with your tests.
+    # To access database, just use this db instance (db is a PyMongo instance)
+    # Eg-> To search a user, db.users.find_one({"username": "abc"})
+```
+</ul>
+
+## Running the App
+To run this flask app-><br>
 <ul>
 <li>Download the zip or fork the repo</li>
 <li>Go to the main directory(where run.py is) through terminal and run the following commands-></li>
