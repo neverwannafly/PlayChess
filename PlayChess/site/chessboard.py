@@ -427,10 +427,12 @@ class Chessboard:
                 move_list.append(self.chessboard[tempX][tempY].html_id)
                 limit -= 1
             # check for captures at top-right and top-left
-            if self.chessboard[X-1][Y+1].piece.color == "black":
-                move_list.append(self.chessboard[X-1][Y+1].html_id)
-            if self.chessboard[X-1][Y-1].piece.color == "black":
-                move_list.append(self.chessboard[X-1][Y-1].html_id)
+            if X-1<=7 and Y+1<=7:
+                if self.chessboard[X-1][Y+1].piece.color == "black":
+                    move_list.append(self.chessboard[X-1][Y+1].html_id)
+            if X-1<=7 and Y-1>=0:
+                if self.chessboard[X-1][Y-1].piece.color == "black":
+                    move_list.append(self.chessboard[X-1][Y-1].html_id)
         else:
             if int(self.convert_to_index(initial_pos).html_id[1])==7:
                 limit=2
@@ -443,10 +445,12 @@ class Chessboard:
                 move_list.append(self.chessboard[tempX][tempY].html_id)
                 limit -= 1
             # check for captures at bottom-right and bottom-left
-            if self.chessboard[X+1][Y-1].piece.color == "white":
-                move_list.append(self.chessboard[X+1][Y-1].html_id)
-            if self.chessboard[X+1][Y+1].piece.color == "white":
-                move_list.append(self.chessboard[X+1][Y+1].html_id)
+            if X+1>=0 and Y-1>=0:
+                if self.chessboard[X+1][Y-1].piece.color == "white":
+                    move_list.append(self.chessboard[X+1][Y-1].html_id)
+            if X+1>=0 and Y+1<=7:
+                if self.chessboard[X+1][Y+1].piece.color == "white":
+                    move_list.append(self.chessboard[X+1][Y+1].html_id)
         return move_list
 
     def generate_knight_moves(self, initial_pos):
