@@ -1,4 +1,3 @@
-import PlayChess
 from .client import client
 
 import string
