@@ -72,6 +72,7 @@ class King(Piece):
 class Blank(Piece):
     def __init__(self, current_position):
         super().__init__()
+        self.points = 0
         self.current_position = current_position
         self.color = "none"
         self.label = self.color + "-" + "_"
@@ -196,11 +197,182 @@ class Chessboard:
     def return_index_as_touple(self, notation):
         return (ord('8')-ord(notation[1]), ord(notation[0])-ord('a'))
 
+    def checks(self,initial_pos,square_color):
+        indexes= self.return_index_as_touple(initial_pos)
+        X,Y = indexes[0], indexes[1]
+        square_in_check= False
+        #horizontal checks from rooks and queen
+        for j in range(Y-1,-1,-1):
+            if self.chessboard[X][j].piece.points==9 or self.chessboard[X][j].piece.points== 5:
+                if self.chessboard[X][j].piece.color!=square_color:
+                    square_in_check = True
+                    break
+
+            elif self.chessboard[X][j].piece.points!=0:
+                square_in_check=False
+                break
+
+        if square_in_check==False:
+            for j in range(Y+1,8):
+                if self.chessboard[X][j].piece.points==9 or self.chessboard[X][j].piece.points== 5:
+                    if self.chessboard[X][j].piece.color!=square_color:
+                        square_in_check= True
+                        break
+                elif self.chessboard[X][j].piece.points!=0:
+                    square_in_check= False
+                    break
+        #vertical checks from rooks and queen
+        if square_in_check==False:
+            for i in range(X-1,-1,-1):
+                if self.chessboard[i][Y].piece.points==9 or self.chessboard[i][Y].piece.points== 5:
+                    if self.chessboard[i][Y].piece.color!=square_color:
+                        square_in_check= True
+                        break
+                elif self.chessboard[i][Y].piece.points!=0:
+                    square_in_check= False
+                    break
+            if square_in_check==False:
+                for i in range(X+1,8):
+                    if self.chessboard[i][Y].piece.points==9 or self.chessboard[i][Y].piece.points== 5:
+                        if self.chessboard[i][Y].piece.color!=square_color:
+                            square_in_check= True
+                            break
+                    elif self.chessboard[i][Y].piece.points!=0:
+                        square_in_check= False
+                        break
+       
+        #diagonal checks from bishop and queen
+        if square_in_check==False:
+            countX=1
+            flag1=1
+            flag2=1
+            came_here=0
+            for j in range(Y-1,-1,-1):
+                if X-countX>=0:
+                    if flag1==1:
+                        if self.chessboard[X-countX][j].piece.points==9 or self.chessboard[X-countX][j].piece.label[-1]=="B":
+                            if self.chessboard[X-countX][j].piece.color!=square_color:
+                                square_in_check=True
+                                break
+                if X+countX<=7:
+                    if flag2==1:
+                        if self.chessboard[X+countX][j].piece.points==9 or self.chessboard[X+countX][j].piece.label[-1]=="B":
+                            if self.chessboard[X+countX][j].piece.color!=square_color:
+                                square_in_check=True
+                                break
+                if X-countX>=0:
+                    if self.chessboard[X-countX][j].piece.color!="none":
+                        flag1=0
+                if X+countX<=7:
+                    if self.chessboard[X+countX][j].piece.color!="none":
+                        flag2=0
+                if X-countX>=0:
+                    if self.chessboard[X-countX][j].piece.color=="none":
+                        countX+=1
+                        came_here=1
+                if X+countX<=7 and came_here==0:
+                    if self.chessboard[X+countX][j].piece.color=="none":
+                        countX+=1
+
+                if flag1==0 and flag2==0:
+                    square_in_check=False
+                    break
+
+        if square_in_check==False:
+            countX=1
+            flag1=1
+            flag2=1
+            came_here=0
+            for j in range(Y+1,8):
+                if X-countX>=0:
+                    if flag1==1:
+                        if self.chessboard[X-countX][j].piece.points==9 or self.chessboard[X-countX][j].piece.label[-1]=="B":
+                            if self.chessboard[X-countX][j].piece.color!=square_color:
+                                square_in_check=True
+                                break
+                if X+countX<=7:
+                    if flag2==1:
+                        if self.chessboard[X+countX][j].piece.points==9 or self.chessboard[X+countX][j].piece.label[-1]=="B":
+                            if self.chessboard[X+countX][j].piece.color!=square_color:
+                                square_in_check=True
+                                break
+                if X-countX>=0:
+                    if self.chessboard[X-countX][j].piece.color!="none":
+                        flag1=0
+                if X+countX<=7:
+                    if self.chessboard[X+countX][j].piece.color!="none":
+                        flag2=0
+                if X-countX>=0:
+                    if self.chessboard[X-countX][j].piece.color=="none":
+                        countX+=1
+                        came_here=1
+                elif X+countX<=7 and came_here==0:
+                    if self.chessboard[X+countX][j].piece.color=="none":
+                        countX+=1
+
+                if flag1==0 and flag2==0:
+                    square_in_check=False
+                    break
+
+       
+        #tricky knight checks
+        if square_in_check==False:
+            possible_skew_moves = [(2, 1), (-2, 1), (2, -1), (-2, -1), (1, 2), (-1, 2), (1, -2), (-1, -2)]
+            for move in possible_skew_moves:
+                if X+move[0] <=7 and X+move[0]>=0 and Y+move[1]<=7 and Y+move[1]>=0:
+                    if self.chessboard[X+move[0]][Y+move[1]].piece.label[-1]=="N":
+                        if self.chessboard[X+move[0]][Y+move[1]].piece.color!=square_color:
+                            square_in_check=True
+                            break
+        #pawn checks
+        if square_in_check==False:
+            if self.chessboard[X][Y].piece.color=="white":
+                if X-1>=0 and Y+1<=7:
+                    if self.chessboard[X-1][Y+1].piece.color=="black" and self.chessboard[X-1][Y+1].piece.label[-1]=="p":
+                        square_in_check= True
+                if X-1>=0 and Y-1>=0:
+                    if self.chessboard[X-1][Y-1].piece.color=="black" and self.chessboard[X-1][Y-1].piece.label[-1]=="p":
+                        square_in_check= True
+
+            if self.chessboard[X][Y].piece.color=="black":
+                if X+1<=7 and Y+1<=7:    
+                    if self.chessboard[X+1][Y+1].piece.color=="white" and self.chessboard[X+1][Y+1].piece.label[-1]=="p":
+                        square_in_check= True
+                if X+1<=7 and Y-1>=0:    
+                    if self.chessboard[X+1][Y-1].piece.color=="white" and self.chessboard[X+1][Y-1].piece.label[-1]=="p":
+                        square_in_check= True
+
+        return square_in_check
+
+    def king_chase(self,king_color):
+        index=(0,0)
+
+        for i in range(8):
+            for j in range(8):
+                if self.chessboard[i][j].piece.label[-1]=='K' and self.chessboard[i][j].piece.color==king_color:
+                    index= (i,j)
+                    break
+        notation_str = chr(index[1]+ord('a')) + chr(ord('8')-index[0])
+        return notation_str
+
+
+
     def make_move(self, initial_pos, final_pos):
         indexes = self.return_index_as_touple(initial_pos)
         X, Y = indexes[0], indexes[1]
-        # Check for special king moves!
+        init_color = self.chessboard[X][Y].piece.color
+
+        indexes2= self.return_index_as_touple(final_pos)
+        Xf,Yf = indexes2[0], indexes2[1]
+        fin_color= self.chessboard[Xf][Yf].piece.color
+        
         if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
+        #ensuring king safety - avoiding checks  
+            fin_color=init_color 
+            if self.checks(final_pos,fin_color)==False:
+                    self.make_move_private(initial_pos,final_pos)
+                
+        # Check for special king moves!
             if self.castling_rights_white["white_side_castled"] is not True and self.castling_rights_white["has_white_king_moved"] is not True:
                 if self.convert_to_index(initial_pos).piece.color=="white":
                     # King side castle
@@ -241,7 +413,14 @@ class Chessboard:
                             self.castling_rights_black["has_black_king_moved"] = True
                             self.castling_rights_black["has_a8_rook_moved"] = True
                             self.castling_rights_black["has_h8_rook_moved"] = True
-        self.make_move_private(initial_pos, final_pos)
+
+        else:
+            self.make_move_private(initial_pos,final_pos)
+            king_pos=self.king_chase(init_color)
+            if self.checks(king_pos,init_color)==True:
+                self.force_move_private(final_pos,initial_pos)
+                
+                
 
     # This method is to override legal moves generated by generate_legal_moves() method so as to innumerate
     # special chess moves like castling, en-passant, pawn promotion.
@@ -464,6 +643,7 @@ class Chessboard:
                     move_list.append(self.chessboard[X+move[0]][Y+move[1]].html_id)
         return move_list
 
+    
     def is_move_legal(self, initial_pos, final_pos):
         # Will make use of generate legal move only.
         if final_pos in self.generate_legal_moves(initial_pos):
@@ -472,9 +652,10 @@ class Chessboard:
 
     def generate_legal_moves(self, initial_pos):
         piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
+
         # returns a dictionary of valid final positions for a particular piece
         if piece_label=="K":
-            return self.make_orthogonal_moves(initial_pos, limit=1) + self.make_diagonal_moves(initial_pos, limit=1)
+            return self.make_orthogonal_moves(initial_pos,limit=1) + self.make_diagonal_moves(initial_pos,limit=1)       
         elif piece_label=="Q":
             return self.make_diagonal_moves(initial_pos) + self.make_orthogonal_moves(initial_pos)
         elif piece_label=="R":
