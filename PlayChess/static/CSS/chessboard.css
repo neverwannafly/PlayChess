@@ -68,6 +68,7 @@ body {
 }
 /** Provisional cell highlighting css. Should be used to highlight Legal moves!! **/
 td:hover {
+    cursor: pointer;
     filter: brightness(85%);
 }
 
