@@ -134,17 +134,13 @@ class Chessboard:
 
     @property
     def can_white_castle(self):
-        castling_flag = False
-        for key in castling_rights_white:
-            castling_flag &= castling_rights_white[key]
-        return castling_flag
+        castling_flag = (self.castling_rights_white["white_side_castled"]^self.castling_rights_white["has_white_king_moved"])^(self.castling_rights_white["has_a1_rook_moved"]&self.castling_rights_white["has_h1_rook_moved"])
+        return not castling_flag
 
     @property
     def can_black_castle(self):
-        castling_flag = True
-        for key in castling_rights_black:
-            castling_flag &= castling_rights_black[key]
-        return castling_flag
+        castling_flag = (self.castling_rights_black["black_side_castled"]^self.castling_rights_black["has_black_king_moved"])^(self.castling_rights_black["has_a8_rook_moved"]&self.castling_rights_black["has_h8_rook_moved"])
+        return not castling_flag
 
     def initialise_board(self):
         # White chess pieces
@@ -250,20 +246,22 @@ class Chessboard:
                     self.change_chessboard_state("h1", "f1")
                     self.castling_rights_white["white_side_castled"] = True
                 # Queen side castle
-                if initial_pos=="e1" and final_pos=="c1":
+                elif initial_pos=="e1" and final_pos=="c1":
                     self.change_chessboard_state("e1", "c1")
                     self.change_chessboard_state("a1", "d1")
                     self.castling_rights_white["white_side_castled"] = True
                 # King side castle
-                if initial_pos=="e8" and final_pos=="g8":
+                elif initial_pos=="e8" and final_pos=="g8":
                     self.change_chessboard_state("e8", "g8")
                     self.change_chessboard_state("h8", "f8")
                     self.castling_rights_black["black_side_castled"] = True
                 # Queen side castle
-                if initial_pos=="e8" and final_pos=="c8":
+                elif initial_pos=="e8" and final_pos=="c8":
                     self.change_chessboard_state("e8", "c8")
                     self.change_chessboard_state("a8", "d8")
                     self.castling_rights_black["black_side_castled"] = True
+                else:
+                    self.change_chessboard_state(initial_pos, final_pos)
             # If no special king move is encountered
             else:
                 self.change_chessboard_state(initial_pos, final_pos)
@@ -474,7 +472,7 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         # Check for special king moves!
         if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
-            if self.castling_rights_white["white_side_castled"] is not True and self.castling_rights_white["has_white_king_moved"] is not True and self.convert_to_index(initial_pos).piece.color=="white":
+            if self.can_white_castle and self.convert_to_index(initial_pos).piece.color=="white":
                 # King side castle
                 if initial_pos=="e1" and self.castling_rights_white["has_h1_rook_moved"] is not True:
                     if self.chessboard[X][Y+1].piece.color=="none" and self.chessboard[X][Y+2].piece.color=="none":
@@ -483,7 +481,7 @@ class Chessboard:
                 if initial_pos=="e1" and self.castling_rights_white["has_a1_rook_moved"] is not True:
                     if self.chessboard[X][Y-1].piece.color=="none" and self.chessboard[X][Y-2].piece.color=="none":
                         move_list.append("c1")
-            if self.castling_rights_black["black_side_castled"] is not True and self.castling_rights_black["has_black_king_moved"] is not True and self.convert_to_index(initial_pos).piece.color=="black":
+            if self.can_black_castle and self.convert_to_index(initial_pos).piece.color=="black":
                 # King side castle
                 if initial_pos=="e8" and self.castling_rights_black["has_h8_rook_moved"] is not True:
                     if self.chessboard[X][Y+1].piece.color=="none" and self.chessboard[X][Y+2].piece.color=="none":
@@ -495,7 +493,7 @@ class Chessboard:
         return move_list
 
     # Sets flags such as of castling rights
-    def mark_flags(self):
+    def mark_flags(self, initial_pos, final_pos):
         if self.can_white_castle and self.convert_to_index(initial_pos).piece.color=="white":
             # Check if piece moved is king
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
@@ -520,6 +518,7 @@ class Chessboard:
             
     def is_move_legal(self, initial_pos, final_pos):
         # Will make use of generate legal move only.
+        print(self.generate_legal_moves(initial_pos))
         if final_pos in self.generate_legal_moves(initial_pos):
             self.mark_flags(initial_pos, final_pos)
             return True
