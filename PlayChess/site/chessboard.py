@@ -3,6 +3,8 @@
 # Define a class for chessboard pieces with necessary members and methods.
 # This would serve as the parent class for other pieces.
 
+import sys
+
 from .exceptions import InvalidMoveError
 
 class Piece:
@@ -124,8 +126,10 @@ class Chessboard:
             "has_h8_rook_moved": False,
         }
 
-        self.enpassant_target = None
-        
+        self.enpassant_target_square = None
+        self.enpassant_flag_life = 0
+        self.moves = 0
+
         self.configuration = 1
         # config of 2 means chessboard is drawn for white player at bottom!
         # config of 1 means chessboard is drawn for black player at bottom!
@@ -211,8 +215,29 @@ class Chessboard:
     def make_move(self, initial_pos, final_pos):
         try:
             self.make_move_private(initial_pos, final_pos)
+            self.moves += 1
+            if self.enpassant_flag_life >= 1:
+                self.enpassant_flag_life = 0
+                self.enpassant_target_square = None
+            elif self.enpassant_target_square:
+                self.enpassant_flag_life += 1
         except InvalidMoveError as error:
             print(error)
+
+    # Need to be used for pawn promotion, en-passant and board editor
+    def delete_piece(self, piece_position):
+        obj = self.convert_to_index(piece_position)
+        obj.piece = Blank(piece_position)
+        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
+        obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
+            html_class = obj.html_class,
+            html_id = obj.html_id
+        )
+
+    # Can be used for simple Board Editor
+    def create_piece(self, piece_position, piece_color, piece_name):
+        obj = self.convert_to_index(piece_position)
+        obj.piece = getattr(sys.modules[__name__], piece_name)(piece_position, piece_color)
 
     # This method changes the current state of board, i.e modifies id's and classes of 
     # class members of Sqaure class and also change the values of chessboard array.
@@ -262,7 +287,17 @@ class Chessboard:
                     self.castling_rights_black["black_side_castled"] = True
                 else:
                     self.change_chessboard_state(initial_pos, final_pos)
-            # If no special king move is encountered
+            # Check for special pawn moves - enpassant
+            elif self.convert_to_index(initial_pos).piece.label.split('-')[1]=="p":
+                if self.enpassant_target_square is not None:
+                    # Black attacked pawn -> 6, white attacked pawn -> 3
+                    if self.enpassant_target_square[1]=="6":
+                        direction = -1
+                    elif self.enpassant_target_square[1]=="3":
+                        direction = 1
+                    attacked_pawn = self.enpassant_target_square[0] + str(int(self.enpassant_target_square[1])+direction)
+                    self.delete_piece(attacked_pawn)
+                self.change_chessboard_state(initial_pos, final_pos)
             else:
                 self.change_chessboard_state(initial_pos, final_pos)
         else:
@@ -411,6 +446,7 @@ class Chessboard:
         move_list += self.move_left(initial_pos, limit=limit) + self.move_right(initial_pos, limit=limit) + self.move_top(initial_pos, limit=limit) + self.move_bottom(initial_pos, limit=limit)
         return move_list
 
+    # This could be optimised by excluding the need to check colors!
     def generate_pawn_moves(self, initial_pos):
         move_list = []
         indexes = self.return_index_as_touple(initial_pos)
@@ -430,10 +466,14 @@ class Chessboard:
                 limit -= 1
             # check for captures at top-right and top-left
             if X-1<=7 and Y+1<=7:
-                if self.chessboard[X-1][Y+1].piece.color == "black":
+                if self.enpassant_target_square==self.chessboard[X-1][Y+1].html_id:
+                    move_list.append(self.enpassant_target_square)
+                elif self.chessboard[X-1][Y+1].piece.color == "black":
                     move_list.append(self.chessboard[X-1][Y+1].html_id)
             if X-1<=7 and Y-1>=0:
-                if self.chessboard[X-1][Y-1].piece.color == "black":
+                if self.enpassant_target_square==self.chessboard[X-1][Y-1].html_id:
+                    move_list.append(self.enpassant_target_square)
+                elif self.chessboard[X-1][Y-1].piece.color == "black":
                     move_list.append(self.chessboard[X-1][Y-1].html_id)
         else:
             if int(self.convert_to_index(initial_pos).html_id[1])==7:
@@ -448,10 +488,14 @@ class Chessboard:
                 limit -= 1
             # check for captures at bottom-right and bottom-left
             if X+1>=0 and Y-1>=0:
-                if self.chessboard[X+1][Y-1].piece.color == "white":
+                if self.enpassant_target_square==self.chessboard[X+1][Y-1].html_id:
+                    move_list.append(self.enpassant_target_square)
+                elif self.chessboard[X+1][Y-1].piece.color == "white":
                     move_list.append(self.chessboard[X+1][Y-1].html_id)
             if X+1>=0 and Y+1<=7:
-                if self.chessboard[X+1][Y+1].piece.color == "white":
+                if self.enpassant_target_square==self.chessboard[X+1][Y+1].html_id:
+                    move_list.append(self.enpassant_target_square)
+                elif self.chessboard[X+1][Y+1].piece.color == "white":
                     move_list.append(self.chessboard[X+1][Y+1].html_id)
         return move_list
 
@@ -492,8 +536,24 @@ class Chessboard:
                         move_list.append("c8")
         return move_list
 
-    # Sets flags such as of castling rights
-    def mark_flags(self, initial_pos, final_pos):
+    # Sets flags such as of castling rights, enpassant
+    def set_flags(self, initial_pos, final_pos):
+        # Set Enpassant Flags
+        indexes = self.return_index_as_touple(final_pos)
+        old_indexes = self.return_index_as_touple(initial_pos)
+        X, Y = indexes[0], indexes[1]
+        oX, oY = old_indexes[0], old_indexes[1]
+        if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="p":
+            if abs(int(final_pos[1])-int(initial_pos[1]))==2:
+                direction = (int(final_pos[1])-int(initial_pos[1]))//2
+                if Y+1<=7:
+                    if self.chessboard[X][Y+1].piece.label.split('-')[1]=='p' and self.chessboard[oX][oY].piece.color!=self.chessboard[X][Y+1].piece.color:
+                        self.enpassant_target_square = self.chessboard[X+direction][Y].html_id
+                if Y-1>=0:
+                    if self.chessboard[X][Y-1].piece.label.split('-')[1]=='p' and self.chessboard[oX][oY].piece.color!=self.chessboard[X][Y-1].piece.color:
+                        self.enpassant_target_square = self.chessboard[X+direction][Y].html_id
+
+        # Set Castling Flags
         if self.can_white_castle and self.convert_to_index(initial_pos).piece.color=="white":
             # Check if piece moved is king
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
@@ -518,9 +578,8 @@ class Chessboard:
             
     def is_move_legal(self, initial_pos, final_pos):
         # Will make use of generate legal move only.
-        print(self.generate_legal_moves(initial_pos))
         if final_pos in self.generate_legal_moves(initial_pos):
-            self.mark_flags(initial_pos, final_pos)
+            self.set_flags(initial_pos, final_pos)
             return True
         return False
 
