@@ -1,7 +1,7 @@
 # You can also pass arguments to this file to register a new admin!
 # Note that you must pass valid arguments only!
 
-from PlayChess import create_new_admin
+from PlayChess import create_admin, db
 import re as regex
 import sys
 
@@ -10,7 +10,7 @@ USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 if len(sys.argv)==3:
     valid_username = bool(regex.match(USERNAME_REGEX, sys.argv[1]))
     if valid_username:
-        if create_new_admin.createAdmin(sys.argv[1], sys.argv[2]):
+        if create_admin(db, sys.argv[1], sys.argv[2]):
             print("Admin added successfully to database!")
         else:
             print("This username already exits! Please try again!")
@@ -24,7 +24,7 @@ elif len(sys.argv)==1:
         admin_password = str(input())
         valid_username = bool(regex.match(USERNAME_REGEX, admin_username))
         if valid_username:
-            if create_new_admin.createAdmin(admin_username, admin_password):
+            if create_admin(db, admin_username, admin_password):
                 print("Admin added successfully to database!")
                 break
             else:
