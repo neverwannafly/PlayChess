@@ -24,6 +24,8 @@ These are the likely goals I would like to achieve in the near future
 ## Hosting
 Curently the live view of application is hosted on https://playchesswebsite.herokuapp.com/<br>
 Feel free to check it out. <br>
+NOTE: THIS FOR SOME REASONS DOESNT WORK!
+Please check out issues and share your knowledge if you know a fix!
 
 ## <a name="env"></a>Setting up virtual env
 #### For UNIX based devices(linux/mac)
