@@ -112,7 +112,7 @@ class LightSquare(Square):
 # Defines the final layout of the chessboard!
 class Chessboard:
     def __init__(self):
-        
+
         self.castling_rights_white = {
             "white_side_castled": False,
             "has_white_king_moved": False,
@@ -216,9 +216,9 @@ class Chessboard:
 
     def swap_board(self):
         if self.configuration == 1:
-            return self.draw_chessboard_for_black()
+            self.configuration = 2
         else:
-            return self.draw_chessboard_for_white()
+            self.configuration = 1
 
     def convert_to_index(self, notation):
         return self.chessboard[ord('8')-ord(notation[1])][ord(notation[0])-ord('a')]
@@ -237,6 +237,7 @@ class Chessboard:
                 self.enpassant_flag_life += 1
         except InvalidMoveError as error:
             print(error)
+        return
 
     # Need to be used for pawn promotion, en-passant and board editor
     def delete_piece(self, piece_position):
@@ -313,7 +314,6 @@ class Chessboard:
                     elif self.enpassant_target_square[1]=="3":
                         direction = 1
                     attacked_pawn = self.enpassant_target_square[0] + str(int(self.enpassant_target_square[1])+direction)
-                    print(attacked_pawn)
                     self.delete_piece(attacked_pawn)
                 self.change_chessboard_state(initial_pos, final_pos)
             else:
