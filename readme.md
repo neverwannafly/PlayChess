@@ -1,5 +1,7 @@
 # PlayChess WebApp
 
+[![Build Status](https://travis-ci.org/neverwannafly/PlayChess.svg?branch=master)](https://travis-ci.org/neverwannafly/PlayChess)
+
 ## Current Features
 <ul>
     <li>User registration and login</li>
