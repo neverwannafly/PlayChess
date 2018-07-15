@@ -2,6 +2,7 @@ from .client import client
 from .client import login
 
 def test_legal_pawn_moves(client):
+    # Simple Pawn Moves
     login(client)
     pawn_e4 = client.get('/makemove/e2-e4')
     assert pawn_e4.status_code==200
@@ -17,7 +18,13 @@ def test_legal_pawn_moves(client):
     ]
     for test_case in corner_pawn_moves:
         assert test_case.status_code==200
-    # Add tests for enpassant later
+    # Enpassant
+    client.get('/makemove/c7-c5')
+    client.get('/makemove/c2-c4')
+    pawn_elapsed_ep = client.get('/makemove/d5-c6')
+    
+
+
 
 def test_castling(client):
     login(client)
