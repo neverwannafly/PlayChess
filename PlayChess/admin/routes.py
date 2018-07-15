@@ -9,6 +9,11 @@ import random
 
 mod = Blueprint('admin', __name__, template_folder='admin_templates')
 
+# Global admin dict to keep track of admins
+ADMIN_DICT = {
+
+}
+
 # regex to verify email addresses and usernames!
 EMAIL_PATTERN_COMPILED = regex.compile("^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$")
 USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
@@ -16,9 +21,7 @@ USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 from .. import database
 db = database.db
 
-from . import classes
-current_admin = classes.Admin(db) # initialise an admin object to be able to load admin!
-new_admin = classes.Admin(db) # initialise an admin object to be able to make a new admin!
+from .classes import Admin, loadAdmin
 
 # login_required and logout_required decorators that ensure certain url's confront to 
 # respective wanted behaviors!
@@ -29,8 +32,6 @@ def login_required(view_function):
     def wrapper(*args, **kwargs):
         admin_username = session.get('admin_username')
         if admin_username:
-            # if there's an admin in session, set the current_admin to that admin!
-            current_admin.loadAdmin(session['admin_username'])
             return view_function(*args, **kwargs)
         else:
             return redirect(url_for('admin.login'))
@@ -47,13 +48,24 @@ def logout_required(view_function):
             return view_function(*args, **kwargs)
     return wrapper
 
+@mod.before_app_first_request
+def get_admin():
+    if session.get('admin_username'):
+        ADMIN_DICT['current_admin_'+str(session['admin_username'])] = loadAdmin(db, session['admin_username'])
+
+@mod.before_request
+def init():
+    print(ADMIN_DICT)
+
 @mod.route('/', methods=['POST', 'GET'])
 @logout_required
 def login():
     if request.method=='POST':
-        if current_admin.loadAdmin(request.form['admin_username']):
+        current_admin = loadAdmin(db, request.form['admin_username'])
+        if current_admin:
             if hash_pass.hashpw(request.form['admin_password'].encode('utf-8'), current_admin.admin_password)==current_admin.admin_password:
                 session['admin_username'] = current_admin.admin_username
+                ADMIN_DICT['current_admin_'+str(session['admin_username'])] = current_admin
                 return redirect(url_for('admin.dashboard'))
             return render_template('admin_login.html', error_code=2)
         return render_template('admin_login.html', error_code=1)
@@ -63,17 +75,20 @@ def login():
 @mod.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
+    current_admin = ADMIN_DICT['current_admin_'+str(session['admin_username'])]
     return render_template('dashboard.html', error_code=0, admin=current_admin.admin_username)
 
 @mod.route('/table')
 @login_required
 def table():
+    current_admin = ADMIN_DICT['current_admin_'+str(session['admin_username'])]
     user_data = current_admin.loadAllUsers()
     return render_template('table.html', user_data=user_data)
 
 @mod.route('/add', methods=['POST'])
 @login_required
 def add():
+    current_admin = ADMIN_DICT['current_admin_'+str(session['admin_username'])]
     user_data = current_admin.loadAllUsers()
     if bool(regex.match(EMAIL_PATTERN_COMPILED, request.form['email'])) and bool(regex.match(USERNAME_REGEX, request.form['username'])):
         isUserInsertionSuccessful = current_admin.createUser(
@@ -92,12 +107,14 @@ def add():
 @mod.route('/delete', methods=['POST'])
 @login_required
 def delete():
+    current_admin = ADMIN_DICT['current_admin_'+str(session['admin_username'])]
     current_admin.deleteUser(request.form['username'])
     return redirect(url_for('admin.table'))
 
 @mod.route('/update', methods=['POST'])
 @login_required
 def update():
+    current_admin = ADMIN_DICT['current_admin_'+str(session['admin_username'])]
     current_admin.updateUserDetails(
         request.form["username"], 
         request.form["email"], 
@@ -120,4 +137,5 @@ def update():
 @login_required
 def logout():
     session.pop('admin_username')
+    ADMIN_DICT.pop('current_admin_'+str(session['admin_username']))
     return redirect(url_for('admin.login'))
