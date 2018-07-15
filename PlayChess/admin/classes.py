@@ -6,37 +6,10 @@ class Admin:
 
     # A class to create an admin user instant!
 
-    def __init__(self, db):
-        self.admin_username = ""
-        self.admin_password = ""
+    def __init__(self, admin_username, admin_password, db):
+        self.admin_username = admin_username
+        self.admin_password = admin_password
         self.db = db
-
-    # loads an admin from the databse!
-    def loadAdmin(self, admin_username):
-        if admin_username is not None:
-            admin = self.db.admin.find_one({
-                'admin_username': admin_username
-            })
-            if admin:
-                self.admin_username = admin['admin_username']
-                self.admin_password = admin['admin_password']
-                return 1
-            return 0
-        return -1
-    
-    # creates a new admin for the site!
-    # This command is only supported through the commandline!
-    def createAdmin(self, admin_username, admin_password):
-        doesUserNameExist = self.db.admin.find_one({
-            'admin_username': admin_username
-        })
-        if doesUserNameExist is None:
-            self.db.admin.insert_one({
-                'admin_username': admin_username,
-                'admin_password': hash_pass.hashpw(admin_password.encode('utf-8'), hash_pass.gensalt())
-            })
-            return 1
-        return 0
 
     # Lets the admin create a new user to be added to database!
     # An user added by admin will always be verified!
@@ -97,3 +70,29 @@ class Admin:
         if userUpdate:
             return True
         return False
+
+
+# creates a new admin for the site!
+# This command is only supported through the commandline!
+def create_admin(db, admin_username, admin_password):
+        doesUserNameExist = db.admin.find_one({
+            'admin_username': admin_username
+        })
+        if doesUserNameExist is None:
+            db.admin.insert_one({
+                'admin_username': admin_username,
+                'admin_password': hash_pass.hashpw(admin_password.encode('utf-8'), hash_pass.gensalt())
+            })
+            return 1
+        return 0
+
+def loadAdmin(db, admin_username):
+        if admin_username is not None:
+            admin = db.admin.find_one({
+                'admin_username': admin_username
+            })
+            if admin:
+                admin_username = admin['admin_username']
+                admin_password = admin['admin_password']
+                return Admin(admin_username, admin_password, db)
+        return None
