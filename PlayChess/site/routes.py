@@ -152,6 +152,7 @@ def verify(username):
         if request.form['activation_link'].strip(' ')==current_user._id:
             session['username'] = current_user.username
             current_user.updateUserVerificationStatus()
+            USER_DICT['current_user_' + str(session['username'])] = current_user
             return redirect(url_for('site.index'))
         return render_template('verify.html', username=username ,error_code=1)
     return render_template('verify.html', username=username, error_code=0)
