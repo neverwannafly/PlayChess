@@ -7,22 +7,24 @@ import random
 
 mod = Blueprint('site', __name__, template_folder='templates')
 
+USER_DICT = {
+
+}
+
 # Regex expression for email and username verification
 EMAIL_PATTERN_COMPILED = regex.compile("^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$")
 # Username regex also limits the string to be b/w 5 and 30!
 USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 
 # Relative imports
+from .classes import User, addNewUserToDatabase, loadUser
 from .. import database
-from . import classes
 from . import chessboard
+from .. import config
 
 # Database initialisation
 db = database.db
 users = db.users # object pointing to users database!
-
-#initialises a class object, current user that can load, update, read and delete a user data!
-current_user = classes.User(users)
 
 # Custom login_required decorator
 def login_required(view_function):
@@ -31,7 +33,6 @@ def login_required(view_function):
         username = session.get('username')
         if username:
             # if there's a user in session, set the current_user to that user!
-            current_user.loadUser(session['username'])
             return view_function(*args, **kwargs)
         else:
             return redirect(url_for('site.login'))
@@ -49,31 +50,39 @@ def logout_required(view_function):
     return wrapper
 
 # Make users to be logged in for 5 days!
-@mod.before_request
+@mod.before_app_first_request
 def make_session_permanent():
     session.permanent = True
     mod.permanent_session_lifetime = timedelta(days=5)
+    if session.get('username'):
+        USER_DICT['current_user_'+str(session['username'])] = loadUser(users, session['username'])[0]
+
+@mod.before_request
+def init():
+    print(USER_DICT)
 
 ### View functions start ###
 
 @mod.route('/')
 @login_required
 def index():
+    current_user = USER_DICT['current_user_' + str(session['username'])]
     return render_template('index.html', user=current_user)
 
 @mod.route('/login', methods=['GET', 'POST'])
 @logout_required
 def login():
     if request.method=='POST':
-        isLoadSuccessful = current_user.loadUser(request.form['username'])
-        if isLoadSuccessful==1:
-            if hash_pass.hashpw(request.form['password'].encode('utf-8'), current_user.password)==current_user.password:
+        user = loadUser(users, request.form['username'])
+        if user[0] and user[1]==1:
+            if hash_pass.hashpw(request.form['password'].encode('utf-8'), user[0].password)==user[0].password:
                 session['username'] = request.form['username']
+                USER_DICT['current_user_' + str(session['username'])] = user[0]
                 return redirect(url_for('site.index'))
             else:
                 return render_template('login.html', error_code=-3, script=None)
-        elif isLoadSuccessful==0:
-            return redirect(url_for('site.verify', username=current_user.username))
+        elif user[1]==0:
+            return redirect(url_for('site.verify', username=user[0].username))
         return render_template('login.html', error_code=-1, script=None)
     return render_template('login.html', error_code=0, script=None)
 
@@ -110,20 +119,21 @@ def register():
                 random_image = "/static/Images/profile_pics/" + str(random.randint(1, 17)) + ".png"
                 hash_password = hash_pass.hashpw(request.form['password'].encode('utf-8'), hash_pass.gensalt())
                 # This method adds an user to database and sends a verification mail!
-                response = current_user.addNewUserToDatabase(
+                addNewUserToDatabase(
                     request.form['username'], 
                     hash_password, 
                     request.form['email'], 
                     random_image, 
                     request.form['first_name'], 
                     request.form['last_name'], 
+                    users,
                 )
+                current_user = loadUser(users, request.form['username'])[0]
                 #Send email verification
                 response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
                 if response:
                     return redirect(url_for('site.verify', username=current_user.username))
                 else:
-                    current_user.deleteUser()
                     return render_template('login.html', error_code=6, script=script)
             return render_template('login.html', error_code=5, script=script)
         elif existing_email:
@@ -137,50 +147,50 @@ def register():
 @mod.route('/verify/<username>', methods=['GET', 'POST'])
 @logout_required
 def verify(username):
+    current_user = loadUser(users, username)[0]
     if request.method=='POST':
         if request.form['activation_link'].strip(' ')==current_user._id:
             session['username'] = current_user.username
-            current_user.updateUserVerificationStatus(username)
+            current_user.updateUserVerificationStatus()
             return redirect(url_for('site.index'))
         return render_template('verify.html', username=username ,error_code=1)
-    if current_user.username!=username:
-        current_user.loadUser(username)
     return render_template('verify.html', username=username, error_code=0)
 
 # Route to resend verification mail to user
-@mod.route('/verify/retry', methods=["POST"])
+@mod.route('/verify/<username>/retry', methods=["POST"])
 @logout_required
-def retry():
+def retry(username):
+    current_user = loadUser(users, username)[0]
     response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
     return jsonify({response: response})
 
 # Initialises a chessboard
-chessboard = chessboard.Chessboard()
 
 @mod.route('/board')
 @login_required
 def board():
-    new_chess_board = chessboard.draw_chessboard_for_white()
+    new_chess_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return render_template('chessboard.html', chessboard=new_chess_board)
 
 @mod.route('/board/flip')
 @login_required
 def flipBoard():
-    flipped_board = chessboard.swap_board()
+    USER_DICT['current_user_' + str(session['username'])].chessboard.swap_board()
+    flipped_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": flipped_board})
 
 @mod.route('/makemove/<move>')
 @login_required
 def make_move(move):
     positions = move.split('-')
-    chessboard.make_move(positions[0], positions[1])
-    board = chessboard.draw_chessboard()
+    USER_DICT['current_user_' + str(session['username'])].chessboard.make_move(positions[0], positions[1])
+    board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({'board': board})
 
 # logout routine
 @mod.route('/logout')
 @login_required
 def logout():
+    USER_DICT.pop('current_user_' + str(session['username']))
     session.pop('username')
-    chessboard.reset_chessboard()
     return redirect(url_for('site.login'))
