@@ -130,11 +130,25 @@ class Chessboard:
         self.enpassant_flag_life = 0
         self.moves = 0
 
+        self.king_position_white = "e1"
+        self.king_position_black = "e8"
+
         self.configuration = 1
         # config of 2 means chessboard is drawn for white player at bottom!
         # config of 1 means chessboard is drawn for black player at bottom!
         self.chessboard = self.create_chessboard()
         self.initialise_board()
+
+    def is_square_under_attack(self, square):
+        indexes = self.return_index_as_touple(square)
+        X, Y = indexes[0], indexes[1]
+        # Check along horizontal
+
+        # Check along vertical
+
+        # Check along the diagonal
+
+        # Check at skew positions
 
     @property
     def can_white_castle(self):
@@ -145,7 +159,7 @@ class Chessboard:
     def can_black_castle(self):
         castling_flag = (self.castling_rights_black["black_side_castled"]^self.castling_rights_black["has_black_king_moved"])^(self.castling_rights_black["has_a8_rook_moved"]&self.castling_rights_black["has_h8_rook_moved"])
         return not castling_flag
-
+            
     def initialise_board(self):
         # White chess pieces
         white_rooks = [Rook("a1", "white"), Rook("h1", "white")]
@@ -289,20 +303,23 @@ class Chessboard:
                     self.change_chessboard_state(initial_pos, final_pos)
             # Check for special pawn moves - enpassant
             elif self.convert_to_index(initial_pos).piece.label.split('-')[1]=="p":
-                if self.enpassant_target_square is not None:
+                ini_index = self.return_index_as_touple(initial_pos)
+                fin_index = self.return_index_as_touple(final_pos)
+                diagonal_flag = abs(ini_index[0]-fin_index[0]) & abs(ini_index[1]-fin_index[1])
+                if self.enpassant_target_square is not None and diagonal_flag:
                     # Black attacked pawn -> 6, white attacked pawn -> 3
                     if self.enpassant_target_square[1]=="6":
                         direction = -1
                     elif self.enpassant_target_square[1]=="3":
                         direction = 1
                     attacked_pawn = self.enpassant_target_square[0] + str(int(self.enpassant_target_square[1])+direction)
+                    print(attacked_pawn)
                     self.delete_piece(attacked_pawn)
                 self.change_chessboard_state(initial_pos, final_pos)
             else:
                 self.change_chessboard_state(initial_pos, final_pos)
         else:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
-                
 
     def move_top(self, initial_pos, limit=10):
         indexes = self.return_index_as_touple(initial_pos)
@@ -552,6 +569,7 @@ class Chessboard:
                 if Y-1>=0:
                     if self.chessboard[X][Y-1].piece.label.split('-')[1]=='p' and self.chessboard[oX][oY].piece.color!=self.chessboard[X][Y-1].piece.color:
                         self.enpassant_target_square = self.chessboard[X+direction][Y].html_id
+        print(self.enpassant_target_square)
 
         # Set Castling Flags
         if self.can_white_castle and self.convert_to_index(initial_pos).piece.color=="white":
