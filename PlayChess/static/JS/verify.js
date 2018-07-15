@@ -6,7 +6,7 @@ $(document).ready(function(){
         $("#header-text").text("Resending...");
         $.ajax({
             type: "POST",
-            url: "retry"
+            url: window.location.pathname + "/retry",
         })
         .done(function(data){
             $(".loader").hide();
