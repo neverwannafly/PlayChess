@@ -22,7 +22,7 @@ from PlayChess.blog.routes import mod
 
 # makes an instance of admin class that can be used to add new admins!
 
-from PlayChess.admin.classes import create_admin
+from PlayChess.admin.admins import create_admin
 
 # Register the blueprints!
 
