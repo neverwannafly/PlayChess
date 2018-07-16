@@ -1,3 +1,5 @@
+<p align="center"><img src="logo/PlayChess.png" alt="PlayChess" height="150px"></p>
+
 # PlayChess WebApp
 
 [![Build Status](https://travis-ci.org/neverwannafly/PlayChess.svg?branch=master)](https://travis-ci.org/neverwannafly/PlayChess)
