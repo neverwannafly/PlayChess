@@ -21,7 +21,7 @@ USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 from .. import database
 db = database.db
 
-from .classes import Admin, loadAdmin
+from .admins import Admin, loadAdmin
 
 # login_required and logout_required decorators that ensure certain url's confront to 
 # respective wanted behaviors!
