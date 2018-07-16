@@ -17,7 +17,7 @@ EMAIL_PATTERN_COMPILED = regex.compile("^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-
 USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 
 # Relative imports
-from .classes import User, addNewUserToDatabase, loadUser
+from .users import User, addNewUserToDatabase, loadUser
 from .. import database
 from . import chessboard
 from .. import config
