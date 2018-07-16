@@ -50,8 +50,7 @@ def logout_required(view_function):
 
 @mod.before_app_first_request
 def get_admin():
-    if session.get('admin_username'):
-        ADMIN_DICT['current_admin_'+str(session['admin_username'])] = loadAdmin(db, session['admin_username'])
+    pass
 
 @mod.before_request
 def init():
