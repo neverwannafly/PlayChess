@@ -19,20 +19,16 @@ a:active {
     float: left;
 }
 
-iframe {
-    width: 607px;
-    height: 672px;
-}
 .chessboard {
-    position: absolute;
-    right: 12%;
-    top: 6%;
     float: right;
 }
+
 .user {
     float: left;
     margin-left: 5%;
     margin-top: 10%;
+    margin-right: 5%;
+    min-width: 20%;
     width: 30%;
 }
 .button {

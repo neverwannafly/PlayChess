@@ -19,8 +19,6 @@ time, mark, audio, video {
     margin: 0;
     padding: 0;
     border: 0;
-    font-size: 100%;
-    font: inherit;
     vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -47,6 +45,8 @@ table {
     border-collapse: collapse;
     padding: 0px;
     table-layout: fixed;
+    width: 520px;
+    height: 520px;
 }
 
 body {
@@ -54,8 +54,8 @@ body {
 }
 .square {
     display: block;
-    height: 75px !important;
-    width: 75px !important;
+    height: 65px !important;
+    width: 65px !important;
 }
 .light {
     background-color: rgb(255, 254, 223);
