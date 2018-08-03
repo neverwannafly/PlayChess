@@ -1,7 +1,11 @@
 "use strict";
 
-$(document).ready(function() {
-    $(".button").click(function(){
-        alert("Under development!");
-    })
-});
+(function(){
+    
+    $(document).ready(function() {
+        $(".button").click(function(){
+            alert("Under development!");
+        })
+    });
+
+})();
