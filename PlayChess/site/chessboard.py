@@ -243,7 +243,7 @@ class Chessboard:
     def delete_piece(self, piece_position):
         obj = self.convert_to_index(piece_position)
         obj.piece = Blank(piece_position)
-        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
+        obj.html_class = obj.piece.label
         obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
             html_class = obj.html_class,
             html_id = obj.html_id
@@ -260,13 +260,14 @@ class Chessboard:
         obj = self.convert_to_index(initial_pos)
         temp_piece = obj.piece
         obj.piece = Blank(initial_pos)
-        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
+        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p")
+        obj.html_class += " " + obj.piece.label
         obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
             html_class = obj.html_class,
             html_id = obj.html_id
         )
         obj = self.convert_to_index(final_pos)
-        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p_")
+        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-pnone_-")
         obj.piece = temp_piece
         obj.html_class += " " + obj.piece.label
         obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
