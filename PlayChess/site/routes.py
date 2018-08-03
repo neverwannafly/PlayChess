@@ -68,8 +68,9 @@ def init():
 @mod.route('/')
 @login_required
 def index():
+    new_chess_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     current_user = USER_DICT['current_user_' + str(session['username'])]
-    return render_template('index.html', user=current_user)
+    return render_template('index.html', user=current_user, board=new_chess_board)
 
 @mod.route('/login', methods=['GET', 'POST'])
 @logout_required
@@ -169,12 +170,6 @@ def retry(username):
 
 # Initialises a chessboard
 
-@mod.route('/board')
-@login_required
-def board():
-    new_chess_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
-    return render_template('chessboard.html', chessboard=new_chess_board)
-
 @mod.route('/board/flip')
 @login_required
 def flipBoard():
@@ -187,11 +182,14 @@ def flipBoard():
 def make_move(move):
     positions = move.split('-')
     try:
-        USER_DICT['current_user_' + str(session['username'])].chessboard.make_move(positions[0], positions[1])
+        changes = USER_DICT['current_user_' + str(session['username'])].chessboard.make_move(positions[0], positions[1])
     except InvalidMoveError as error:
         print(error)
         return jsonify({'success': False})
-    return jsonify({'success': True})
+    return jsonify({
+        'success': True,
+        'changes': changes,
+    })
 
 # logout routine
 @mod.route('/logout')
