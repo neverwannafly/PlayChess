@@ -113,6 +113,9 @@ class LightSquare(Square):
 class Chessboard:
     def __init__(self):
 
+        # An array holding recent changes in board position
+        self.changes = []
+
         self.castling_rights_white = {
             "white_side_castled": False,
             "has_white_king_moved": False,
@@ -227,6 +230,7 @@ class Chessboard:
         return (ord('8')-ord(notation[1]), ord(notation[0])-ord('a'))
 
     def make_move(self, initial_pos, final_pos):
+        self.changes = []
         try:
             self.make_move_private(initial_pos, final_pos)
             self.moves += 1
@@ -237,17 +241,19 @@ class Chessboard:
                 self.enpassant_flag_life += 1
         except InvalidMoveError as error:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
-        return
+        return self.changes
 
     # Need to be used for pawn promotion, en-passant and board editor
     def delete_piece(self, piece_position):
         obj = self.convert_to_index(piece_position)
         obj.piece = Blank(piece_position)
-        obj.html_class = obj.piece.label
+        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p")
+        obj.html_class += " " + obj.piece.label
         obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
             html_class = obj.html_class,
             html_id = obj.html_id
         )
+        self.changes.append({'pos': piece_position, 'class': obj.html_class})
 
     # Can be used for simple Board Editor
     def create_piece(self, piece_position, piece_color, piece_name):
@@ -266,6 +272,7 @@ class Chessboard:
             html_class = obj.html_class,
             html_id = obj.html_id
         )
+        self.changes.append({'pos': initial_pos, 'class': obj.html_class})
         obj = self.convert_to_index(final_pos)
         obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-pnone_-")
         obj.piece = temp_piece
@@ -274,6 +281,7 @@ class Chessboard:
             html_class = obj.html_class,
             html_id = obj.html_id
         )
+        self.changes.append({'pos': final_pos, 'class': obj.html_class})
 
     def make_move_private(self, initial_pos, final_pos):
         if self.is_move_legal(initial_pos, final_pos):
