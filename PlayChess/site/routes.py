@@ -22,6 +22,8 @@ from .. import database
 from . import chessboard
 from .. import config
 
+from .exceptions import InvalidMoveError
+
 # Database initialisation
 db = database.db
 users = db.users # object pointing to users database!
@@ -184,9 +186,12 @@ def flipBoard():
 @login_required
 def make_move(move):
     positions = move.split('-')
-    USER_DICT['current_user_' + str(session['username'])].chessboard.make_move(positions[0], positions[1])
-    board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
-    return jsonify({'board': board})
+    try:
+        USER_DICT['current_user_' + str(session['username'])].chessboard.make_move(positions[0], positions[1])
+    except InvalidMoveError as error:
+        print(error)
+        return jsonify({'success': False})
+    return jsonify({'success': True})
 
 # logout routine
 @mod.route('/logout')
