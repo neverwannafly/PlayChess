@@ -236,7 +236,7 @@ class Chessboard:
             elif self.enpassant_target_square:
                 self.enpassant_flag_life += 1
         except InvalidMoveError as error:
-            print(error)
+            raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
         return
 
     # Need to be used for pawn promotion, en-passant and board editor
