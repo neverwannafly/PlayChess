@@ -75,24 +75,24 @@ class Admin:
 # creates a new admin for the site!
 # This command is only supported through the commandline!
 def create_admin(db, admin_username, admin_password):
-        doesUserNameExist = db.admin.find_one({
-            'admin_username': admin_username
+    doesUserNameExist = db.admin.find_one({
+        'admin_username': admin_username
+    })
+    if doesUserNameExist is None:
+        db.admin.insert_one({
+            'admin_username': admin_username,
+            'admin_password': hash_pass.hashpw(admin_password.encode('utf-8'), hash_pass.gensalt())
         })
-        if doesUserNameExist is None:
-            db.admin.insert_one({
-                'admin_username': admin_username,
-                'admin_password': hash_pass.hashpw(admin_password.encode('utf-8'), hash_pass.gensalt())
-            })
-            return 1
-        return 0
+        return 1
+    return 0
 
 def loadAdmin(db, admin_username):
-        if admin_username is not None:
-            admin = db.admin.find_one({
-                'admin_username': admin_username
-            })
-            if admin:
-                admin_username = admin['admin_username']
-                admin_password = admin['admin_password']
-                return Admin(admin_username, admin_password, db)
-        return None
+    if admin_username is not None:
+        admin = db.admin.find_one({
+            'admin_username': admin_username
+        })
+        if admin:
+            admin_username = admin['admin_username']
+            admin_password = admin['admin_password']
+            return Admin(admin_username, admin_password, db)
+    return None
