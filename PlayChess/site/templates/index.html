@@ -3,8 +3,10 @@
     Home
 {% endblock %}
 {% block includes %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/chessboard.css')}}"></link>
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/index.css')}}">
     <script src="{{ url_for('static', filename='JS/index.js')}}"></script>
+    <script src="{{ url_for('static', filename='JS/chessboard.js')}}"></script>
 {% endblock %}
 {% block body %}
     <div class="user">
@@ -19,7 +21,12 @@
         </div>
     </div>
     <div class="chessboard">
-        <iframe scrolling="no" src="{{url_for('site.board')}}" frameborder="0"></iframe>
+        <table>
+            <tbody>
+                {{board|safe}}
+            </tbody>
+        </table>
+        <button type="button" class="btn-primary btn btn-block flipButton">Flip</button>
         <button class="btn btn-success btn-block button">Find Game</button>
     </div>
 
