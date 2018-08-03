@@ -3,9 +3,11 @@
 
 from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 import bcrypt as hash_pass
-from functools import wraps
 import re as regex
 import random
+
+from functools import wraps
+from datetime import timedelta
 
 mod = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -49,8 +51,11 @@ def logout_required(view_function):
     return wrapper
 
 @mod.before_app_first_request
-def get_admin():
-    pass
+def make_session_permanent():
+    session.permanent = True
+    mod.permanent_session_lifetime = timedelta(days=5)
+    if session.get('admin_username'):
+        USER_DICT['current_admin_'+str(session['admin_username'])] = loadAdmin(db, session['admin_username'])
 
 @mod.before_request
 def init():
@@ -135,6 +140,6 @@ def update():
 @mod.route('/logout')
 @login_required
 def logout():
-    session.pop('admin_username')
     ADMIN_DICT.pop('current_admin_'+str(session['admin_username']))
+    session.pop('admin_username')
     return redirect(url_for('admin.login'))
