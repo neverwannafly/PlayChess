@@ -15,29 +15,35 @@
         var initial_pos, final_pos;
 
         $(document).on('click', '.square', function(e){
-            var target = $(e.target), article;
+            const target = $(e.target);
             if(incrementClick()%2!=0) {
                 initial_pos = $(target).attr('id');
             }
             else {
                 final_pos = $(target).attr('id');
-                var url = "makemove/" + initial_pos + "-" + final_pos;
+                const url = "makemove/" + initial_pos + "-" + final_pos;
                 $.ajax({
                     url: url,
-                    error : function(xhr, status, error) {
-                        console.log(xhr, status, error);
-                        console.log("Please enter valid move!");
-                    },
                 })
-                .done(function(data){
-                    $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-                })
+                .done( (data) => {
+                    if (data["success"]) {
+                        make_move(data['changes']);
+                    }
+                    else {
+                        console.log("Invalid Move!");
+                    }
+                });
             }
         });
     });
 
-    function make_move(initial_pos, final_pos) {
-
+    function make_move(changes) {
+        for (var i=0; i<changes.length; i++) {
+            const square_id = "#" + changes[i]['pos'];
+            const square_class = changes[i]['class'];
+            $(square_id).removeClass("white-K white-Q white-R white-B white-N white-p black-K black-Q black-R black-B black-N black-p");
+            $(square_id).addClass(square_class);
+        }
     }
 
     var incrementClick = (function(){
@@ -46,4 +52,5 @@
             return counter += 1;
         }
     })();
+
 })();
