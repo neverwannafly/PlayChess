@@ -183,6 +183,12 @@ def resetBoard():
     reset_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": reset_board})
 
+@mod.route('/generateLegalMoves/<init_pos>')
+@login_required
+def generateLegalMoves(init_pos):
+    moves = USER_DICT['current_user_' + str(session['username'])].chessboard.generate_legal_moves(init_pos);
+    return jsonify({'moves': moves})
+
 @mod.route('/makemove/<move>')
 @login_required
 def make_move(move):
