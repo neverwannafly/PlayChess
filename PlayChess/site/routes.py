@@ -1,9 +1,10 @@
+import random
+
 from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 from datetime import timedelta
-from functools import wraps
+
 import bcrypt as hash_pass
 import re as regex
-import random
 
 mod = Blueprint('site', __name__, template_folder='templates')
 
@@ -18,8 +19,8 @@ USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 
 # Relative imports
 from .users import User, addNewUserToDatabase, loadUser
+from .decorators import login_required, logout_required
 from .. import database
-from . import chessboard
 from .. import config
 
 from .exceptions import InvalidMoveError
@@ -27,28 +28,6 @@ from .exceptions import InvalidMoveError
 # Database initialisation
 db = database.db
 users = db.users # object pointing to users database!
-
-# Custom login_required decorator
-def login_required(view_function):
-    @wraps(view_function)
-    def wrapper(*args, **kwargs):
-        username = session.get('username')
-        if username:
-            return view_function(*args, **kwargs)
-        else:
-            return redirect(url_for('site.login'))
-    return wrapper
-
-# logout required decorator to access register and login page!
-def logout_required(view_function):
-    @wraps(view_function)
-    def wrapper(*args, **kwargs):
-        username = session.get('username')
-        if username:
-            return redirect(url_for('site.index'))
-        else:
-            return view_function(*args, **kwargs)
-    return wrapper
 
 # Make users to be logged in for 5 days!
 @mod.before_app_first_request
