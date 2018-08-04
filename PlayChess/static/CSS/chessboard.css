@@ -41,7 +41,6 @@ q:before, q:after {
     content: none;
 }
 table {
-    border: 2px solid black;
     border-collapse: collapse;
     padding: 0px;
     table-layout: fixed;
@@ -66,10 +65,14 @@ body {
 .flipButton {
     margin-top: 4%;
 }
-/** Provisional cell highlighting css. Should be used to highlight Legal moves!! **/
-td:hover {
+
+.highlighted-cell {
     cursor: pointer;
     filter: brightness(85%);
+}
+
+.active-square {
+    filter: brightness(5%);
 }
 
 /** CSS for chess pieces **/
