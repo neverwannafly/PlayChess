@@ -13,11 +13,21 @@
         });
 
         var initial_pos, final_pos;
+        var squares = null;
 
         $(document).on('click', '.square', (event) => {
             const target = $(event.target);
             if(incrementClick()%2!=0) {
                 initial_pos = $(target).attr('id');
+                $("#"+initial_pos).addClass("active-cell");
+                const url = "generateLegalMoves/" + initial_pos;
+                $.ajax({
+                    url: url,
+                })
+                .done( (data)=> {
+                    squares = data['moves'];
+                    highlightSquares(squares);
+                });
             }
             else {
                 final_pos = $(target).attr('id');
@@ -32,6 +42,8 @@
                     else {
                         console.log("Invalid Move!");
                     }
+                    removeHighlight(squares);
+                    $("#"+initial_pos).removeClass("active-cell");
                 });
             }
         });
@@ -49,15 +61,29 @@
         }
     }
 
+    function highlightSquares(squares) {
+        for (var i=0; i<squares.length; i++) {
+            const square_id = "#" + squares[i];
+            $(square_id).addClass('highlighted-cell');
+        }
+    }
+
+    function removeHighlight(squares) {
+        for (var i=0; i<squares.length; i++) {
+            const square_id = "#" + squares[i];
+            $(square_id).removeClass('highlighted-cell');
+        }
+    }
+
     function mouseIn() {
         const square = $(this).find('.square');
         if (!$(square).hasClass("none-_") || $(square).hasClass("active-square")) {
-            square.addClass("highlighted-cell");
+            square.addClass("hover-cell");
         }
     }
 
     function mouseOut() {
-        $(this).find('.square').removeClass("highlighted-cell");
+        $(this).find('.square').removeClass("hover-cell");
     }
 
     var incrementClick = (function(){
