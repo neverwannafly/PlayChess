@@ -65,7 +65,7 @@ def init():
 ### View functions start ###
 
 @mod.route('/')
-# @login_required
+@login_required
 def index():
     new_chess_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     current_user = USER_DICT['current_user_' + str(session['username'])]
@@ -170,14 +170,14 @@ def retry(username):
 # Initialises a chessboard
 
 @mod.route('/board/flip')
-# @login_required
+@login_required
 def flipBoard():
     USER_DICT['current_user_' + str(session['username'])].chessboard.swap_board()
     flipped_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": flipped_board})
 
 @mod.route('/makemove/<move>')
-# @login_required
+@login_required
 def make_move(move):
     positions = move.split('-')
     try:
