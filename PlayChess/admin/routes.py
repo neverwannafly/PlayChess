@@ -1,12 +1,11 @@
 ### IMPORTANT NOTE ###
 # Admins should only be created through command line!
+import random
 
 from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 import bcrypt as hash_pass
 import re as regex
-import random
 
-from functools import wraps
 from datetime import timedelta
 
 mod = Blueprint('admin', __name__, template_folder='admin_templates')
@@ -24,31 +23,7 @@ from .. import database
 db = database.db
 
 from .admins import Admin, loadAdmin
-
-# login_required and logout_required decorators that ensure certain url's confront to 
-# respective wanted behaviors!
-
-# Custom login_required decorator
-def login_required(view_function):
-    @wraps(view_function)
-    def wrapper(*args, **kwargs):
-        admin_username = session.get('admin_username')
-        if admin_username:
-            return view_function(*args, **kwargs)
-        else:
-            return redirect(url_for('admin.login'))
-    return wrapper
-
-# logout required decorator to access admin login!
-def logout_required(view_function):
-    @wraps(view_function)
-    def wrapper(*args, **kwargs):
-        admin_username = session.get('admin_username')
-        if admin_username:
-            return redirect(url_for('admin.dashboard'))
-        else:
-            return view_function(*args, **kwargs)
-    return wrapper
+from .decorators import login_required, logout_required
 
 @mod.before_app_first_request
 def make_session_permanent():
