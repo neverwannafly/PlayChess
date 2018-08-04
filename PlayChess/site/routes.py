@@ -176,6 +176,13 @@ def flipBoard():
     flipped_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": flipped_board})
 
+@mod.route('/board/reset')
+@login_required
+def resetBoard():
+    USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard()
+    reset_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
+    return jsonify({"board": reset_board})
+
 @mod.route('/makemove/<move>')
 @login_required
 def make_move(move):
