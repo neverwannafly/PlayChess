@@ -55,6 +55,9 @@ def logout_required(view_function):
 def make_session_permanent():
     session.permanent = True
     mod.permanent_session_lifetime = timedelta(days=5)
+    
+@mod.before_app_first_request
+def load_user_from_session():
     if session.get('username'):
         USER_DICT['current_user_'+str(session['username'])] = loadUser(users, session['username'])[0]
 
