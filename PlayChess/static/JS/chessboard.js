@@ -19,7 +19,7 @@
             const target = $(event.target);
             if(incrementClick()%2!=0) {
                 initial_pos = $(target).attr('id');
-                $("#"+initial_pos).addClass("active-cell");
+                    $("#"+initial_pos).addClass("active-cell");
                 const url = "generateLegalMoves/" + initial_pos;
                 $.ajax({
                     url: url,
