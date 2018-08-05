@@ -1,4 +1,4 @@
-<p align="center"><img src="logo/PlayChess.png" alt="PlayChess" height="150px"></p>
+<p align="center"><img src="PlayChess/static/logo/PlayChess.png" alt="PlayChess" height="150px"></p>
 
 # PlayChess WebApp
 
