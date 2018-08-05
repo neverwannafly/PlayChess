@@ -26,6 +26,10 @@ a:active {
     min-width: 520px;
 }
 
+.logo {
+    margin-top: 20%;
+}
+
 .user {
     float: left;
     margin-left: 5%;
@@ -36,4 +40,9 @@ a:active {
 }
 .button {
     margin-top: 0%;
+}
+
+#logo-image {
+    height: 100px;
+    width: 100px;
 }

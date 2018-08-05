@@ -19,6 +19,11 @@
         <div class="container">
             <a href="{{url_for('site.logout')}}"><button type="button" class="btn-warning btn btn-block">Logout</button></a>
         </div>
+        <div class="logo">
+            <div class="container">
+                <img id="logo-image" src="{{ url_for('static', filename='Images/logo/PlayChess1.png') }}" alt="PlayChess">
+            </div>
+        </div>
     </div>
     <div class="chessboard">
         <table class="no-spacing" cellspacing="0">
