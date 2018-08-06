@@ -196,10 +196,10 @@ def make_move(move):
     })
 
 # Handle game loading here
-# @mod.route('/find/game')
-# @login_required
-# def find_players():
-    
+@mod.route('/find/game')
+@login_required
+def find_players():
+    pass
 
 
 # logout routine
