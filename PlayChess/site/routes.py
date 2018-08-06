@@ -199,7 +199,17 @@ def make_move(move):
 @mod.route('/find/game')
 @login_required
 def find_players():
-    pass
+    if session.get('username'):
+        username = session['username']
+        while True:
+            message = PLAYERS_QUEUE.add_to_queue(username)
+            PLAYERS_QUEUE.print_queue()
+            if message.code:
+                print(message.message)
+                print(message.info)
+                break
+            time.sleep(1)
+    return jsonify({"Weeeheeee": "Teeeheeee"})
 
 
 # logout routine
