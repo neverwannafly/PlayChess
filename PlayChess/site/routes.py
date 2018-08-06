@@ -1,6 +1,5 @@
 import time
 import random
-from games_queue import GameQueue
 
 from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 from datetime import timedelta, datetime
@@ -18,8 +17,6 @@ ONGOING_GAMES = {
 
 }
 
-PLAYERS_QUEUE = GameQueue()
-
 # Regex expression for email and username verification
 EMAIL_PATTERN_COMPILED = regex.compile("^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$")
 # Username regex also limits the string to be b/w 5 and 30!
@@ -29,10 +26,14 @@ USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 from .game import Game
 from .users import User, addNewUserToDatabase, loadUser
 from .decorators import login_required, logout_required
+from .game_queue import GameQueue
 from .. import database
 from .. import config
 
 from .exceptions import InvalidMoveError
+
+# Keeps track of players finding matches.
+PLAYERS_QUEUE = GameQueue()
 
 # Database initialisation
 db = database.db
