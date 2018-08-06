@@ -17,11 +17,11 @@ class GameQueue:
             return ComprehensiveMessage("2 Players in the Queue!", 2, success=True)
 
         else:
-            return ComprehensiveMessage("Game Queue Full!", -1)
+            return ComprehensiveMessage("Game Queue Full!", 0)
 
     def _generate_url(self):
         self._queue.sort()
-        url = "{0}-{1}".format(_queue[0], _queue[1])
+        url = "{0}-{1}".format(self._queue[0], self._queue[1])
         return url
 
     def add_to_queue(self, player):
@@ -30,7 +30,9 @@ class GameQueue:
             print(addition.message)
             url = self._generate_url()
             del self._queue[:]
-            return url
+            addition.info = url
 
-        print(addition.message)
-        return None
+        return addition
+
+    def print_queue(self):
+        print(self._queue)
