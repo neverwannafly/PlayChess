@@ -9,30 +9,40 @@
     <script src="{{ url_for('static', filename='JS/chessboard.js')}}"></script>
 {% endblock %}
 {% block body %}
-    <div class="user">
-        <div class="container">
-            <div class="jumbotron">
-                <img src="{{ user.image }}"></img>
-                <h3>Welcome {{user.username}}</h3>
-            </div>
-        </div>
-        <div class="container">
-            <a href="{{url_for('site.logout')}}"><button type="button" class="btn-warning btn btn-block">Logout</button></a>
-        </div>
-        <div class="logo">
+    <div class="main">
+        <div class="user">
             <div class="container">
-                <img id="logo-image" src="{{ url_for('static', filename='Images/logo/PlayChess1.png') }}" alt="PlayChess">
+                <div class="jumbotron">
+                    <img src="{{ user.image }}"></img>
+                    <h3>Welcome <span id="username">{{user.username}}</span></h3>
+                </div>
             </div>
+            <div class="container">
+                <a href="{{url_for('site.logout')}}"><button type="button" class="btn-warning btn btn-block">Logout</button></a>
+            </div>
+            <div class="logo">
+                <div class="container">
+                    <img id="logo-image" src="{{ url_for('static', filename='Images/logo/PlayChess1.png') }}" alt="PlayChess">
+                </div>
+            </div>
+        </div>
+        <div class="chessboard">
+            <table class="no-spacing" cellspacing="0">
+                <tbody>
+                    {{board|safe}}
+                </tbody>
+            </table>
+            <button type="button" class="btn-primary btn btn-block flipButton">Flip</button>
+            <button id="find-game" class="btn btn-success btn-block">Find Game</button>
         </div>
     </div>
-    <div class="chessboard">
-        <table class="no-spacing" cellspacing="0">
-            <tbody>
-                {{board|safe}}
-            </tbody>
-        </table>
-        <button type="button" class="btn-primary btn btn-block flipButton">Flip</button>
-        <button class="btn btn-success btn-block button">Find Game</button>
+    <div class="game-loader">
+        <center>
+            <div class="container">
+                <img src="{{ url_for('static', filename='Images/loading_gifs/game-finder.gif') }}" alt="finding-game">
+            </div>
+            Finding Game!
+        </center>
     </div>
 
 {% endblock %}

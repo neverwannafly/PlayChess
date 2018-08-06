@@ -1,10 +1,21 @@
 "use strict";
 
 (function(){
-    
+
     $(document).ready(function() {
-        $(".button").click(function(){
-            alert("Under development!");
+
+        $(".game-loader").hide();
+
+        $("#find-game").click(function(){
+            $(".main").hide();
+            $(".game-loader").show();
+            $.ajax({
+                url: '/find/game',
+                type: 'GET'
+            })
+            .done( (data) => {
+                
+            });
         })
     });
 
