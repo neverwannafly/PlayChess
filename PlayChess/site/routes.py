@@ -1,7 +1,9 @@
+import time
 import random
+from games_queue import GameQueue
 
 from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 import bcrypt as hash_pass
 import re as regex
@@ -12,12 +14,19 @@ USER_DICT = {
 
 }
 
+ONGOING_GAMES = {
+
+}
+
+PLAYERS_QUEUE = GameQueue()
+
 # Regex expression for email and username verification
 EMAIL_PATTERN_COMPILED = regex.compile("^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$")
 # Username regex also limits the string to be b/w 5 and 30!
 USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 
 # Relative imports
+from .game import Game
 from .users import User, addNewUserToDatabase, loadUser
 from .decorators import login_required, logout_required
 from .. import database
@@ -45,13 +54,6 @@ def init():
     print(USER_DICT)
 
 ### View functions start ###
-
-@mod.route('/')
-@login_required
-def index():
-    new_chess_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
-    current_user = USER_DICT['current_user_' + str(session['username'])]
-    return render_template('index.html', user=current_user, board=new_chess_board)
 
 @mod.route('/login', methods=['GET', 'POST'])
 @logout_required
@@ -149,7 +151,14 @@ def retry(username):
     response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
     return jsonify({response: response})
 
-# Initialises a chessboard
+## Index Page
+
+@mod.route('/')
+@login_required
+def index():
+    new_chess_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
+    current_user = USER_DICT['current_user_' + str(session['username'])]
+    return render_template('index.html', user=current_user, board=new_chess_board)
 
 @mod.route('/board/flip')
 @login_required
@@ -184,6 +193,13 @@ def make_move(move):
         'success': True,
         'changes': changes,
     })
+
+# Handle game loading here
+# @mod.route('/find/game')
+# @login_required
+# def find_players():
+    
+
 
 # logout routine
 @mod.route('/logout')
