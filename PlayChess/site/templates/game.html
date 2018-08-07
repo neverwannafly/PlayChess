@@ -5,9 +5,21 @@
 {% endblock %}
 
 {% block includes %}
-    
+    <script src="{{ url_for('static', filename='JS/game.js') }}"></script>
+    <script src="{{ url_for('static', filename='JS/chessboard.js') }}"></script>
 {% endblock %}
 
 {% block body %}
-    Hello {{ player1 }} and {{ player2 }}!!
+<div class="container">
+    <div class="header">
+        Hello {{ player1 }} and {{ player2 }}!!
+    </div>
+    <div class="chessboard">
+        <table class="no-spacing" cellspacing="0">
+            <tbody>
+                {{board|safe}}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
