@@ -40,5 +40,8 @@ class GameQueue:
 
         return addition
 
+    def remove(self, username):
+        self._queue.remove(username)
+
     def print_queue(self):
         print(self._queue)
