@@ -22,7 +22,7 @@
                     type: 'error',
                     title: 'Sorry...',
                     text: 'No other player found! Please try again later.',
-                    footer: '<a href>Why do I have this issue?></a>'
+                    footer: '<a href>Why do I have this issue?</a>'
                 }).then(function() {
                     $(".main").show();
                 });
