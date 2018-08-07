@@ -214,6 +214,19 @@ def find_players():
     url = USER_DICT['current_user_' + str(session['username'])].in_game['url']
     return jsonify({"url": url})
 
+## Game route
+@mod.route('/game/<game_url>')
+def game(game_url):
+    if GAMES.get(game_url):
+        game = GAMES[game_url]
+        title = "{0} vs {1}".format(game.player1, game.player2)
+        board = game.chessboard
+        player1 = game.player1
+        player2 = game.player2
+        print(game)
+        return render_template('game.html', title=title, board=board, player1=player1, player2=player2)
+    return jsonify({"BAD_EXCESS": "ABORT 404"})
+
 # logout routine
 @mod.route('/logout')
 @login_required
