@@ -14,9 +14,20 @@
                 type: 'GET'
             })
             .done( (data) => {
-                
+                if (data) {
+                    window.url = `/game/${data}`;
+                }
+                $(".game-loader").hide();
+                swal({
+                    type: 'error',
+                    title: 'Sorry...',
+                    text: 'No other player found! Please try again later.',
+                    footer: '<a href>Why do I have this issue?></a>'
+                }).then(function() {
+                    $(".main").show();
+                });
             });
-        })
+        });
     });
 
 })();
