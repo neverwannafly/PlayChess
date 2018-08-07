@@ -24,6 +24,10 @@ class User:
         self.createdBy = createdBy
         self.updatedBy = updatedBy
         self.db_object = db_object
+        self.in_game = {
+            'status': False,
+            'url': None,
+        }
         self.chessboard = chessboard.Chessboard()
 
     ## Future update operations would be carried here if required!
