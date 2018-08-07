@@ -202,7 +202,7 @@ def make_move(move):
 def find_players():
     if not USER_DICT['current_user_' + str(session['username'])].in_game['status']:
         make_game(session)
-        end_time = (datetime.now() + timedelta(seconds=20)).time()
+        end_time = (datetime.now() + timedelta(seconds=10)).time()
         while end_time >= datetime.now().time():
             game = get_game(session)
             if game:
