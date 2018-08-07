@@ -15,7 +15,7 @@
             })
             .done( (data) => {
                 if (data) {
-                    window.url = `/game/${data}`;
+                    window.location = `/game/${data}`;
                 }
                 $(".game-loader").hide();
                 swal({
