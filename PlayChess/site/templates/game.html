@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block includes %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/chessboard.css')}}"></link>
     <script src="{{ url_for('static', filename='JS/game.js') }}"></script>
     <script src="{{ url_for('static', filename='JS/chessboard.js') }}"></script>
 {% endblock %}

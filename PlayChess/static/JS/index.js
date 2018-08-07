@@ -1,7 +1,5 @@
 "use strict";
 
-(function(){
-
     $(document).ready(function() {
 
         $(".game-loader").hide();
@@ -14,20 +12,20 @@
                 type: 'GET'
             })
             .done( (data) => {
-                if (data) {
-                    window.location = `/game/${data}`;
+                if (data['url']) {
+                    window.location = `/game/${data['url']}`;
                 }
-                $(".game-loader").hide();
-                swal({
-                    type: 'error',
-                    title: 'Sorry...',
-                    text: 'No other player found! Please try again later.',
-                    footer: '<a href>Why do I have this issue?</a>'
-                }).then(function() {
-                    $(".main").show();
-                });
+                else {
+                    $(".game-loader").hide();
+                    swal({
+                        type: 'error',
+                        title: 'Sorry...',
+                        text: 'No other player found! Please try again later.',
+                        footer: '<a href>Why do I have this issue?</a>'
+                    }).then(function() {
+                        $(".main").show();
+                    });
+                }
             });
         });
     });
-
-})();
