@@ -13,7 +13,7 @@ USER_DICT = {
 
 }
 
-ONGOING_GAMES = {
+GAMES = {
 
 }
 
@@ -53,6 +53,7 @@ def load_user_from_session():
 @mod.before_request
 def init():
     print(USER_DICT)
+    print(GAMES)
 
 ### View functions start ###
 
@@ -199,18 +200,19 @@ def make_move(move):
 @mod.route('/find/game')
 @login_required
 def find_players():
-    if session.get('username'):
-        username = session['username']
-        while True:
-            message = PLAYERS_QUEUE.add_to_queue(username)
-            PLAYERS_QUEUE.print_queue()
-            if message.code:
-                print(message.message)
-                print(message.info)
-                break
+    if not USER_DICT['current_user_' + str(session['username'])].in_game['status']:
+        make_game(session)
+        end_time = (datetime.now() + timedelta(seconds=20)).time()
+        while end_time >= datetime.now().time():
+            game = get_game(session)
+            if game:
+                USER_DICT['current_user_' + str(session['username'])].in_game['status'] = True
+                USER_DICT['current_user_' + str(session['username'])].in_game['url'] = game
+                return jsonify({"url": game})
             time.sleep(1)
-    return jsonify({"Weeeheeee": "Teeeheeee"})
-
+        return jsonify({"url": None})
+    url = USER_DICT['current_user_' + str(session['username'])].in_game['url']
+    return jsonify({"url": url})
 
 # logout routine
 @mod.route('/logout')
@@ -219,3 +221,26 @@ def logout():
     USER_DICT.pop('current_user_' + str(session['username']))
     session.pop('username')
     return redirect(url_for('site.login'))
+
+## Helper functions
+def make_game(session):
+    if session.get('username'):
+        username = session['username']
+        while True:
+            message = PLAYERS_QUEUE.add_to_queue(username)
+            PLAYERS_QUEUE.print_queue()
+            if message.code:
+                if not GAMES.get(message) and message.info:
+                    GAMES[message.info] = Game(message.info)
+                break
+            time.sleep(1)
+
+def get_game(session):
+    username = session.get('username')
+    print(username)
+    game = [games for games in GAMES if username in games]
+    if len(game) is not 1:
+        return None
+    return game[0]
+        
+        
