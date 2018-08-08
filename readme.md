@@ -10,8 +10,9 @@
     <li>User verification via emailID</li>
     <li>Admin dashboard</li>
     <li>Creating new admin through command line</li>
-    <li>Functional chessboard with basic legal move check</li>
-    <li>Unit testing</li>
+    <li>Functional chessboard with basic legal move checks</li>
+    <li>Working Game Finding Mechanism</li>
+    <li>Working Global chat at '/chat' (It currently has basic functionality and no styling)</li>
 </ul>
 
 ## Check Points
@@ -19,14 +20,14 @@ These are the likely goals I would like to achieve in the near future
 <ul>
     <li>Implement necessary styling till now</li>
     <li>Make user profile page for logged in users</li>
-    <li><strong>Castling/Enpassant/Pawn promotion</strong></li>
-    <li><strong>Game room stacks for playing game</strong></li>
+    <li>Styling and more Functionality for Global Chat</li>
+    <li><strong>Pawn promotion</strong></li>
 </ul>
 
 ## Hosting
 Curently the live view of application is hosted on https://playchesswebsite.herokuapp.com/<br>
 Feel free to check it out. <br>
-NOTE: THIS FOR SOME REASONS DOESNT WORK!
+NOTE: THIS FOR SOME REASONS DOESN'T WORK AND NO NEW CHANGES ARE BEING PUSHED TO HEROKU DEPLOYMENT!
 Please check out issues and share your knowledge if you know a fix!
 
 ## <a name="env"></a>Setting up virtual env
@@ -91,8 +92,10 @@ $ python manage.py <_ADMIN_USERNAME> <_ADMIN_PASSWORD>
 <li>The default url <strong>http://127.0.0.1:8000/</strong> or <strong>http://localhost:8000/</strong> routes to the site.</li>
 <li>Use <strong>http://127.0.0.1:8000/admin/</strong> or <strong>http://localhost:8000/admin/</strong> to access the admin interface</li>
 <li>Use <strong>http://127.0.0.1:8000/blog/</strong> or 
-<strong>http://localhost:8000/blog/</strong> to access the blog interface</li>
-<li><strong> NOTE : blog route is under development and encountering bugs is possible if you access the blog application. If you encounter any errors, please exit the application and start again! </strong></li>
+<strong>http://localhost:8000/blog/</strong> to access the blog interface (NOT MADE)</li>
+<li>Use <strong>http://127.0.0.1:8000/chat/</strong> or 
+<strong>http://localhost:8000/chat/</strong> to access the global chat and chat with other players.</li>
+<li><strong> NOTE : chat route is under development and encountering bugs is possible if you access the chat application. If you encounter any errors, please exit the application and start again! </strong></li>
 </ul>
 
 ## Testing
@@ -155,7 +158,7 @@ To run this flask app-><br>
 $ gunicorn run:app -w 1 --threads 12
 ```
 
-<li>goto localhost:8000/ on your browser and mendle around with the app!</li>
+<li>goto <strong>localhost:8000/</strong> on your browser and mendle around with the app!</li>
 <li>To exit the application, press Ctrl+C</li>
 <li>Do drop in your suggestions via pull requests <3 </li>
 <li><strong>NOTE: </strong>Donot use flask development server as it will only serve one client
