@@ -1,5 +1,7 @@
 "use strict";
 
+(function(){
+
     $(document).ready(function() {
 
         $(".game-loader").hide();
@@ -21,7 +23,7 @@
                         type: 'error',
                         title: 'Sorry...',
                         text: 'No other player found! Please try again later.',
-                        footer: '<a href>Why do I have this issue?</a>'
+                        footer: '<a id="issue-url" href="#">Why do I have this issue?</a>'
                     }).then(function() {
                         $(".main").show();
                     });
@@ -29,3 +31,5 @@
             });
         });
     });
+
+})();
