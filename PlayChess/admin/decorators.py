@@ -3,6 +3,7 @@ from functools import wraps
 
 # login_required and logout_required decorators that ensure certain url's confront to 
 # respective wanted behaviors!
+# This file contains only admin centered login checks.
 
 # Custom login_required decorator
 def login_required(view_function):

@@ -10,7 +10,7 @@
             $(".main").hide();
             $(".game-loader").show();
             $.ajax({
-                url: '/find/game',
+                url: '/game/find',
                 type: 'GET'
             })
             .done( (data) => {

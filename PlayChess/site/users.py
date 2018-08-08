@@ -2,7 +2,7 @@
 
 import random
 
-from . import chessboard
+from ..utils import chessboard
 
 class User:
     # Initialises a user class with a database object!

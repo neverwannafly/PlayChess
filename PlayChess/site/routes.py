@@ -5,37 +5,20 @@ from flask import Blueprint, render_template, url_for, request, session, redirec
 from datetime import timedelta, datetime
 
 import bcrypt as hash_pass
-import re as regex
+
 
 mod = Blueprint('site', __name__, template_folder='templates')
 
-USER_DICT = {
-
-}
-
-GAMES = {
-
-}
-
-# Regex expression for email and username verification
-EMAIL_PATTERN_COMPILED = regex.compile("^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$")
-# Username regex also limits the string to be b/w 5 and 30!
-USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
-
 # Relative imports
-from .game import Game
 from .users import User, addNewUserToDatabase, loadUser
-from .decorators import login_required, logout_required
-from .game_queue import GameQueue
-from .. import database
-from .. import config
+from ..utils import exceptions
+from ..utils import decorators
 
-from .exceptions import InvalidMoveError
-
-# Keeps track of players finding matches.
-PLAYERS_QUEUE = GameQueue()
+# Import global variables and settings
+from ..config import *
 
 # Database initialisation
+from .. import database
 db = database.db
 users = db.users # object pointing to users database!
 
@@ -58,7 +41,7 @@ def init():
 ### View functions start ###
 
 @mod.route('/login', methods=['GET', 'POST'])
-@logout_required
+@decorators.logout_required
 def login():
     if request.method=='POST':
         user = loadUser(users, request.form['username'])
@@ -77,7 +60,7 @@ def login():
 from . import mailing
 
 @mod.route('/register', methods=['POST'])
-@logout_required
+@decorators.logout_required
 def register():
     # Script adds a little js code to login.html so as in to keep registration form
     # in view after template is rendered again due to invalid register attempt!
@@ -133,7 +116,7 @@ def register():
 
 # Link user for verification!
 @mod.route('/verify/<username>', methods=['GET', 'POST'])
-@logout_required
+@decorators.logout_required
 def verify(username):
     current_user = loadUser(users, username)[0]
     if request.method=='POST':
@@ -147,7 +130,7 @@ def verify(username):
 
 # Route to resend verification mail to user
 @mod.route('/verify/<username>/retry', methods=["POST"])
-@logout_required
+@decorators.logout_required
 def retry(username):
     current_user = loadUser(users, username)[0]
     response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
@@ -156,39 +139,39 @@ def retry(username):
 ## Index Page
 
 @mod.route('/')
-@login_required
+@decorators.login_required
 def index():
     new_chess_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     current_user = USER_DICT['current_user_' + str(session['username'])]
     return render_template('index.html', user=current_user, board=new_chess_board)
 
 @mod.route('/board/flip')
-@login_required
+@decorators.login_required
 def flipBoard():
     USER_DICT['current_user_' + str(session['username'])].chessboard.swap_board()
     flipped_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": flipped_board})
 
 @mod.route('/board/reset')
-@login_required
+@decorators.login_required
 def resetBoard():
     USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard()
     reset_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": reset_board})
 
 @mod.route('/generateLegalMoves/<init_pos>')
-@login_required
+@decorators.login_required
 def generateLegalMoves(init_pos):
     moves = USER_DICT['current_user_' + str(session['username'])].chessboard.generate_legal_moves(init_pos);
     return jsonify({'moves': moves})
 
 @mod.route('/makemove/<move>')
-@login_required
+@decorators.login_required
 def make_move(move):
     positions = move.split('-')
     try:
         changes = USER_DICT['current_user_' + str(session['username'])].chessboard.make_move(positions[0], positions[1])
-    except InvalidMoveError as error:
+    except exceptions.InvalidMoveError as error:
         print(error)
         return jsonify({'success': False})
     return jsonify({
@@ -196,66 +179,12 @@ def make_move(move):
         'changes': changes,
     })
 
-# Handle game loading here
-@mod.route('/find/game')
-@login_required
-def find_players():
-    if not USER_DICT['current_user_' + str(session['username'])].in_game['status']:
-        make_game(session)
-        end_time = (datetime.now() + timedelta(seconds=10)).time()
-        while end_time >= datetime.now().time():
-            game = get_game(session)
-            if game:
-                USER_DICT['current_user_' + str(session['username'])].in_game['status'] = True
-                USER_DICT['current_user_' + str(session['username'])].in_game['url'] = game
-                return jsonify({"url": game})
-            time.sleep(1)
-        PLAYERS_QUEUE.remove(session['username'])
-        return jsonify({"url": None})
-    url = USER_DICT['current_user_' + str(session['username'])].in_game['url']
-    return jsonify({"url": url})
-
-## Game route
-@mod.route('/game/<game_url>')
-@login_required
-def game(game_url):
-    if GAMES.get(game_url):
-        game = GAMES[game_url]
-        game_title = "{0} vs {1}".format(game.player1, game.player2)
-        board = game.chessboard.draw_chessboard()
-        player1 = game.player1
-        player2 = game.player2
-        print(game)
-        return render_template('game.html', game_title=game_title, board=board, player1=player1, player2=player2)
-    return jsonify({"BAD_EXCESS": "ABORT 404"})
-
 # logout routine
 @mod.route('/logout')
-@login_required
+@decorators.login_required
 def logout():
     USER_DICT.pop('current_user_' + str(session['username']))
     session.pop('username')
     return redirect(url_for('site.login'))
-
-## Helper functions
-def make_game(session):
-    if session.get('username'):
-        username = session['username']
-        while True:
-            message = PLAYERS_QUEUE.add_to_queue(username)
-            PLAYERS_QUEUE.print_queue()
-            if message.code:
-                if not GAMES.get(message) and message.info:
-                    GAMES[message.info] = Game(message.info)
-                break
-            time.sleep(1)
-
-def get_game(session):
-    username = session.get('username')
-    print(username)
-    game = [games for games in GAMES if username in games]
-    if len(game) is not 1:
-        return None
-    return game[0]
         
         
