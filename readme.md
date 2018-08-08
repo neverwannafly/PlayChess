@@ -88,10 +88,10 @@ $ python manage.py <_ADMIN_USERNAME> <_ADMIN_PASSWORD>
 
 ## Different routes
 <ul>
-<li>The default url <strong>http://127.0.0.1:5000/</strong> or <strong>http://localhost:5000/</strong> routes to the site.</li>
-<li>Use <strong>http://127.0.0.1:5000/admin/</strong> or <strong>http://localhost:5000/admin/</strong> to access the admin interface</li>
-<li>Use <strong>http://127.0.0.1:5000/blog/</strong> or 
-<strong>http://localhost:5000/blog/</strong> to access the blog interface</li>
+<li>The default url <strong>http://127.0.0.1:8000/</strong> or <strong>http://localhost:8000/</strong> routes to the site.</li>
+<li>Use <strong>http://127.0.0.1:8000/admin/</strong> or <strong>http://localhost:8000/admin/</strong> to access the admin interface</li>
+<li>Use <strong>http://127.0.0.1:8000/blog/</strong> or 
+<strong>http://localhost:8000/blog/</strong> to access the blog interface</li>
 <li><strong> NOTE : blog route is under development and encountering bugs is possible if you access the blog application. If you encounter any errors, please exit the application and start again! </strong></li>
 </ul>
 
@@ -152,17 +152,15 @@ To run this flask app-><br>
 <li>Go to the main directory(where run.py is) through terminal and run the following commands-></li>
 
 ```shell
-$ python run.py
+$ gunicorn run:app -w 1 --threads 12
 ```
 
-<li>goto localhost:5000/ on your browser and mendle around with the app!</li>
+<li>goto localhost:8000/ on your browser and mendle around with the app!</li>
 <li>To exit the application, press Ctrl+C</li>
 <li>Do drop in your suggestions via pull requests <3 </li>
-<li>You can also run the app from gunicorn by using the following command and going to http://127.0.0.1:8000
-    
-```shell
-$ gunicorn run:app
-```
+<li><strong>NOTE: </strong>Donot use flask development server as it will only serve one client
+at a time and would only move to the second client when done with 1st. So this will make
+finding game algorithm impossible to execute.</li>
 </ul>
 
 ## Import Closures
