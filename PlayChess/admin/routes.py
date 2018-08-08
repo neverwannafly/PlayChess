@@ -4,26 +4,19 @@ import random
 
 from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 import bcrypt as hash_pass
-import re as regex
 
 from datetime import timedelta
 
 mod = Blueprint('admin', __name__, template_folder='admin_templates')
 
-# Global admin dict to keep track of admins
-ADMIN_DICT = {
-
-}
-
-# regex to verify email addresses and usernames!
-EMAIL_PATTERN_COMPILED = regex.compile("^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$")
-USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
+from .admins import Admin, loadAdmin
+from .decorators import login_required, logout_required
+# Import global vars
+from ..config import *
 
 from .. import database
 db = database.db
 
-from .admins import Admin, loadAdmin
-from .decorators import login_required, logout_required
 
 @mod.before_app_first_request
 def make_session_permanent():
