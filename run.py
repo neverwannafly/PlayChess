@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from PlayChess import app
+from PlayChess import socketio, app
 
 if __name__ == '__main__':
-    app.run(debug=True, threaded=True)
+    socketio.run(app)
