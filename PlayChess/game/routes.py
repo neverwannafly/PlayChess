@@ -2,12 +2,14 @@ import time
 
 from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 from datetime import timedelta, datetime
+from flask_socketio import send
 
 from .game import Game, get_game, make_game
 from ..utils import decorators
 
 # Import global variables
 from ..config import *
+from .. import socketio
 
 mod = Blueprint('game', __name__, template_folder='templates')
 
@@ -42,3 +44,4 @@ def game(game_url):
         player2 = game.player2
         return render_template('game.html', game_title=game_title, board=board, player1=player1, player2=player2)
     return jsonify({"BAD_EXCESS": "ABORT 404"})
+
