@@ -13,6 +13,7 @@ mod = Blueprint('site', __name__, template_folder='templates')
 from .users import User, addNewUserToDatabase, loadUser
 from ..utils import exceptions
 from ..utils import decorators
+from ..utils import game
 
 # Import global variables and settings
 from ..config import *
@@ -178,6 +179,25 @@ def make_move(move):
         'success': True,
         'changes': changes,
     })
+
+# Handle game loading here
+@mod.route('/find_game')
+@decorators.login_required
+def find_game():
+    if not USER_DICT['current_user_' + str(session['username'])].in_game['status']:
+        game.make_game(session, PLAYERS_QUEUE, GAMES)
+        end_time = (datetime.now() + timedelta(seconds=10)).time()
+        while end_time >= datetime.now().time():
+            new_game = game.get_game(session, GAMES)
+            if new_game:
+                USER_DICT['current_user_' + str(session['username'])].in_game['status'] = True
+                USER_DICT['current_user_' + str(session['username'])].in_game['url'] = new_game
+                return jsonify({"url": new_game})
+            time.sleep(1)
+        PLAYERS_QUEUE.remove(session['username'])
+        return jsonify({"url": None})
+    url = USER_DICT['current_user_' + str(session['username'])].in_game['url']
+    return jsonify({"url": url})
 
 # logout routine
 @mod.route('/logout')
