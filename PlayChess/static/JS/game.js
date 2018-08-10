@@ -1,7 +1,5 @@
 (function(){
 
-    alert("hello!");
-
     $(document).ready(function(){
 
         var initial_pos, final_pos;
