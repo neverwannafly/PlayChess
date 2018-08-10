@@ -33,7 +33,6 @@ class GameQueue:
     def add_to_queue(self, player):
         addition = self._add(player)
         if addition.code == 2:
-            print(addition.message)
             url = self._generate_url()
             addition.info = url
             del self._queue[:]
