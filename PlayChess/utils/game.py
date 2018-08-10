@@ -28,21 +28,34 @@ class Game:
         self.player2 = player2
 
     def generate_legal_moves(self, init_pos, sender):
-        self.verify_sender(sender)
+        try:
+            self.verify_move_origin(init_pos, sender)
+        except exceptions.SenderCannotBeVerified as error:
+            print(error)
+            return jsonify({'moves': []})
         moves = self.chessboard.generate_legal_moves(init_pos);
         return jsonify({'moves': moves})
 
     def make_move(self, init_pos, final_pos, sender):
-        self.verify_sender(sender)
+        try:
+            self.verify_move_origin(init_pos, sender)
+        except exceptions.SenderCannotBeVerified as error:
+            print(error)
+            return jsonify({'success': False})
         try:
             changes = self.chessboard.make_move(init_pos, final_pos)
         except exceptions.InvalidMoveError as error:
             print(error)
             return jsonify({'success': False})
+        self.moves += 1
         return jsonify({
-        'success': True,
-        'changes': changes,
-    })
+            'success': True,
+            'changes': changes,
+        })
+
+    def verify_move_origin(self, init_pos, sender):
+        self.verify_sender(sender)
+        self.verify_piece_color(init_pos, sender)
 
     def verify_sender(self, sender):
         def check_sender(sender, moves, player1, player2):
@@ -53,13 +66,24 @@ class Game:
         if not check_sender(sender, self.moves, self.player1, self.player2):
             raise exceptions.SenderCannotBeVerified("Sender Cannot be verified!")
 
+    def verify_piece_color(self, init_pos, sender):
+        def check_color(chessboard, init_pos, player1, player2, sender):
+            color = chessboard.convert_to_index(init_pos).piece.color
+            if sender == player1:
+                return color=="white"
+            elif sender == player2:
+                return color=="black"
+            else:
+                return 0
+        if not check_color(self.chessboard, init_pos, self.player1, self.player2, sender):
+            raise exceptions.SenderCannotBeVerified("Sender doesnt have valid access!")
+
 ## Helper functions
 def make_game(session, players_queue, ongoing_games):
     if session.get('username'):
         username = session['username']
         while True:
             message = players_queue.add_to_queue(username)
-            players_queue.print_queue()
             if message.code:
                 if not ongoing_games.get(message) and message.info:
                     ongoing_games[message.info] = Game(message.info)
