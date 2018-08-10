@@ -10,12 +10,12 @@
             $(".main").hide();
             $(".game-loader").show();
             $.ajax({
-                url: '/game/find',
+                url: '/find_game',
                 type: 'GET'
             })
             .done( (data) => {
                 if (data['url']) {
-                    window.location = `/game/${data['url']}`;
+                    window.location.assign(`/game/${data['url']}`);
                 }
                 else {
                     $(".game-loader").hide();
