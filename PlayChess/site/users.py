@@ -28,6 +28,7 @@ class User:
             'status': False,
             'url': None,
         }
+        self.sessionid = None
         self.chessboard = chessboard.Chessboard()
 
     ## Future update operations would be carried here if required!
