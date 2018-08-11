@@ -2,7 +2,7 @@ import time
 
 from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 from datetime import timedelta, datetime
-from flask_socketio import send
+from flask_socketio import send, emit
 
 from ..utils import decorators, exceptions
 
@@ -55,3 +55,8 @@ def end_game(game_url):
         USER_DICT['current_user_' + player2].in_game['url'] = None
         GAMES.pop(game_url)
     raise exceptions.GameNotFound("This game doesn't exist!")
+
+@socketio.on('user_connect', namespace='/game/marky-neverwannafly/')
+def handle_connection(message):
+    print(message)
+    emit('user_connect', "Hello!")

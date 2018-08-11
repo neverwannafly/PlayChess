@@ -6,20 +6,25 @@
 
 {% block includes %}
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/chessboard.css')}}"></link>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/game.css') }}"></link>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='JS/game.js') }}"></script>
 {% endblock %}
 
 {% block body %}
 <div class="container">
     <div class="header">
-        Hello {{ player1 }} and {{ player2 }}!!
     </div>
-    <div class="chessboard">
-        <table class="no-spacing" cellspacing="0">
-            <tbody>
-                {{board|safe}}
-            </tbody>
-        </table>
-    </div>
+    <center>
+        <div class="chessboard">
+            <span class="player">{{ player2 }}</span>
+            <table class="no-spacing" cellspacing="0">
+                <tbody>
+                    {{board|safe}}
+                </tbody>
+            </table>
+            <span class="player">{{ player1 }}</span>
+        </div>
+    </center>
 </div>
 {% endblock %}
