@@ -16,6 +16,7 @@ class Game:
         self.player1 = None
         self.player2 = None
         self.moves = 0
+        self.prev_move = None
         self.spectators = []
 
         self.game_name = game_name
@@ -41,17 +42,20 @@ class Game:
             self.verify_move_origin(init_pos, sender)
         except exceptions.SenderCannotBeVerified as error:
             print(error)
-            return jsonify({'success': False})
+            move = {'success': False}
+            self.prev_move = move
+            return move
         try:
             changes = self.chessboard.make_move(init_pos, final_pos)
         except exceptions.InvalidMoveError as error:
             print(error)
-            return jsonify({'success': False})
+            move = {'success': False}
+            self.prev_move = move
+            return move
         self.moves += 1
-        return jsonify({
-            'success': True,
-            'changes': changes,
-        })
+        move = {'success': True, 'changes': changes}
+        self.prev_move = move
+        return move
 
     def verify_move_origin(self, init_pos, sender):
         self.verify_sender(sender)
