@@ -2,19 +2,27 @@
 
     $(document).ready(function(){
 
-        var game_socket = io.connect(window.location.href);
+        var game_socket = io.connect("http://127.0.0.1:8000/game");
+        var initial_pos, final_pos;
+        var squares = null;
+        const game_url = window.location.pathname.split('/')[2];
 
         game_socket.on('connect', function(){
             game_socket.emit('user_connect', "User has connected!");
         });
 
+        game_socket.on('make_move', function(move){
+            if (move["success"]) {
+                make_move(move['changes']);
+            }
+            else {
+                console.log("Invalid Move!");
+            }
+        });
+
         game_socket.on('user_connect', function(data){
             console.log(data);
-        })
-
-        var initial_pos, final_pos;
-        var squares = null;
-        const game_url = window.location.pathname.split('/')[2];
+        });
 
         $(document).on('click', '.square', (event) => {
             const target = $(event.target);
@@ -43,6 +51,11 @@
                     else {
                         console.log("Invalid Move!");
                     }
+                    game_socket.emit('make_move', {
+                        'game_url': game_url, 
+                        'init_pos': initial_pos, 
+                        'final_pos': final_pos
+                    });
                     removeHighlight(squares);
                     $("#"+initial_pos).removeClass("active-cell");
                 });
