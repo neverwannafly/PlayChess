@@ -25,19 +25,20 @@ def game(game_url):
         return render_template('game.html', game_title=game_title, board=board, player1=player1, player2=player2)
     raise exceptions.GameNotFound("This game doesn't exist!")
 
-@mod.route('/<game_url>/makemove/<move>')
-@decorators.login_required
-def make_move(game_url, move):
-    if GAMES.get(game_url):
-        init_pos, final_pos = move.split('-')[0], move.split('-')[1]
-        return GAMES[game_url].make_move(init_pos, final_pos, session.get('username'))
-    raise exceptions.GameNotFound("This game doesn't exist!")
-
 @mod.route('/<game_url>/generateLegalMoves/<init_pos>')
 @decorators.login_required
 def generate_legal_moves(game_url, init_pos):
     if GAMES.get(game_url):
         return GAMES[game_url].generate_legal_moves(init_pos, session.get('username'))
+    raise exceptions.GameNotFound("This game doesn't exist!")
+
+@mod.route('/<game_url>/makemove/<move>')
+@decorators.login_required
+def make_move(game_url, move):
+    if GAMES.get(game_url):
+        init_pos, final_pos = move.split('-')[0], move.split('-')[1]
+        move = GAMES[game_url].make_move(init_pos, final_pos, session.get('username'))
+        return jsonify(move)
     raise exceptions.GameNotFound("This game doesn't exist!")
 
 ## Add a cryptographic id so that only server can dissolve games
@@ -56,7 +57,22 @@ def end_game(game_url):
         GAMES.pop(game_url)
     raise exceptions.GameNotFound("This game doesn't exist!")
 
-@socketio.on('user_connect', namespace='/game/marky-neverwannafly/')
+## Socket connections
+
+@socketio.on('user_connect', namespace='/game')
 def handle_connection(message):
-    print(message)
+    USER_DICT['current_user_' + session['username']].sessionid = request.sid
     emit('user_connect', "Hello!")
+
+@socketio.on('make_move', namespace='/game')
+def make_move(move_info):
+    init_pos = move_info['init_pos']
+    final_pos = move_info['final_pos']
+    game_url = move_info['game_url']
+    player1, player2 = game_url.split('-')[0], game_url.split('-')[1]
+    reciever = player1 if player1!=session['username'] else player2
+    if GAMES.get(game_url):
+        move = GAMES[game_url].prev_move
+    else:
+        move = {'success': False}
+    emit("make_move", move, room = USER_DICT['current_user_' + reciever].sessionid)
