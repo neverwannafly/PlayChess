@@ -2,20 +2,28 @@
 
     $(document).ready(function(){
 
+        var game_socket = io.connect(window.location.href);
+
+        game_socket.on('connect', function(){
+            game_socket.emit('user_connect', "User has connected!");
+        });
+
+        game_socket.on('user_connect', function(data){
+            console.log(data);
+        })
+
         var initial_pos, final_pos;
         var squares = null;
         const game_url = window.location.pathname.split('/')[2];
-        console.log(game_url);
 
         $(document).on('click', '.square', (event) => {
             const target = $(event.target);
             if(incrementClick()%2!=0) {
                 initial_pos = $(target).attr('id');
                     $("#"+initial_pos).addClass("active-cell");
-                const url = `${game_url}/generateLegalMoves/${initial_pos}`;
-                console.log(url);
+                const move_url = `${game_url}/generateLegalMoves/${initial_pos}`;
                 $.ajax({
-                    url: url,
+                    url: move_url,
                 })
                 .done( (data)=> {
                     squares = data['moves'];
@@ -24,9 +32,9 @@
             }
             else {
                 final_pos = $(target).attr('id');
-                const url = `${game_url}/makemove/${initial_pos}-${final_pos}`;
+                const move_url = `${game_url}/makemove/${initial_pos}-${final_pos}`;
                 $.ajax({
-                    url: url,
+                    url: move_url,
                 })
                 .done( (data) => {
                     if (data["success"]) {
