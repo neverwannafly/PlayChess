@@ -103,10 +103,7 @@ def register():
                 current_user = loadUser(users, request.form['username'])[0]
                 #Send email verification
                 response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
-                if response:
-                    return redirect(url_for('site.verify', username=current_user.username))
-                else:
-                    return render_template('login.html', error_code=6, script=script)
+                return redirect(url_for('site.verify', username=current_user.username))
             return render_template('login.html', error_code=5, script=script)
         elif existing_email:
             return render_template('login.html', error_code=4, script=script)
