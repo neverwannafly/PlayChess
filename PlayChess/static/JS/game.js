@@ -2,9 +2,11 @@
 
     $(document).ready(function(){
 
-        var game_socket = io.connect(window.location.href);
-        var initial_pos, final_pos;
-        var squares = null;
+        const window_url = window.location.href;
+        const game_index = window_url.indexOf('game/') + 4;
+        const game_socket = io.connect(window_url.slice(0, game_index));
+        let initial_pos, final_pos;
+        let squares = null;
         const game_url = window.location.pathname.split('/')[2];
 
         game_socket.on('connect', function(){
