@@ -2,7 +2,7 @@
 
     $(document).ready(function(){
 
-        var game_socket = io.connect("http://127.0.0.1:8000/game");
+        var game_socket = io.connect(window.location.href);
         var initial_pos, final_pos;
         var squares = null;
         const game_url = window.location.pathname.split('/')[2];
