@@ -18,12 +18,20 @@ mod = Blueprint('game', __name__, template_folder='templates')
 def game(game_url):
     if GAMES.get(game_url):
         game = GAMES[game_url]
-        game_title = "{0} vs {1}".format(game.player1, game.player2)
-        board = game.chessboard.draw_chessboard()
         player1 = game.player1
         player2 = game.player2
-        return render_template('game.html', game_title=game_title, board=board, player1=player1, player2=player2)
-    raise exceptions.GameNotFound("This game doesn't exist!")
+        print(session.get('username'))
+        print(player1, player2)
+        print(player1 == session.get('username'))
+        if player1 == session.get('username'):
+            board = game.chessboard.draw_chessboard()
+            game_title = "{0} vs {1}".format(game.player1, game.player2)
+            return render_template('game.html', game_title=game_title, board=board, player1=player1, player2=player2)
+        else:
+            board = game.chessboard.draw_chessboard_for_black()
+            game_title = "{0} vs {1}".format(game.player2, game.player1)
+            return render_template('game.html', game_title=game_title, board=board, player1=player1, player2=player2)
+    
 
 @mod.route('/<game_url>/generateLegalMoves/<init_pos>')
 @decorators.login_required
@@ -55,7 +63,7 @@ def end_game(game_url):
         USER_DICT['current_user_' + player2].in_game['status'] = False
         USER_DICT['current_user_' + player2].in_game['url'] = None
         GAMES.pop(game_url)
-    raise exceptions.GameNotFound("This game doesn't exist!")
+    return redirect(url_for('site.index'))
 
 ## Socket connections
 
