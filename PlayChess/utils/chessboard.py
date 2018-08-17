@@ -650,21 +650,3 @@ class Chessboard:
         self.configuration = 1
         self.chessboard = self.create_chessboard()
         self.initialise_board()
-
-
-    
-    # This Json data could be used as a way to save games!
-    # piece = {
-    #     "white-K": King("white", notation),
-    #     "white-Q": King("white", notation),
-    #     "white-R": Rook("white", notation),
-    #     "white-B": Rook("white", notation),
-    #     "white-N": Rook("white", notation),
-    #     "white-p": Pawn("white", notation),
-    #     "black-K": King("black", notation),
-    #     "black-Q": Queen("black", notation),
-    #     "black-R": Rook("black", notation),
-    #     "black-B": Bishop("black", notation),
-    #     "black-N": Knight("black", notation),
-    #     "black-p": Pawn("black", notation),
-    # }.get(piece)
