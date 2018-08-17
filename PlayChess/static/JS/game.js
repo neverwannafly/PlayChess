@@ -9,11 +9,11 @@
         let squares = null;
         const game_url = window.location.pathname.split('/')[2];
 
-        game_socket.on('connect', function(){
+        game_socket.on('connect', () => {
             game_socket.emit('user_connect', "User has connected!");
         });
 
-        game_socket.on('make_move', function(move){
+        game_socket.on('make_move', move => {
             if (move["success"]) {
                 make_move(move['changes']);
             }
@@ -22,7 +22,7 @@
             }
         });
 
-        game_socket.on('user_connect', function(data){
+        game_socket.on('user_connect', data => {
             console.log(data);
         });
 
@@ -137,7 +137,7 @@
         $(this).find('.square').removeClass("hover-cell");
     }
 
-    var incrementClick = (function(){
+    var incrementClick = ( () => {
         var counter = 0;
         return function() {
             return counter += 1;

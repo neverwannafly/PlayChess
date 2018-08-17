@@ -6,7 +6,6 @@ from datetime import timedelta, datetime
 
 import bcrypt as hash_pass
 
-
 mod = Blueprint('site', __name__, template_folder='templates')
 
 # Relative imports
@@ -203,5 +202,3 @@ def logout():
     USER_DICT.pop('current_user_' + str(session['username']))
     session.pop('username')
     return redirect(url_for('site.login'))
-        
-        

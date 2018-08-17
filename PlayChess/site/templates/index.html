@@ -3,8 +3,9 @@
     Home
 {% endblock %}
 {% block includes %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/chessboard.css')}}"></link>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/chessboard.css')}}"/>
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/index.css')}}">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.26.10/dist/sweetalert2.all.min.js"></script>
     <script src="{{ url_for('static', filename='JS/index.js')}}"></script>
     <script src="{{ url_for('static', filename='JS/chessboard.js')}}"></script>
