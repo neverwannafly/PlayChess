@@ -1,6 +1,6 @@
 import time
 
-from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
+from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify, abort
 from datetime import timedelta, datetime
 from flask_socketio import send, emit
 
@@ -31,14 +31,14 @@ def game(game_url):
             board = game.chessboard.draw_chessboard_for_black()
             game_title = "{0} vs {1}".format(game.player2, game.player1)
             return render_template('game.html', game_title=game_title, board=board, player1=player2, player2=player1)
-    
+    abort(404)
 
 @mod.route('/<game_url>/generateLegalMoves/<init_pos>')
 @decorators.login_required
 def generate_legal_moves(game_url, init_pos):
     if GAMES.get(game_url):
         return GAMES[game_url].generate_legal_moves(init_pos, session.get('username'))
-    raise exceptions.GameNotFound("This game doesn't exist!")
+    abort(404)
 
 @mod.route('/<game_url>/makemove/<move>')
 @decorators.login_required
@@ -47,7 +47,7 @@ def make_move(game_url, move):
         init_pos, final_pos = move.split('-')[0], move.split('-')[1]
         move = GAMES[game_url].make_move(init_pos, final_pos, session.get('username'))
         return jsonify(move)
-    raise exceptions.GameNotFound("This game doesn't exist!")
+    abort(404)
 
 ## Add a cryptographic id so that only server can dissolve games
 ## Something like /end/<server_id>/<game_url> or better yet 
