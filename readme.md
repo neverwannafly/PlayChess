@@ -6,29 +6,29 @@
 
 ## Current Features
 <ul>
-    <li>User registration and login</li>
-    <li>User verification via emailID</li>
+    <li>User signin</li>
     <li>Admin dashboard</li>
     <li>Creating new admin through command line</li>
     <li>Functional chessboard with basic legal move checks</li>
     <li>Working Game Finding Mechanism</li>
+    <li>Players can play realtime chess game against each other</li>
     <li>Working Global chat at '/chat' (It currently has basic functionality and no styling)</li>
 </ul>
 
-## Check Points
-These are the likely goals I would like to achieve in the near future
+## Checkpoints
+These are the likely goals that would be achieved in the near future (in order of decreasing priority)
 <ul>
-    <li>Implement necessary styling till now</li>
+    <li>Pawn promotion</li>
+    <li>assert if king is in check and devise legal moves accordingly</li>
+    <li>Create in game chat for ongoing games</li>
     <li>Make user profile page for logged in users</li>
     <li>Styling and more Functionality for Global Chat</li>
-    <li><strong>Pawn promotion</strong></li>
+    <li>Implement necessary styling till now</li>
 </ul>
 
 ## Hosting
 Curently the live view of application is hosted on https://playchesswebsite.herokuapp.com/<br>
 Feel free to check it out. <br>
-NOTE: THIS FOR SOME REASONS DOESN'T WORK AND NO NEW CHANGES ARE BEING PUSHED TO HEROKU DEPLOYMENT!
-Please check out issues and share your knowledge if you know a fix!
 
 ## <a name="env"></a>Setting up virtual env
 #### For UNIX based devices(linux/mac)
@@ -57,15 +57,12 @@ Write in the following commands to set up your virtualenv
 > Set-ExecutionPolicy -ExecutionPolicy Unrestricted
 ```
 
-## Adding a new admin!
-There are two ways to add a new admin to website's database!
-#### Method 1 (Through the Interactive App): 
-<ul>
-<li>Go to the main directory (where run.py is) through the terminal and enter the following code</li>
-</ul>
+## Manage.py Script
+This script is an easy interface to navigate through the webapp. Currently this script can create an admin, run  the development server and for individuals having access to heroku credentials (where the site is hosted), concurrently push changes to both origin and heroku branch at the same time. It's different interfaces are as follows->
+#### Creating An Admin 
 
 ```shell
-$ python manage.py
+$ python manage.py create_admin
 ```
 
 <ul>
@@ -73,29 +70,34 @@ $ python manage.py
 <li><strong>NOTE: </strong>your username can only contain alphanumeric characters and an underscore! Failing to adhere to username restrictions will result in error. However since you're in an interactive app, you will be reprompted to enter your username and password!</li>
 </ul>
 
-#### Method 2 (Through the Script):
-<ul>
-    <li>Go to the main directory (where run.py is) through the terminal and enter the following code</li>
-</ul>
+#### Pushing Changes
 
 ```shell
-$ python manage.py <_ADMIN_USERNAME> <_ADMIN_PASSWORD>
+$ python manage.py commitall
 ```
 
 <ul>
-<li>You can type in your desired username followed by your desired password seperated by a space right in front of the python command!</li>
-<li><strong>NOTE: </strong>In case of failure in creating an admin, it will throw an error and abort. It won't go for a reprompt and you'll need to run the command again!</li>
+<li>Now your changes would be pushed to both the heroku and the origin remotes</li>
 </ul>
 
-## Different routes
+#### Running dev server
+
+
+```shell
+$ python manage.py dev
+```
+
 <ul>
-<li>The default url <strong>http://127.0.0.1:8000/</strong> or <strong>http://localhost:8000/</strong> routes to the site.</li>
-<li>Use <strong>http://127.0.0.1:8000/admin/</strong> or <strong>http://localhost:8000/admin/</strong> to access the admin interface</li>
-<li>Use <strong>http://127.0.0.1:8000/blog/</strong> or 
-<strong>http://localhost:8000/blog/</strong> to access the blog interface (NOT MADE)</li>
-<li>Use <strong>http://127.0.0.1:8000/chat/</strong> or 
-<strong>http://localhost:8000/chat/</strong> to access the global chat and chat with other players.</li>
-<li><strong> NOTE : chat route is under development and encountering bugs is possible if you access the chat application. If you encounter any errors, please exit the application and start again! </strong></li>
+<li>It'll start a dev Gunicorn server on port 8000</li>
+<li><strong>NOTE: </strong>Donot use flask development server as it will only serve one client at a time and would only move to the second client when done with 1st. So this will make finding game algorithm impossible to execute.</li>
+</ul>
+
+## Routes
+<ul>
+<li>The default url http://127.0.0.1:8000/ routes to the website's homepage.</li>
+<li>Use http://127.0.0.1:8000/admin/ to access the admin interface</li>
+<li>Use http://127.0.0.1:8000/blog/ to access the blog interface (NOT MADE)</li>
+<li>Use http://127.0.0.1:8000/chat/ to access the global chat and chat with other players.</li>
 </ul>
 
 ## Testing
@@ -152,18 +154,16 @@ def test_database(client):
 To run this flask app-><br>
 <ul>
 <li>Download the zip or fork the repo</li>
-<li>Go to the main directory(where run.py is) through terminal and run the following commands-></li>
+<li>Go to the main directory(where manage.py is) through terminal and run the following command-></li>
 
 ```shell
-$ gunicorn run:app -w 1 --threads 12
+$ python manage.py dev
 ```
 
-<li>goto <strong>localhost:8000/</strong> on your browser and mendle around with the app!</li>
+<li>goto <strong>http://127.0.0.1:8000/</strong> on your browser and mendle around with the app!</li>
 <li>To exit the application, press Ctrl+C</li>
 <li>Do drop in your suggestions via pull requests <3 </li>
-<li><strong>NOTE: </strong>Donot use flask development server as it will only serve one client
-at a time and would only move to the second client when done with 1st. So this will make
-finding game algorithm impossible to execute.</li>
+
 </ul>
 
 ## Import Closures
