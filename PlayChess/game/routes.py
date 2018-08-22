@@ -73,9 +73,7 @@ def handle_connection(message):
     emit('user_connect', "Hello!")
 
 @socketio.on('make_move', namespace='/game')
-def make_move(move_info):
-    init_pos = move_info['init_pos']
-    final_pos = move_info['final_pos']
+def realtime_make_move(move_info):
     game_url = move_info['game_url']
     player1, player2 = game_url.split('-')[0], game_url.split('-')[1]
     reciever = player1 if player1!=session['username'] else player2
