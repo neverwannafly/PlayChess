@@ -17,6 +17,9 @@ main() {
     elif [ $1 = "commitall" ]
     then
         runscript "commitall.sh"
+    elif [ $1 = "logs" ]
+    then
+        runscript "logs.sh"
     else
         echo ERROR: Unrecognised Command!
         exit -1

@@ -80,6 +80,23 @@ if len(sys.argv) == 2:
                 TERMINAL_COLORS['CEND']
             )
             sys.exit(1)
+    elif sys.argv[1] == "logs":
+        try:
+            print(
+                TERMINAL_COLORS['CBOLD'] + 
+                TERMINAL_COLORS['CGREEN'] + 
+                "Opening Heroku logs......." +
+                TERMINAL_COLORS['CEND'] + 
+                TERMINAL_COLORS['CEND']
+            )
+            subprocess.call(['./app.sh', 'logs'])
+        except KeyboardInterrupt:
+            print(
+                TERMINAL_COLORS['CRED'] + 
+                "Closing Logs" + 
+                TERMINAL_COLORS['CEND']
+            )
+            sys.exit(1)
     else:
         print(
             TERMINAL_COLORS['CRED'] + 
