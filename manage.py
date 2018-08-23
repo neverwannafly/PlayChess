@@ -40,7 +40,11 @@ if len(sys.argv) == 2:
                         TERMINAL_COLORS['CEND']
                     )
         except KeyboardInterrupt:
-            print("Exiting Process")
+            print(
+                TERMINAL_COLORS['CRED'] + 
+                "Exiting Process" + 
+                TERMINAL_COLORS['CEND']
+            )
             sys.exit(1)
     elif sys.argv[1] == "dev":
         try:
