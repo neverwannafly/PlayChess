@@ -6,6 +6,7 @@
 import sys
 
 from .exceptions import InvalidMoveError
+from .. import config
 
 class Piece:
     # Initialises the basic component of every piece
@@ -111,7 +112,7 @@ class LightSquare(Square):
 
 # Defines the final layout of the chessboard!
 class Chessboard:
-    def __init__(self):
+    def __init__(self, fen_notation=None):
 
         # An array holding recent changes in board position
         self.changes = []
@@ -137,21 +138,14 @@ class Chessboard:
         self.king_position_black = "e8"
 
         self.configuration = 1
-        # config of 2 means chessboard is drawn for white player at bottom!
-        # config of 1 means chessboard is drawn for black player at bottom!
+        # config of 2 means chessboard is drawn for black player at bottom!
+        # config of 1 means chessboard is drawn for white player at bottom!
         self.chessboard = self.create_chessboard()
-        self.initialise_board()
 
-    def is_square_under_attack(self, square):
-        indexes = self.return_index_as_touple(square)
-        X, Y = indexes[0], indexes[1]
-        # Check along horizontal
-
-        # Check along vertical
-
-        # Check along the diagonal
-
-        # Check at skew positions
+        if fen_notation is None:
+            self.initialise_board()
+        else:
+            self.load_position(fen_notation)
 
     @property
     def can_white_castle(self):
@@ -162,7 +156,128 @@ class Chessboard:
     def can_black_castle(self):
         castling_flag = (self.castling_rights_black["black_side_castled"]^self.castling_rights_black["has_black_king_moved"])^(self.castling_rights_black["has_a8_rook_moved"]&self.castling_rights_black["has_h8_rook_moved"])
         return not castling_flag
-            
+
+    # generates a rudimentary fen notation of a position with placeholders and
+    # these placeholders in fen notation would be filled upon by the Game class.
+    # A placeholer will be represented by '*'.
+    @property
+    def fen_notation(self):
+        fen_notation = ""
+        # Set board position
+        for rank in self.chessboard:
+            rank_notation = ""
+            skips = 0
+            for square in rank:
+                piece = config.CHESS_PIECES.get(square.piece.label, None)
+                if piece == None:
+                    skips += 1
+                else:
+                    if skips is not 0:
+                        rank_notation += str(skips)
+                        rank_notation += piece
+                        skips = 0
+                    else:
+                        rank_notation += piece
+            if skips is not 0:
+                rank_notation += str(skips)
+            fen_notation += rank_notation + "/"
+
+        # remove trailing slash
+        fen_notation = fen_notation[:-1]
+
+        # Create placeholder for player to move
+        # A chessboard is an object that doesnt concerns itself with 
+        # which player has to make a move. That behavior is handled 
+        # By the game class hence unrequired parameters in fen notations
+        # are being filled by placeholders
+        fen_notation = fen_notation + " * "
+
+        # Castling Parameters
+        if not self.castling_rights_white['white_side_castled'] and not self.castling_rights_white['has_white_king_moved']:
+            if not self.castling_rights_white['has_h1_rook_moved']:
+                fen_notation = fen_notation + "K"
+            if not self.castling_rights_white['has_a1_rook_moved']:
+                fen_notation = fen_notation + "Q"
+        if not self.castling_rights_black['black_side_castled'] and not self.castling_rights_black['has_black_king_moved']:
+            if not self.castling_rights_black['has_h8_rook_moved']:
+                fen_notation = fen_notation + "k"
+            if not self.castling_rights_black['has_a8_rook_moved']:
+                fen_notation = fen_notation + "q"
+
+        # Enpassant Target Square
+        if self.enpassant_target_square is not None:
+            fen_notation = fen_notation + " " + str(self.enpassant_target_square)
+        else:
+            fen_notation = fen_notation + " - "
+
+        # Halfmove placeholder and full move placeholders. Again a delegate
+        # of the Game class and not the chessboard class
+        fen_notation = fen_notation + " * *"
+
+        return fen_notation
+
+    def load_position(self, fen_notation):
+        # Extract required parameters for the Chessboard class from fen_notation
+        fen_components = fen_notation.split(' ')
+        game_component = fen_components[0]
+        castling_info = fen_components[2]
+        enpassant_target_square = fen_components[3]
+
+        def get_position(file, rank):
+            return str(chr(ord('a') + file -1)) + str(rank)
+
+        # Iterate over the board_component and place pieces as you find them
+        rank = 8
+        file = 1
+        temp_board = []
+        board_row = []
+
+        for character in game_component:
+            if character == '/':
+                rank -= 1
+                file = 1
+                temp_board.append(board_row)
+                board_row = []
+            else:
+                piece = config.CHESS_PIECE_CLASS.get(character, None)
+                if piece is None:
+                    squares = int(character)
+                    while squares >= 1:
+                        board_row.append(self.create_piece(get_position(file, rank), 'Blank'))
+                        file += 1
+                        squares -= 1
+                else:
+                    board_row.append(self.create_piece(get_position(file, rank), piece[0], piece[1]))
+                    file += 1
+
+        # Create the chessboard
+        for i in range(8):
+            for j in range(8):
+                self.chessboard[i][j].piece = temp_board[i][j]
+                self.chessboard[i][j].html_class += temp_board[i][j].label
+                self.chessboard[i][j].css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
+                    html_class = self.chessboard[i][j].html_class,
+                    html_id = self.chessboard[i][j].html_id
+                )
+
+        # Parse Castling info
+        if not "K" in castling_info:
+            self.castling_rights_white['has_h1_rook_moved'] = True
+        if not "Q" in castling_info:
+            self.castling_rights_white['has_a1_rook_moved'] = True
+        if not "k" in castling_info:
+            self.castling_rights_black['has_h8_rook_moved'] = True
+        if not "q" in castling_info:
+            self.castling_rights_black['has_a8_rook_moved'] = True
+        if "-" in castling_info:
+            self.castling_rights_black['has_black_king_moved'] = True
+            self.castling_rights_white['has_white_king_moved'] = True
+
+        # Enpassant Setting
+        if enpassant_target_square is not None:
+            self.enpassant_target_square = enpassant_target_square
+            self.enpassant_flag_life = 1
+    
     def initialise_board(self):
         # White chess pieces
         white_rooks = [Rook("a1", "white"), Rook("h1", "white")]
@@ -239,9 +354,20 @@ class Chessboard:
                 self.enpassant_target_square = None
             elif self.enpassant_target_square:
                 self.enpassant_flag_life += 1
-        except InvalidMoveError as error:
+        except InvalidMoveError:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
         return self.changes
+
+    def is_square_under_attack(self, square):
+        indexes = self.return_index_as_touple(square)
+        X, Y = indexes[0], indexes[1]
+        # Check along horizontal
+
+        # Check along vertical
+
+        # Check along the diagonal
+
+        # Check at skew positions
 
     # Need to be used for pawn promotion, en-passant and board editor
     def delete_piece(self, piece_position):
@@ -256,9 +382,10 @@ class Chessboard:
         self.changes.append({'pos': piece_position, 'class': obj.html_class})
 
     # Can be used for simple Board Editor
-    def create_piece(self, piece_position, piece_color, piece_name):
-        obj = self.convert_to_index(piece_position)
-        obj.piece = getattr(sys.modules[__name__], piece_name)(piece_position, piece_color)
+    def create_piece(self, piece_position, piece_name, piece_color=None):
+        if piece_color == None:
+            return getattr(sys.modules[__name__], piece_name)(piece_position)
+        return getattr(sys.modules[__name__], piece_name)(piece_position, piece_color)
 
     # This method changes the current state of board, i.e modifies id's and classes of 
     # class members of Sqaure class and also change the values of chessboard array.
@@ -285,8 +412,6 @@ class Chessboard:
 
     def make_move_private(self, initial_pos, final_pos):
         if self.is_move_legal(initial_pos, final_pos):
-            indexes = self.return_index_as_touple(initial_pos)
-            X, Y = indexes[0], indexes[1]
             # Check for special king moves!
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
                 # King side castle
