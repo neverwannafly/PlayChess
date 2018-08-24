@@ -80,6 +80,16 @@ $ python manage.py commitall
 <li>Now your changes would be pushed to both the heroku and the origin remotes</li>
 </ul>
 
+#### Checking Heroku Server Logs
+
+```shell
+$ python manage.py logs
+```
+
+<ul>
+<li>It shows you the latest heroku logs of live server. You must be having the heroku credentials for this command to work</li>
+</ul>
+
 #### Running dev server
 
 
