@@ -10,3 +10,4 @@ Werkzeug==0.12.2
 gunicorn==19.8.1
 pytest==3.6.1
 flask-socketio==3.0.1
+python-chess==0.23.9
