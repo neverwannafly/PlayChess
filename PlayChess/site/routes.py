@@ -5,6 +5,7 @@ from flask import Blueprint, render_template, url_for, request, session, redirec
 from datetime import timedelta, datetime
 
 import bcrypt as hash_pass
+import re as regex
 
 mod = Blueprint('site', __name__, template_folder='templates')
 
@@ -15,7 +16,7 @@ from ..utils import decorators
 from ..utils import game
 
 # Import global variables and settings
-from ..config import *
+from ..config import PLAYERS_QUEUE, USER_DICT, USERNAME_REGEX, EMAIL_PATTERN_COMPILED, GAMES
 
 # Database initialisation
 from .. import database
@@ -101,7 +102,7 @@ def register():
                 )
                 current_user = loadUser(users, request.form['username'])[0]
                 #Send email verification
-                response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
+                mailing.sendMail(current_user._id, current_user.email, current_user.username)
                 return redirect(url_for('site.verify', username=current_user.username))
             return render_template('login.html', error_code=5, script=script)
         elif existing_email:
@@ -159,7 +160,7 @@ def resetBoard():
 @mod.route('/generateLegalMoves/<init_pos>')
 @decorators.login_required
 def generateLegalMoves(init_pos):
-    moves = USER_DICT['current_user_' + str(session['username'])].chessboard.generate_legal_moves(init_pos);
+    moves = USER_DICT['current_user_' + str(session['username'])].chessboard.generate_legal_moves(init_pos)
     return jsonify({'moves': moves})
 
 @mod.route('/makemove/<move>')

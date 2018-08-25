@@ -4,6 +4,7 @@ import random
 
 from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 import bcrypt as hash_pass
+import re as regex
 
 from datetime import timedelta
 
@@ -12,18 +13,17 @@ mod = Blueprint('admin', __name__, template_folder='admin_templates')
 from .admins import Admin, loadAdmin
 from .decorators import login_required, logout_required
 # Import global vars
-from ..config import *
+from ..config import ADMIN_DICT, EMAIL_PATTERN_COMPILED, USERNAME_REGEX
 
 from .. import database
 db = database.db
-
 
 @mod.before_app_first_request
 def make_session_permanent():
     session.permanent = True
     mod.permanent_session_lifetime = timedelta(days=5)
     if session.get('admin_username'):
-        USER_DICT['current_admin_'+str(session['admin_username'])] = loadAdmin(db, session['admin_username'])
+        ADMIN_DICT['current_admin_'+str(session['admin_username'])] = loadAdmin(db, session['admin_username'])
 
 @mod.before_request
 def init():
@@ -61,7 +61,7 @@ def table():
 @login_required
 def add():
     current_admin = ADMIN_DICT['current_admin_'+str(session['admin_username'])]
-    user_data = current_admin.loadAllUsers()
+    current_admin.loadAllUsers()
     if bool(regex.match(EMAIL_PATTERN_COMPILED, request.form['email'])) and bool(regex.match(USERNAME_REGEX, request.form['username'])):
         isUserInsertionSuccessful = current_admin.createUser(
             request.form['username'],

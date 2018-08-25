@@ -7,7 +7,7 @@ from flask_socketio import send, emit
 from ..utils import decorators, exceptions
 
 # Import global variables
-from ..config import *
+from ..config import GAMES, USER_DICT
 from .. import socketio
 
 mod = Blueprint('game', __name__, template_folder='templates')
