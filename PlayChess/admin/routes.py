@@ -13,7 +13,7 @@ mod = Blueprint('admin', __name__, template_folder='admin_templates')
 from .admins import Admin, loadAdmin
 from .decorators import login_required, logout_required
 # Import global vars
-from ..config import ADMIN_DICT, EMAIL_PATTERN_COMPILED, USERNAME_REGEX
+from ..config import ADMIN_DICT, EMAIL_PATTERN_COMPILED, USERNAME_REGEX, TERMINAL_COLORS
 
 from .. import database
 db = database.db
@@ -27,7 +27,13 @@ def make_session_permanent():
 
 @mod.before_request
 def init():
-    print(ADMIN_DICT)
+    print(
+        TERMINAL_COLORS['CYELLOW'] + 
+        TERMINAL_COLORS['CBOLD'] + 
+        ADMIN_DICT + 
+        TERMINAL_COLORS['CEND'] + 
+        TERMINAL_COLORS['CEND']
+    )
 
 @mod.route('/', methods=['POST', 'GET'])
 @logout_required

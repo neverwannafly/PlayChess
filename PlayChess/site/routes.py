@@ -16,7 +16,7 @@ from ..utils import decorators
 from ..utils import game
 
 # Import global variables and settings
-from ..config import PLAYERS_QUEUE, USER_DICT, USERNAME_REGEX, EMAIL_PATTERN_COMPILED, GAMES
+from ..config import PLAYERS_QUEUE, USER_DICT, USERNAME_REGEX, EMAIL_PATTERN_COMPILED, GAMES, TERMINAL_COLORS
 
 # Database initialisation
 from .. import database
@@ -36,8 +36,20 @@ def load_user_from_session():
 
 @mod.before_request
 def init():
-    print(USER_DICT)
-    print(GAMES)
+    print(
+        TERMINAL_COLORS['CYELLOW'] + 
+        TERMINAL_COLORS['CBOLD'] + 
+        USER_DICT + 
+        TERMINAL_COLORS['CEND'] + 
+        TERMINAL_COLORS['CEND'] 
+    )
+    print(
+        TERMINAL_COLORS['CYELLOW'] + 
+        TERMINAL_COLORS['CBOLD'] + 
+        GAMES + 
+        TERMINAL_COLORS['CEND'] + 
+        TERMINAL_COLORS['CEND']
+    )
 
 ### View functions start ###
 
