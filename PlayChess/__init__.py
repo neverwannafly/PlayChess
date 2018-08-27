@@ -26,6 +26,7 @@ from PlayChess.admin.routes import mod
 from PlayChess.blog.routes import mod
 from PlayChess.chat.routes import mod
 from PlayChess.game.routes import mod
+from PlayChess.api.routes import mod
 
 # makes an instance of admin class that can be used to add new admins!
 
@@ -38,6 +39,7 @@ app.register_blueprint(admin.routes.mod, url_prefix='/admin')
 app.register_blueprint(blog.routes.mod, url_prefix='/blog')
 app.register_blueprint(chat.routes.mod, url_prefix='/chat')
 app.register_blueprint(game.routes.mod, url_prefix='/game')
+app.register_blueprint(api.routes.mod, url_prefix='/api')
 
 # Makes chess board easily accessible thorugh terminal
 
