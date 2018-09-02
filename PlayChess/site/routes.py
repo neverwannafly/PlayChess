@@ -38,17 +38,15 @@ def load_user_from_session():
 def init():
     print(
         TERMINAL_COLORS['CYELLOW'] + 
-        TERMINAL_COLORS['CBOLD'] + 
-        USER_DICT + 
-        TERMINAL_COLORS['CEND'] + 
-        TERMINAL_COLORS['CEND'] 
+        TERMINAL_COLORS['CBOLD'], end=""
     )
+    print("Current Users : ", end="")
+    print(USER_DICT)
+    print("Current Games : ", end="")
+    print(GAMES)
     print(
-        TERMINAL_COLORS['CYELLOW'] + 
-        TERMINAL_COLORS['CBOLD'] + 
-        GAMES + 
         TERMINAL_COLORS['CEND'] + 
-        TERMINAL_COLORS['CEND']
+        TERMINAL_COLORS['CEND'], end=""
     )
 
 ### View functions start ###
