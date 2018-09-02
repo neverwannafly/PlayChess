@@ -1,6 +1,6 @@
 bcrypt==3.1.4
 Faker==0.8.7
-Flask==0.12.3
+Flask==0.12.4
 Flask-Cors==3.0.3
 Flask-Login==0.4.1
 Flask-PyMongo==0.5.1
