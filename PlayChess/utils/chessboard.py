@@ -16,9 +16,6 @@ class Piece:
         self.current_position = ""
         self.color = ""
         self.label = ""
-
-    def returnLabel(self):
-        return self.label
         
     def __str__(self):
         return self.label + self.current_position
@@ -28,6 +25,7 @@ class Piece:
 class Pawn(Piece):
     def __init__(self, current_position, color):
         super().__init__()
+        self.name = "Pawn"
         self.points = 1
         self.current_position = current_position
         self.color = color
@@ -36,6 +34,7 @@ class Pawn(Piece):
 class Knight(Piece):
     def __init__(self, current_position, color):
         super().__init__()
+        self.name = "Knight"
         self.points = 3
         self.current_position = current_position
         self.color = color
@@ -44,6 +43,7 @@ class Knight(Piece):
 class Bishop(Piece):
     def __init__(self, current_position, color):
         super().__init__()
+        self.name = "Bishop"
         self.points = 3
         self.current_position = current_position
         self.color = color
@@ -52,6 +52,7 @@ class Bishop(Piece):
 class Rook(Piece):
     def __init__(self, current_position, color):
         super().__init__()
+        self.name = "Rook"
         self.points = 5
         self.current_position = current_position
         self.color = color
@@ -60,6 +61,7 @@ class Rook(Piece):
 class Queen(Piece):
     def __init__(self, current_position, color):
         super().__init__()
+        self.name = "Queen"
         self.points = 9
         self.current_position = current_position
         self.color = color
@@ -68,6 +70,7 @@ class Queen(Piece):
 class King(Piece):
     def __init__(self, current_position, color):
         super().__init__()
+        self.name = "King"
         self.points = 100
         self.current_position = current_position
         self.color = color
@@ -76,6 +79,7 @@ class King(Piece):
 class Blank(Piece):
     def __init__(self, current_position):
         super().__init__()
+        self.name = "Blank"
         self.current_position = current_position
         self.color = "none"
         self.label = self.color + "-" + "_"
@@ -397,6 +401,7 @@ class Chessboard:
     # Need to be used for pawn promotion, en-passant and board editor
     def delete_piece(self, piece_position):
         obj = self.convert_to_index(piece_position)
+        self.pieces[obj.piece.color][obj.piece.name].remove(piece_position)
         obj.piece = Blank(piece_position)
         obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p")
         obj.html_class += " " + obj.piece.label
@@ -410,12 +415,15 @@ class Chessboard:
     def create_piece(self, piece_position, piece_name, piece_color=None):
         if piece_color == None:
             return getattr(sys.modules[__name__], piece_name)(piece_position)
+        self.pieces[piece_color][piece_name].append(piece_position)
         return getattr(sys.modules[__name__], piece_name)(piece_position, piece_color)
 
     # This method changes the current state of board, i.e modifies id's and classes of 
     # class members of Sqaure class and also change the values of chessboard array.
     def change_chessboard_state(self, initial_pos, final_pos):
         obj = self.convert_to_index(initial_pos)
+        #temporarily delete piece from pieces object
+        self.pieces[obj.piece.color][obj.piece.name].remove(initial_pos)
         temp_piece = obj.piece
         obj.piece = Blank(initial_pos)
         obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p")
@@ -433,6 +441,8 @@ class Chessboard:
             html_class = obj.html_class,
             html_id = obj.html_id
         )
+        # Add the deleted piece back to pieces object
+        self.pieces[obj.piece.color][obj.piece.name].append(final_pos)
         self.changes.append({'pos': final_pos, 'class': obj.html_class})
 
     def make_move_private(self, initial_pos, final_pos):
@@ -728,7 +738,6 @@ class Chessboard:
                 if Y-1>=0:
                     if self.chessboard[X][Y-1].piece.label.split('-')[1]=='p' and self.chessboard[oX][oY].piece.color!=self.chessboard[X][Y-1].piece.color:
                         self.enpassant_target_square = self.chessboard[X+direction][Y].html_id
-        print(self.enpassant_target_square)
 
         # Set Castling Flags
         if self.can_white_castle and self.convert_to_index(initial_pos).piece.color=="white":
