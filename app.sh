@@ -8,7 +8,7 @@ runscript() {
 main() {
     if [ $# -lt 1 ]
     then 
-        echo ERROR: Invalid Arguments
+        echo "\33[1m\33[31mERROR: Invalid Arguments\033[0m\033[0m"
         exit 1
     fi
     if [ $1 = "dev" ]
@@ -21,7 +21,7 @@ main() {
     then
         runscript "logs.sh"
     else
-        echo ERROR: Unrecognised Command!
+        echo "\33[1m\33[31mERROR: Unrecognised Command!\033[0m\033[0m"
         exit -1
     fi
 }
