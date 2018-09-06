@@ -112,7 +112,7 @@ class LightSquare(Square):
 
 # Defines the final layout of the chessboard!
 class Chessboard:
-    def __init__(self, fen_notation=None):
+    def __init__(self, fen_notation=config.START_POSITION_NOTATION):
 
         # An array holding recent changes in board position
         self.changes = []
@@ -134,8 +134,8 @@ class Chessboard:
         self.enpassant_flag_life = 0
         self.moves = 0
 
-        self.king_position_white = "e1"
-        self.king_position_black = "e8"
+        # Stores position of black and white pieces for quick checkmate lookup
+        self.pieces = {}
 
         self.configuration = 1
         # config of 2 means chessboard is drawn for black player at bottom!
@@ -144,6 +144,18 @@ class Chessboard:
 
         if fen_notation is None:
             self.initialise_board()
+            self.pieces['white']['King'] = ['e1']
+            self.pieces['white']['Queen'] = ['d1']
+            self.pieces['white']['Bishop'] = ['c1', 'f1']
+            self.pieces['white']['Knight'] = ['b1', 'g1']
+            self.pieces['white']['Rook'] = ['a1', 'h1']
+            self.pieces['white']['Pawn'] = ['a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2']
+            self.pieces['black']['King'] = ['e8']
+            self.pieces['black']['Queen'] = ['d8']
+            self.pieces['black']['Bishop'] = ['c8', 'f8']
+            self.pieces['black']['Knight'] = ['b8', 'g8']
+            self.pieces['black']['Rook'] = ['a8', 'h8']
+            self.pieces['black']['Pawn'] = ['a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7']
         else:
             self.load_position(fen_notation)
 
@@ -219,7 +231,7 @@ class Chessboard:
     def load_position(self, fen_notation):
         # Extract required parameters for the Chessboard class from fen_notation
         fen_components = fen_notation.split(' ')
-        game_component = fen_components[0]
+        game_component = fen_components[0] + "/"
         castling_info = fen_components[2]
         enpassant_target_square = fen_components[3]
 
@@ -247,6 +259,10 @@ class Chessboard:
                         file += 1
                         squares -= 1
                 else:
+
+                    # Set pieces
+                    self.pieces[piece[1]][piece[0]] = get_position(file, rank)
+
                     board_row.append(self.create_piece(get_position(file, rank), piece[0], piece[1]))
                     file += 1
 
@@ -277,7 +293,7 @@ class Chessboard:
         if enpassant_target_square is not None:
             self.enpassant_target_square = enpassant_target_square
             self.enpassant_flag_life = 1
-    
+
     def initialise_board(self):
         # White chess pieces
         white_rooks = [Rook("a1", "white"), Rook("h1", "white")]
