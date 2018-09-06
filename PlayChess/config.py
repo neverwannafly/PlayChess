@@ -70,3 +70,6 @@ CHESS_PIECE_CLASS = {
     'N': ('Knight', 'white'),
     'n': ('Knight', 'black'),
 }
+
+# Starting Position Notation
+START_POSITION_NOTATION = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR * KQkq -  * *'
