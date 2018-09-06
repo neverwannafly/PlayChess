@@ -269,12 +269,6 @@ class Chessboard:
                         squares -= 1
                 else:
 
-                    # Set pieces
-                    if not self.pieces[piece[1]].get(piece[0], None):
-                        self.pieces[piece[1]][piece[0]] = [get_position(file, rank)]
-                    else:
-                        self.pieces[piece[1]][piece[0]].append(get_position(file, rank))
-
                     board_row.append(self.create_piece(get_position(file, rank), piece[0], piece[1]))
                     file += 1
 
@@ -415,7 +409,10 @@ class Chessboard:
     def create_piece(self, piece_position, piece_name, piece_color=None):
         if piece_color == None:
             return getattr(sys.modules[__name__], piece_name)(piece_position)
-        self.pieces[piece_color][piece_name].append(piece_position)
+        if self.pieces[piece_color].get(piece_name, None) == None:
+            self.pieces[piece_color][piece_name] = [piece_position]
+        else:
+            self.pieces[piece_color][piece_name].append(piece_position)
         return getattr(sys.modules[__name__], piece_name)(piece_position, piece_color)
 
     # This method changes the current state of board, i.e modifies id's and classes of 
