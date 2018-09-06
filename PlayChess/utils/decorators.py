@@ -1,6 +1,8 @@
 from flask import session, redirect, url_for
 from functools import wraps
 
+from ..config import TERMINAL_COLORS
+
 # Custom login_required decorator
 def login_required(view_function):
     @wraps(view_function)
@@ -21,4 +23,18 @@ def logout_required(view_function):
             return redirect(url_for('site.index'))
         else:
             return view_function(*args, **kwargs)
+    return wrapper
+
+def deprecated(func):
+    @wraps(func)
+    def wrapper(*args):
+        print(
+            TERMINAL_COLORS['CYELLOW'] +  
+            TERMINAL_COLORS['CBOLD'] + 
+            "This method has been deprecated" + 
+            TERMINAL_COLORS['CEND'] + 
+            TERMINAL_COLORS['CEND']
+        )
+        print(args)
+        return func(args[0])
     return wrapper
