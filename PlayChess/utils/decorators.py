@@ -35,6 +35,5 @@ def deprecated(func):
             TERMINAL_COLORS['CEND'] + 
             TERMINAL_COLORS['CEND']
         )
-        print(args)
         return func(args[0])
     return wrapper
