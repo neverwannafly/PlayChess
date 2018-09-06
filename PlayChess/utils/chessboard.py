@@ -6,6 +6,7 @@
 import sys
 
 from .exceptions import InvalidMoveError
+from .decorators import deprecated
 from .. import config
 
 class Piece:
@@ -135,7 +136,10 @@ class Chessboard:
         self.moves = 0
 
         # Stores position of black and white pieces for quick checkmate lookup
-        self.pieces = {}
+        self.pieces = {
+            'white': {},
+            'black': {},
+        }
 
         self.configuration = 1
         # config of 2 means chessboard is drawn for black player at bottom!
@@ -143,6 +147,7 @@ class Chessboard:
         self.chessboard = self.create_chessboard()
 
         if fen_notation is None:
+            # making chessboard from fen notation should be better
             self.initialise_board()
             self.pieces['white']['King'] = ['e1']
             self.pieces['white']['Queen'] = ['d1']
@@ -261,7 +266,10 @@ class Chessboard:
                 else:
 
                     # Set pieces
-                    self.pieces[piece[1]][piece[0]] = get_position(file, rank)
+                    if not self.pieces[piece[1]].get(piece[0], None):
+                        self.pieces[piece[1]][piece[0]] = [get_position(file, rank)]
+                    else:
+                        self.pieces[piece[1]][piece[0]].append(get_position(file, rank))
 
                     board_row.append(self.create_piece(get_position(file, rank), piece[0], piece[1]))
                     file += 1
@@ -294,6 +302,7 @@ class Chessboard:
             self.enpassant_target_square = enpassant_target_square
             self.enpassant_flag_life = 1
 
+    @deprecated
     def initialise_board(self):
         # White chess pieces
         white_rooks = [Rook("a1", "white"), Rook("h1", "white")]
