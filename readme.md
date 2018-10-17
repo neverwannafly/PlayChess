@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/neverwannafly/PlayChess.svg?branch=master)](https://travis-ci.org/neverwannafly/PlayChess)
 
-## Current Features
+### The Current Features
 <ul>
     <li>User signin</li>
     <li>Admin dashboard</li>
