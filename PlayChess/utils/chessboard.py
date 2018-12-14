@@ -379,6 +379,17 @@ class Chessboard:
                 self.enpassant_flag_life += 1
         except InvalidMoveError:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
+
+        moved_piece = self.convert_to_index(initial_pos).piece
+        captured_piece = self.convert_to_index(final_pos).piece
+
+        if captured_piece.color != "none":
+            self.pieces[captured_piece.color][captured_piece.name] = None
+
+        self.pieces[moved_piece.color][moved_piece.name] = final_pos
+
+        # Handle pawn promotion case here
+
         return self.changes
 
     # Will always be applied to check if king's square is attacked or not
@@ -505,7 +516,7 @@ class Chessboard:
 
         color = self.convert_to_index(initial_pos).piece.color
         print(self.is_square_under_attack(self.pieces[color]["King"]))
-        
+
         if self.is_move_legal(initial_pos, final_pos):
             # Check for special king moves!
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
