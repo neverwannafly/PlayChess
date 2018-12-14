@@ -16,6 +16,7 @@ class Piece:
         self.current_position = ""
         self.color = ""
         self.label = ""
+        self.name = ""
         
     def __str__(self):
         return self.label + self.current_position
@@ -380,6 +381,9 @@ class Chessboard:
         except InvalidMoveError:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
 
+        print(self.is_square_under_attack(self.pieces["white"]["King"][0]), end=", ")
+        print(self.is_square_under_attack(self.pieces["black"]["King"][0]))
+
         return self.changes
 
     # Will always be applied to check if a square is attacked or not
@@ -399,48 +403,174 @@ class Chessboard:
         
         # Check along horizontal
         for y in range(Y+1, 8):
-            destination_sqaure = self.chessboard[X][y]
-            print(destination_sqaure)
-            if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
+            destination_square = self.chessboard[X][y]
+
+            if y==Y+1 and destination_square.piece.name == "King" and are_colors_opposite(destination_square):
                 return True
 
-            if are_colors_same(destination_sqaure):
+            if (destination_square.piece.name == "Rook" or destination_square.piece.name == "Queen") and are_colors_opposite(destination_square):
+                return True
+
+            if are_colors_same(destination_square):
+                break
+
+            if destination_square.piece.name in ["Bishop", "Knight", "Pawn", "King"]:
                 break
 
         for y in range(Y-1, -1, -1):
-            destination_sqaure = self.chessboard[X][y]
-            print(destination_sqaure)
-            if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
+            destination_square = self.chessboard[X][y]
+
+            if y==Y-1 and destination_square.piece.name == "King" and are_colors_opposite(destination_square):
                 return True
 
-            if are_colors_same(destination_sqaure):
+            if (destination_square.piece.name == "Rook" or destination_square.piece.name == "Queen") and are_colors_opposite(destination_square):
+                return True
+
+            if are_colors_same(destination_square):
+                break
+
+            if destination_square.piece.name in ["Bishop", "Knight", "Pawn", "King"]:
                 break
 
         # Check along vertcial 
-        for x in range(X, 8):
-            destination_sqaure = self.chessboard[x][Y]
-            print(destination_sqaure)
-            if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
+        for x in range(X+1, 8):
+            destination_square = self.chessboard[x][Y]
+
+            if x==X+1 and destination_square.piece.name == "King" and are_colors_opposite(destination_square):
                 return True
 
-            if are_colors_same(destination_sqaure):
+            if (destination_square.piece.name == "Rook" or destination_square.piece.name == "Queen") and are_colors_opposite(destination_square):
+                return True
+
+            if are_colors_same(destination_square):
+                break
+
+            if destination_square.piece.name in ["Bishop", "Knight", "Pawn", "King"]:
                 break
 
         for x in range(X-1, -1, -1):
-            destination_sqaure = self.chessboard[x][Y]
-            print(destination_sqaure)
-            if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
+            destination_square = self.chessboard[x][Y]
+
+            if x==X-1 and destination_square.piece.name == "King" and are_colors_opposite(destination_square):
                 return True
 
-            if are_colors_same(destination_sqaure):
+            if (destination_square.piece.name == "Rook" or destination_square.piece.name == "Queen") and are_colors_opposite(destination_square):
+                return True
+
+            if are_colors_same(destination_square):
+                break
+
+            if destination_square.piece.name in ["Bishop", "Knight", "Pawn", "King"]:
                 break
 
         # Check on a1-h8 diagonal
+        x = X-1
+        y = Y+1
+        while x>=0 and y<=7:
+            destination_square = self.chessboard[x][y]
 
+            if x==X-1 and y==Y+1:
+                if destination_square.piece.name == "King" and are_colors_opposite(destination_square):
+                    return True
+
+                if piece_color == "white" and destination_square.piece.name == "Pawn" and are_colors_opposite(destination_square):
+                    return True
+
+            if (destination_square.piece.name == "Bishop" or destination_square.piece.name == "Queen") and are_colors_opposite(destination_square):
+                return True
+
+            if are_colors_same(destination_square):
+                break
+
+            if destination_square.piece.name in ["Rook", "Knight", "Pawn", "King"]:
+                break
+            
+            x -= 1
+            y += 1
+
+        x = X+1
+        y = Y-1
+        while x<=7 and y>=0:
+            destination_square = self.chessboard[x][y]
+
+            if x==X+1 and y==Y-1:
+                if destination_square.piece.name == "King" and are_colors_opposite(destination_square):
+                    return True
+
+                if piece_color == "black" and destination_square.piece.name == "Pawn" and are_colors_opposite(destination_square):
+                    return True
+
+            if (destination_square.piece.name == "Bishop" or destination_square.piece.name == "Queen") and are_colors_opposite(destination_square):
+                return True
+
+            if are_colors_same(destination_square):
+                break
+
+            if destination_square.piece.name in ["Rook", "Knight", "Pawn", "King"]:
+                break
+            
+            x += 1
+            y -= 1
 
         # Check on a8-h1 diagonal
+        x = X-1
+        y = Y-1
+        while x>=0 and y>=0:
+            destination_square = self.chessboard[x][y]
+
+            if x==X-1 and y==Y-1:
+                if destination_square.piece.name == "King" and are_colors_opposite(destination_square):
+                    return True
+
+                if piece_color == "white" and destination_square.piece.name == "Pawn" and are_colors_opposite(destination_square):
+                    return True
+
+            if (destination_square.piece.name == "Bishop" or destination_square.piece.name == "Queen") and are_colors_opposite(destination_square):
+                return True
+
+            if are_colors_same(destination_square):
+                break
+
+            if destination_square.piece.name in ["Rook", "Knight", "Pawn", "King"]:
+                break
+            
+            x -= 1
+            y -= 1
+
+        x = X+1
+        y = Y+1
+        while x<=7 and y<=7:
+            destination_square = self.chessboard[x][y]
+
+            if x==X+1 and y==Y+1:
+                if destination_square.piece.name == "King" and are_colors_opposite(destination_square):
+                    return True
+
+                if piece_color == "black" and destination_square.piece.name == "Pawn" and are_colors_opposite(destination_square):
+                    return True
+
+            if (destination_square.piece.name == "Bishop" or destination_square.piece.name == "Queen") and are_colors_opposite(destination_square):
+                return True
+
+            if are_colors_same(destination_square):
+                break
+
+            if destination_square.piece.name in ["Rook", "Knight", "Pawn", "King"]:
+                break
+            
+            x += 1
+            y += 1
 
         # Check skew positions
+        possible_skew_moves = [(2, 1), (-2, 1), (2, -1), (-2, -1), (1, 2), (-1, 2), (1, -2), (-1, -2)]
+        for move in possible_skew_moves:
+            if X+move[0] <=7 and X+move[0]>=0 and Y+move[1] <= 7 and Y+move[1]>=0:
+                destination_square = self.chessboard[X+move[0]][Y+move[1]]
+
+                if destination_square.piece.name == "Knight" and are_colors_opposite(destination_square):
+                    return True
+
+        return False
 
     # Need to be used for pawn promotion, en-passant and board editor
     def delete_piece(self, piece_position):
@@ -497,10 +627,6 @@ class Chessboard:
             raise InvalidMoveError("Initial and Final Positions cannot be same", initial_pos, final_pos)
         if self.convert_to_index(initial_pos).piece.color=="none":
             raise InvalidMoveError("Cannot Move from empty Square", initial_pos, final_pos)
-
-        color = self.convert_to_index(initial_pos).piece.color
-
-        print(self.is_square_under_attack(self.pieces[color]["King"][0]))
 
         if self.is_move_legal(initial_pos, final_pos):
             # Check for special king moves!
@@ -864,4 +990,4 @@ class Chessboard:
     def reset_chessboard(self):
         self.configuration = 1
         self.chessboard = self.create_chessboard()
-        self.load_position(fen_notation)
+        self.load_position(config.START_POSITION_NOTATION)
