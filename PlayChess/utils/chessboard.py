@@ -381,16 +381,71 @@ class Chessboard:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
         return self.changes
 
+    # Will always be applied to check if king's square is attacked or not
     def is_square_under_attack(self, square):
         indexes = self.return_index_as_touple(square)
+        piece_color = self.convert_to_index(square).piece.color 
+
+        def are_colors_opposite(destination_square):
+            return destination_square.piece.color != piece_color and destination_square.piece.color != "none"
+
+        def are_colors_same(destination_square):
+            return destination_square.piece.color == piece_color
+
         X, Y = indexes[0], indexes[1]
+        
         # Check along horizontal
+        for y in range(Y, 8):
+            destination_sqaure = self.chessboard[X][y]
+            if y==Y+1 or y==Y-1:
+                if destination_sqaure.piece.name == "King" and are_colors_opposite(destination_sqaure):
+                    return True
+            if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
+                return True
 
-        # Check along vertical
+            if are_colors_same(destination_sqaure):
+                break
 
-        # Check along the diagonal
+        for y in range(Y-1, -1, -1):
+            destination_sqaure = self.chessboard[X][y]
+            if y==Y+1 or y==Y-1:
+                if destination_sqaure.piece.name == "King" and are_colors_opposite(destination_sqaure):
+                    return True
+            if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
+                return True
 
-        # Check at skew positions
+            if are_colors_same(destination_sqaure):
+                break
+
+        # Check along vertcial 
+        for x in range(X, 8):
+            destination_sqaure = self.chessboard[x][Y]
+            if x==X+1 or X==X-1:
+                if destination_sqaure.piece.name == "King" and are_colors_opposite(destination_sqaure):
+                    return True
+            if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
+                return True
+
+            if are_colors_same(destination_sqaure):
+                break
+
+        for x in range(X-1, -1, -1):
+            destination_sqaure = self.chessboard[x][Y]
+            if x==X+1 or X==X-1:
+                if destination_sqaure.piece.name == "King" and are_colors_opposite(destination_sqaure):
+                    return True
+            if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
+                return True
+
+            if are_colors_same(destination_sqaure):
+                break
+
+        # Check on a1-h8 diagonal
+
+
+        # Check on a8-h1 diagonal
+
+        # Check skew positions
 
     # Need to be used for pawn promotion, en-passant and board editor
     def delete_piece(self, piece_position):
@@ -443,6 +498,14 @@ class Chessboard:
         self.changes.append({'pos': final_pos, 'class': obj.html_class})
 
     def make_move_private(self, initial_pos, final_pos):
+        if initial_pos==final_pos:
+            raise InvalidMoveError("Initial and Final Positions cannot be same", initial_pos, final_pos)
+        if self.convert_to_index(initial_pos).piece.color=="none":
+            raise InvalidMoveError("Cannot Move from empty Square", initial_pos, final_pos)
+
+        color = self.convert_to_index(initial_pos).piece.color
+        print(self.is_square_under_attack(self.pieces[color]["King"]))
+        
         if self.is_move_legal(initial_pos, final_pos):
             # Check for special king moves!
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
