@@ -380,22 +380,14 @@ class Chessboard:
         except InvalidMoveError:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
 
-        moved_piece = self.convert_to_index(initial_pos).piece
-        captured_piece = self.convert_to_index(final_pos).piece
-
-        if captured_piece.color != "none":
-            self.pieces[captured_piece.color][captured_piece.name] = None
-
-        self.pieces[moved_piece.color][moved_piece.name] = final_pos
-
-        # Handle pawn promotion case here
-
         return self.changes
 
-    # Will always be applied to check if king's square is attacked or not
-    def is_square_under_attack(self, square):
+    # Will always be applied to check if a square is attacked or not
+    def is_square_under_attack(self, square, piece_color=None):
         indexes = self.return_index_as_touple(square)
-        piece_color = self.convert_to_index(square).piece.color 
+
+        if piece_color == None:
+            piece_color = self.convert_to_index(square).piece.color
 
         def are_colors_opposite(destination_square):
             return destination_square.piece.color != piece_color and destination_square.piece.color != "none"
@@ -406,11 +398,9 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         
         # Check along horizontal
-        for y in range(Y, 8):
+        for y in range(Y+1, 8):
             destination_sqaure = self.chessboard[X][y]
-            if y==Y+1 or y==Y-1:
-                if destination_sqaure.piece.name == "King" and are_colors_opposite(destination_sqaure):
-                    return True
+            print(destination_sqaure)
             if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
                 return True
 
@@ -419,9 +409,7 @@ class Chessboard:
 
         for y in range(Y-1, -1, -1):
             destination_sqaure = self.chessboard[X][y]
-            if y==Y+1 or y==Y-1:
-                if destination_sqaure.piece.name == "King" and are_colors_opposite(destination_sqaure):
-                    return True
+            print(destination_sqaure)
             if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
                 return True
 
@@ -431,9 +419,7 @@ class Chessboard:
         # Check along vertcial 
         for x in range(X, 8):
             destination_sqaure = self.chessboard[x][Y]
-            if x==X+1 or X==X-1:
-                if destination_sqaure.piece.name == "King" and are_colors_opposite(destination_sqaure):
-                    return True
+            print(destination_sqaure)
             if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
                 return True
 
@@ -442,9 +428,7 @@ class Chessboard:
 
         for x in range(X-1, -1, -1):
             destination_sqaure = self.chessboard[x][Y]
-            if x==X+1 or X==X-1:
-                if destination_sqaure.piece.name == "King" and are_colors_opposite(destination_sqaure):
-                    return True
+            print(destination_sqaure)
             if destination_sqaure.piece.name == "Rook" or destination_sqaure.piece.name == "Queen" and are_colors_opposite(destination_square):
                 return True
 
@@ -515,7 +499,8 @@ class Chessboard:
             raise InvalidMoveError("Cannot Move from empty Square", initial_pos, final_pos)
 
         color = self.convert_to_index(initial_pos).piece.color
-        print(self.is_square_under_attack(self.pieces[color]["King"]))
+
+        print(self.is_square_under_attack(self.pieces[color]["King"][0]))
 
         if self.is_move_legal(initial_pos, final_pos):
             # Check for special king moves!
@@ -879,4 +864,4 @@ class Chessboard:
     def reset_chessboard(self):
         self.configuration = 1
         self.chessboard = self.create_chessboard()
-        self.initialise_board()
+        self.load_position(fen_notation)
