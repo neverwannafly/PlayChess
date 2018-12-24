@@ -13,7 +13,7 @@ function preload() {
 function setup() {
     createCanvas(windowWidth, windowHeight);
     gravity = createVector(0, 0.01);
-    wind = createVector(0, random(-0.02, 0.02));
+    wind = createVector(0, 0);
     for (let x=0; x<spriteSheet.width; x+=32) {
         for (let y=0; y<spriteSheet.height; y+=32) {
             let img = spriteSheet.get(x, y, 32, 32);
