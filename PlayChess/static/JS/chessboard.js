@@ -19,15 +19,21 @@
             const target = $(event.target);
             if(incrementClick()%2!=0) {
                 initial_pos = $(target).attr('id');
+
+                if ($("#"+initial_pos).hasClass("none-_")) {
+                    incrementClick();
+                } 
+                else {
                     $("#"+initial_pos).addClass("active-cell");
-                const url = "generateLegalMoves/" + initial_pos;
-                $.ajax({
-                    url: url,
-                })
-                .done( (data)=> {
-                    squares = data['moves'];
-                    highlightSquares(squares);
-                });
+                    const url = "generateLegalMoves/" + initial_pos;
+                    $.ajax({
+                        url: url,
+                    })
+                    .done( (data)=> {
+                        squares = data['moves'];
+                        highlightSquares(squares);
+                    });
+                }
             }
             else {
                 final_pos = $(target).attr('id');
