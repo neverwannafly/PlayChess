@@ -71,6 +71,10 @@ body {
     filter: brightness(85%);
 }
 
+.check {
+    background-color: red!important;
+}
+
 .highlighted-cell {
     cursor: pointer!important;
     filter: brightness(50%)!important;
