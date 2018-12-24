@@ -170,7 +170,10 @@ def resetBoard():
 @mod.route('/generateLegalMoves/<init_pos>')
 @decorators.login_required
 def generateLegalMoves(init_pos):
-    moves = USER_DICT['current_user_' + str(session['username'])].chessboard.generate_legal_moves(init_pos)
+    try:
+        moves = USER_DICT['current_user_' + str(session['username'])].chessboard.generate_legal_moves(init_pos)
+    except exceptions.SideNotAuthorizedToMakeMove as error:
+        return jsonify({'moves': []})
     return jsonify({'moves': moves})
 
 @mod.route('/makemove/<move>')
@@ -182,6 +185,20 @@ def make_move(move):
     except exceptions.InvalidMoveError as error:
         print(error)
         return jsonify({'success': False})
+    except exceptions.SideNotAuthorizedToMakeMove as error:
+        print(error)
+        return jsonify({'success': False})
+    except exceptions.Draw as result:
+        return jsonify({
+            'gameFinished': True,
+            'result': result.result,
+            'cause': result.cause,
+        })
+    except exceptions.Checkmate as result:
+        return jsonify({
+            'gameFinished': True,
+            'result': result.result,
+        })
     return jsonify({
         'success': True,
         'changes': changes,
