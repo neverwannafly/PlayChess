@@ -368,24 +368,6 @@ class Chessboard:
     def return_index_as_touple(self, notation):
         return (ord('8')-ord(notation[1]), ord(notation[0])-ord('a'))
 
-    def make_move(self, initial_pos, final_pos):
-        self.changes = []
-        try:
-            self.make_move_private(initial_pos, final_pos)
-            self.moves += 1
-            if self.enpassant_flag_life >= 1:
-                self.enpassant_flag_life = 0
-                self.enpassant_target_square = None
-            elif self.enpassant_target_square:
-                self.enpassant_flag_life += 1
-        except InvalidMoveError:
-            raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
-
-        print(self.is_square_under_attack(self.pieces["white"]["King"][0]), end=", ")
-        print(self.is_square_under_attack(self.pieces["black"]["King"][0]))
-
-        return self.changes
-
     # Will always be applied to check if a square is attacked or not
     def is_square_under_attack(self, square, piece_color=None):
         indexes = self.return_index_as_touple(square)
@@ -622,6 +604,20 @@ class Chessboard:
         self.pieces[obj.piece.color][obj.piece.name].append(final_pos)
         self.changes.append({'pos': final_pos, 'class': obj.html_class})
 
+    def make_move(self, initial_pos, final_pos):
+        self.changes = []
+        try:
+            self.make_move_private(initial_pos, final_pos)
+            self.moves += 1
+            if self.enpassant_flag_life >= 1:
+                self.enpassant_flag_life = 0
+                self.enpassant_target_square = None
+            elif self.enpassant_target_square:
+                self.enpassant_flag_life += 1
+        except InvalidMoveError:
+            raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
+        return self.changes
+
     def make_move_private(self, initial_pos, final_pos):
         if initial_pos==final_pos:
             raise InvalidMoveError("Initial and Final Positions cannot be same", initial_pos, final_pos)
@@ -671,6 +667,14 @@ class Chessboard:
                 self.change_chessboard_state(initial_pos, final_pos)
         else:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
+
+        white_king = self.pieces["white"]["King"][0]
+        if (self.is_square_under_attack(white_king)):
+            self.changes.append({'pos': white_king, 'class': self.convert_to_index(white_king).html_class + ' check'})
+
+        black_king = self.pieces["black"]["King"][0]
+        if (self.is_square_under_attack(black_king)):
+            self.changes.append({'pos': black_king, 'class': self.convert_to_index(black_king).html_class + ' check'})
 
     def move_top(self, initial_pos, limit=10):
         indexes = self.return_index_as_touple(initial_pos)
