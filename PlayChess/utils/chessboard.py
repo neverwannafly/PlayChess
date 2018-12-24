@@ -999,6 +999,12 @@ class Chessboard:
         return board_html_view
 
     def reset_chessboard(self):
+        # Change these settings in accordance with FEN Notation
+        self.moves = 0
+        self.enpassant_target_square = None
+        self.enpassant_flag_life = 0
         self.configuration = 1
+        self.changes = []
+        
         self.chessboard = self.create_chessboard()
         self.load_position(config.START_POSITION_NOTATION)
