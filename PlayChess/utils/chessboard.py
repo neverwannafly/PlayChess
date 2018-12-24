@@ -5,7 +5,7 @@
 
 import sys
 
-from .exceptions import InvalidMoveError
+from .exceptions import (InvalidMoveError, SideNotAuthorizedToMakeMove, Checkmate, Draw)
 from .decorators import deprecated
 from .. import config
 
@@ -605,6 +605,10 @@ class Chessboard:
         self.changes.append({'pos': final_pos, 'class': obj.html_class})
 
     def make_move(self, initial_pos, final_pos):
+        color = self.convert_to_index(initial_pos).piece.color
+        if (self.moves % 2 == 0 and color == "black") or (self.moves % 2 != 0 and color == "white"):
+            raise SideNotAuthorizedToMakeMove()
+
         self.changes = []
         try:
             self.make_move_private(initial_pos, final_pos)
@@ -956,8 +960,11 @@ class Chessboard:
         return False
 
     def generate_legal_moves(self, initial_pos):
-        piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
+        color = self.convert_to_index(initial_pos).piece.color
+        if (self.moves % 2 == 0 and color == "black") or (self.moves % 2 != 0 and color == "white"):
+            raise SideNotAuthorizedToMakeMove()
         # returns a dictionary of valid final positions for a particular piece
+        piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
         if piece_label=="K":
             return self.make_orthogonal_moves(initial_pos, limit=1) + self.make_diagonal_moves(initial_pos, limit=1) + self.special_king_moves(initial_pos)
         elif piece_label=="Q":
