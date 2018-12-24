@@ -37,6 +37,7 @@
                 })
                 .done( (data) => {
                     if (data["success"]) {
+                        console.log(data['changes'])
                         make_move(data['changes']);
                     }
                     else {
