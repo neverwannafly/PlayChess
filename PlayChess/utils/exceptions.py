@@ -10,14 +10,13 @@ class SideNotAuthorizedToMakeMove(Exception):
 
 class Checkmate(Exception):
     """Is raised when one of the players is checkmated"""
-    def __init__(self):
-        self.result = None
+    def __init__(self, result):
+        self.result = result
     
 class Draw(Exception):
     """Is raised when a drawing condition is met"""
-    def __init__(self):
-        self.cause = None
-        self.result = None
+    def __init__(self, cause):
+        self.cause = cause
 
 class SenderCannotBeVerified(Exception):
     """Is raised when make_move is called by questionable sender"""
