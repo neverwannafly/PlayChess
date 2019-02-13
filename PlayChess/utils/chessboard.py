@@ -582,7 +582,8 @@ class Chessboard:
     def change_chessboard_state(self, initial_pos, final_pos):
         obj = self.convert_to_index(initial_pos)
         #temporarily delete piece from pieces object
-        self.pieces[obj.piece.color][obj.piece.name].remove(initial_pos)
+        if obj.piece.name!="Blank":
+            self.pieces[obj.piece.color][obj.piece.name].remove(initial_pos)
         temp_piece = obj.piece
         obj.piece = Blank(initial_pos)
         obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p")
@@ -593,6 +594,8 @@ class Chessboard:
         )
         self.changes.append({'pos': initial_pos, 'class': obj.html_class})
         obj = self.convert_to_index(final_pos)
+        if obj.piece.name != "Blank":
+            self.pieces[obj.piece.color][obj.piece.name].remove(final_pos)
         obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-pnone_-")
         obj.piece = temp_piece
         obj.html_class += " " + obj.piece.label
@@ -601,10 +604,21 @@ class Chessboard:
             html_id = obj.html_id
         )
         # Add the deleted piece back to pieces object
-        self.pieces[obj.piece.color][obj.piece.name].append(final_pos)
+        if obj.piece.name!="Blank":
+            self.pieces[obj.piece.color][obj.piece.name].append(final_pos)
         self.changes.append({'pos': final_pos, 'class': obj.html_class})
 
     def make_move(self, initial_pos, final_pos):
+
+        if self.is_checkmate:
+            print("Mate")
+            raise Checkmate(self.moves%2)
+
+        draw = self.is_draw()
+
+        if draw[0]:
+            raise Draw(draw[1])
+
         color = self.convert_to_index(initial_pos).piece.color
         if (self.moves % 2 == 0 and color == "black") or (self.moves % 2 != 0 and color == "white"):
             raise SideNotAuthorizedToMakeMove()
@@ -620,6 +634,7 @@ class Chessboard:
                 self.enpassant_flag_life += 1
         except InvalidMoveError:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
+
         return self.changes
 
     def make_move_private(self, initial_pos, final_pos):
@@ -672,13 +687,40 @@ class Chessboard:
         else:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
 
-        white_king = self.pieces["white"]["King"][0]
-        if (self.is_square_under_attack(white_king)):
-            self.changes.append({'pos': white_king, 'class': self.convert_to_index(white_king).html_class + ' check'})
+        # white_king = self.pieces["white"]["King"][0]
+        # if (self.is_square_under_attack(white_king)):
+        #     self.changes.append({'pos': white_king, 'class': self.convert_to_index(white_king).html_class + ' check'})
 
-        black_king = self.pieces["black"]["King"][0]
-        if (self.is_square_under_attack(black_king)):
-            self.changes.append({'pos': black_king, 'class': self.convert_to_index(black_king).html_class + ' check'})
+        # black_king = self.pieces["black"]["King"][0]
+        # if (self.is_square_under_attack(black_king)):
+        #     self.changes.append({'pos': black_king, 'class': self.convert_to_index(black_king).html_class + ' check'})
+
+    @property
+    def is_checkmate(self):
+        color = "white" if self.moves%2==0 else "black"
+        if self.is_square_under_attack(self.pieces[color]["King"][0]):
+            moves = []
+            for piece in self.pieces[color]:
+                for square in self.pieces[color][piece]:
+                    moves += self.generate_legal_moves(square)
+            # print(moves)
+            # print(self.pieces)
+            return True if len(moves)==0 else False
+        return False
+
+    @property
+    def is_stalemate(self):
+        color = "white" if self.moves%2==0 else "black"
+        if not self.is_square_under_attack(self.pieces[color]["King"]):
+            moves = []
+            for piece in self.pieces[color]:
+                moves += self.generate_legal_moves(self.pieces[color][piece])
+            print(moves)
+            return True if len(moves)==0 else False
+        return True
+
+    def is_draw(self):
+        return [False, "stalemate"]
 
     def move_top(self, initial_pos, limit=10):
         indexes = self.return_index_as_touple(initial_pos)
@@ -959,11 +1001,66 @@ class Chessboard:
             return True
         return False
 
+    def make_temp_move(self, initial_pos, final_pos):
+
+        color = "white" if self.moves%2==0 else "black"
+
+        initial_piece = self.convert_to_index(initial_pos).piece
+        final_piece = self.convert_to_index(final_pos).piece
+
+        self.convert_to_index(initial_pos).piece = final_piece
+        self.convert_to_index(final_pos).piece = initial_piece
+
+        self.pieces[initial_piece.color][initial_piece.name].remove(initial_pos)
+        self.pieces[initial_piece.color][initial_piece.name].append(final_pos)
+        if final_piece.name != "Blank":
+            self.pieces[final_piece.color][final_piece.name].remove(final_pos)
+
+        def reset_pos():
+            self.convert_to_index(initial_pos).piece = initial_piece
+            self.convert_to_index(final_pos).piece = final_piece
+            self.pieces[initial_piece.color][initial_piece.name].remove(final_pos)
+            self.pieces[initial_piece.color][initial_piece.name].append(initial_pos)
+            if final_piece.name != "Blank":
+                self.pieces[final_piece.color][final_piece.name].append(final_pos)
+
+        if self.is_square_under_attack(self.pieces[color]["King"][0]):
+            reset_pos()
+            return True
+        else:
+            reset_pos()
+            return False
+
+
     def generate_legal_moves(self, initial_pos):
-        color = self.convert_to_index(initial_pos).piece.color
+
+        color = "white" if self.moves%2==0 else "black"
+
         if (self.moves % 2 == 0 and color == "black") or (self.moves % 2 != 0 and color == "white"):
             raise SideNotAuthorizedToMakeMove()
-        # returns a dictionary of valid final positions for a particular piece
+
+        if self.is_square_under_attack(self.pieces[color]["King"][0]):
+            piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
+            moveList = []
+            if piece_label=="K":
+                moveList += self.make_orthogonal_moves(initial_pos, limit=1) + self.make_diagonal_moves(initial_pos, limit=1) + self.special_king_moves(initial_pos)
+            elif piece_label=="Q":
+                moveList += self.make_diagonal_moves(initial_pos) + self.make_orthogonal_moves(initial_pos)
+            elif piece_label=="R":
+                moveList += self.make_orthogonal_moves(initial_pos)
+            elif piece_label=="B":
+                moveList += self.make_diagonal_moves(initial_pos)
+            elif piece_label=="N":
+                moveList += self.generate_knight_moves(initial_pos)
+            elif piece_label=="p":
+                moveList += self.generate_pawn_moves(initial_pos)
+            else:
+                moveList += []
+
+            moveList[:] = [move for move in moveList if not self.make_temp_move(initial_pos, move)]
+
+            return moveList
+
         piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
         if piece_label=="K":
             return self.make_orthogonal_moves(initial_pos, limit=1) + self.make_diagonal_moves(initial_pos, limit=1) + self.special_king_moves(initial_pos)
