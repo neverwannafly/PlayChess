@@ -42,9 +42,12 @@
                     url: url,
                 })
                 .done( (data) => {
-                    if (data["success"]) {
+                    console.log(data);
+                    if (!data["gameFinished"] && data["success"]) {
                         console.log(data['changes'])
                         make_move(data['changes']);
+                    } else if (data["gameFinished"]) {
+                        console.log("Game Finished", data["result"]);
                     }
                     else {
                         console.log("Invalid Move!");
