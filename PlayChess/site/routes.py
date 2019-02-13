@@ -191,7 +191,7 @@ def make_move(move):
     except exceptions.Draw as result:
         return jsonify({
             'gameFinished': True,
-            'result': result.result,
+            'result': 0.5,
             'cause': result.cause,
         })
     except exceptions.Checkmate as result:
