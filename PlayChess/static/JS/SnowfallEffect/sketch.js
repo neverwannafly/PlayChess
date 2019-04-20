@@ -2,6 +2,7 @@ let snow = [];
 let gravity;
 let wind;
 let sinIndex = 0;
+let maxSnowFlakes = 250;
 
 let spriteSheet;
 let textures = [];
@@ -25,8 +26,11 @@ function setup() {
 function draw() {
     background(0);
 
-    let design = random(textures);
-    snow.push(new Snowflake(design));
+    let prob = Math.floor(Math.random()*10);
+    if (snow.length < maxSnowFlakes && prob < 5) {
+        let design = random(textures);
+        snow.push(new Snowflake(design));
+    }
 
     for (flake of snow) {
         flake.applyForce(gravity);
