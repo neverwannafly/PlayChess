@@ -42,9 +42,9 @@ function draw() {
 
     for (flake of snow) {
         flake.applyForce(gravity);
-        flake.applyForce(wind);
-        wind.x = sin(sinIndex);
-        sinIndex += 0.01;
+        // flake.applyForce(wind);
+        // wind.x = sin(sinIndex);
+        // sinIndex += 0.01;
         flake.update();
         flake.render();
     }
