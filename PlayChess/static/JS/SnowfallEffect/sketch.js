@@ -7,6 +7,14 @@ let maxSnowFlakes = 250;
 let spriteSheet;
 let textures = [];
 
+function stop() {
+    maxSnowFlakes = 0;
+}
+
+function start() {
+    maxSnowFlakes = 250;
+}
+
 function preload() {
     spriteSheet = loadImage('static/Images/snowflakes/flakes32.png');
 }
