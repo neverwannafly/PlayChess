@@ -12,6 +12,16 @@
             });
         });
 
+        $(".resetButton").on('click', function(){
+            $.ajax({
+                type: "GET",
+                url: "board/reset"
+            })
+            .done(function(data) {
+                $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+            })
+        });
+
         var initial_pos, final_pos;
         var squares = null;
 

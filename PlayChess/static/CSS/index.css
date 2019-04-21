@@ -38,8 +38,8 @@ a:active {
     min-width: 20%;
     width: 30%;
 }
-.find-game {
-    margin-top: 0%;
+#find-game {
+    margin-top: 1%;
 }
 
 #logo-image {
