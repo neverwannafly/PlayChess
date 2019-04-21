@@ -365,12 +365,12 @@ class Chessboard:
     def convert_to_index(self, notation):
         return self.chessboard[ord('8')-ord(notation[1])][ord(notation[0])-ord('a')]
 
-    def return_index_as_touple(self, notation):
+    def return_index_as_tuple(self, notation):
         return (ord('8')-ord(notation[1]), ord(notation[0])-ord('a'))
 
     # Will always be applied to check if a square is attacked or not
     def is_square_under_attack(self, square, piece_color=None):
-        indexes = self.return_index_as_touple(square)
+        indexes = self.return_index_as_tuple(square)
 
         if piece_color == None:
             piece_color = self.convert_to_index(square).piece.color
@@ -670,8 +670,8 @@ class Chessboard:
                     self.change_chessboard_state(initial_pos, final_pos)
             # Check for special pawn moves - enpassant
             elif self.convert_to_index(initial_pos).piece.label.split('-')[1]=="p":
-                ini_index = self.return_index_as_touple(initial_pos)
-                fin_index = self.return_index_as_touple(final_pos)
+                ini_index = self.return_index_as_tuple(initial_pos)
+                fin_index = self.return_index_as_tuple(final_pos)
                 diagonal_flag = abs(ini_index[0]-fin_index[0]) & abs(ini_index[1]-fin_index[1])
                 if self.enpassant_target_square is not None and diagonal_flag:
                     # Black attacked pawn -> 6, white attacked pawn -> 3
@@ -723,7 +723,7 @@ class Chessboard:
         return [False, "stalemate"]
 
     def move_top(self, initial_pos, limit=10):
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
@@ -739,7 +739,7 @@ class Chessboard:
         return move_list
 
     def move_bottom(self, initial_pos, limit=10):
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
@@ -755,7 +755,7 @@ class Chessboard:
         return move_list
 
     def move_left(self, initial_pos, limit=10):
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
@@ -771,7 +771,7 @@ class Chessboard:
         return move_list
 
     def move_right(self, initial_pos, limit=10):
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
@@ -787,7 +787,7 @@ class Chessboard:
         return move_list
 
     def move_top_right(self, initial_pos, limit=10):
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
@@ -804,7 +804,7 @@ class Chessboard:
         return move_list
 
     def move_bottom_right(self, initial_pos, limit=10):
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
@@ -821,7 +821,7 @@ class Chessboard:
         return move_list
 
     def move_top_left(self, initial_pos, limit=10):
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
@@ -838,7 +838,7 @@ class Chessboard:
         return move_list
 
     def move_bottom_left(self, initial_pos, limit=10):
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self.chessboard[X][Y].piece.color
         move_list = []
@@ -867,7 +867,7 @@ class Chessboard:
     # This could be optimised by excluding the need to check colors!
     def generate_pawn_moves(self, initial_pos):
         move_list = []
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         tempX, tempY = X, Y
         piece_color = self.convert_to_index(initial_pos).piece.color
@@ -920,7 +920,7 @@ class Chessboard:
     def generate_knight_moves(self, initial_pos):
         move_list = []
         possible_skew_moves = [(2, 1), (-2, 1), (2, -1), (-2, -1), (1, 2), (-1, 2), (1, -2), (-1, -2)]
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         for move in possible_skew_moves:
             if X+move[0] <=7 and X+move[0]>=0 and Y+move[1] <= 7 and Y+move[1]>=0:
@@ -930,7 +930,7 @@ class Chessboard:
 
     def special_king_moves(self, initial_pos):
         move_list = []
-        indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         # Check for special king moves!
         if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
@@ -957,8 +957,8 @@ class Chessboard:
     # Sets flags such as of castling rights, enpassant
     def set_flags(self, initial_pos, final_pos):
         # Set Enpassant Flags
-        indexes = self.return_index_as_touple(final_pos)
-        old_indexes = self.return_index_as_touple(initial_pos)
+        indexes = self.return_index_as_tuple(final_pos)
+        old_indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         oX, oY = old_indexes[0], old_indexes[1]
         if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="p":
