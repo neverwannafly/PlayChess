@@ -112,7 +112,9 @@ def register():
                 )
                 current_user = loadUser(users, request.form['username'])[0]
                 #Send email verification
-                mailing.sendMail(current_user._id, current_user.email, current_user.username)
+                response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
+                if not response:
+                    return redirect(url_for('site.verify', error_code=6, script=script))
                 return redirect(url_for('site.verify', username=current_user.username))
             return render_template('login.html', error_code=5, script=script)
         elif existing_email:
@@ -142,7 +144,7 @@ def verify(username):
 def retry(username):
     current_user = loadUser(users, username)[0]
     response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
-    return jsonify({response: response})
+    return jsonify({'response': response})
 
 ## Index Page
 
