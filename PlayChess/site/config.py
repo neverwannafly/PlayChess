@@ -1,8 +1,8 @@
 # Contains the configurations for sending a verification email!
 
 configurations = {
-    'host': 'smtp.gmail.com',
+    'host': 'smtp.sendgrid.net',
     'port': 587,
-    'username': 'playchesswebsite@gmail.com',
-    'password': '10p17fs0008',
+    'username': 'apikey',
+    'password': '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',
 }
