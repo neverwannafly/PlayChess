@@ -15,7 +15,7 @@ def sendMail(id, email, username):
         print("working2")
         msg = MIMEMultipart("alternative")
         msg["Subject"] = "Email verification"
-        msg["From"] = "Playchesswebsite@gmail.com"
+        msg["From"] = "shubham_chess@live.com"
         msg["To"] = email
         plain_text = "Use " + id + " as your verification code!"
         html_text = """
