@@ -8,7 +8,7 @@ runscript() {
 main() {
     if [ $# -lt 1 ]
     then 
-        echo "\33[1m\33[31mERROR: Invalid Arguments\033[0m\033[0m"
+        echo "Invalid Arguments"
         exit 1
     fi
     if [ $1 = "dev" ]
@@ -20,8 +20,13 @@ main() {
     elif [ $1 = "logs" ]
     then
         runscript "logs.sh"
+    elif [ $1 == "prod" ]
+    then
+        runscript "runprod.sh"
+    elif [ $1 == "shell" ]
+    then
+        runscript "shell.sh"
     else
-        echo "\33[1m\33[31mERROR: Unrecognised Command!\033[0m\033[0m"
         exit -1
     fi
 }

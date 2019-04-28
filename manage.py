@@ -62,6 +62,23 @@ if len(sys.argv) == 2:
                 TERMINAL_COLORS['CEND']
             )
             sys.exit(1)
+    elif sys.argv[1] == "prod":
+        try:
+            print(
+                TERMINAL_COLORS['CBOLD'] + 
+                TERMINAL_COLORS['CBLUE'] + 
+                "Running Gunicorn with 12 Threads" +
+                TERMINAL_COLORS['CEND'] + 
+                TERMINAL_COLORS['CEND']
+            )
+            subprocess.call(['./app.sh', 'prod'])
+        except KeyboardInterrupt:
+            print(
+                TERMINAL_COLORS['CRED'] + 
+                "Exiting Server..." + 
+                TERMINAL_COLORS['CEND']
+            )
+            sys.exit(1)
     elif sys.argv[1] == "commitall":
         try:
             print(
@@ -96,6 +113,23 @@ if len(sys.argv) == 2:
                 TERMINAL_COLORS['CEND']
             )
             sys.exit(1)
+    elif sys.argv[1] == "shell":
+        try:
+            print(
+                TERMINAL_COLORS['CBOLD'] + 
+                TERMINAL_COLORS['CGREEN'] + 
+                "Starting Heroku Production Shell" +
+                TERMINAL_COLORS['CEND'] + 
+                TERMINAL_COLORS['CEND']
+            )
+            subprocess.call(['./app.sh', 'shell'])
+        except KeyboardInterrupt:
+            print(
+                TERMINAL_COLORS['CRED'] + 
+                "Closing Shell" + 
+                TERMINAL_COLORS['CEND']
+            )
+            sys.exit(1)
     else:
         print(
             TERMINAL_COLORS['CRED'] + 
@@ -105,9 +139,12 @@ if len(sys.argv) == 2:
 elif len(sys.argv) == 1:
     user_instruction = """
     Below are list of available commands ->
-    1) python manage.py create_admin 
-    2) python manage.py commitall
-    3) python manage.py dev
+    1) python manage.py create_admin    : Adds an admin
+    2) python manage.py commitall       : Commits changes to both heroku and git repo.
+    3) python manage.py dev             : Runs the development server
+    4) python manage.py prod            : Runs the production server
+    5) python manage.py shell           : Runs the production shell
+    6) python manage.py logs            : Shows production logs
     """
     print(TERMINAL_COLORS['CBLUE']+user_instruction+TERMINAL_COLORS['CEND'])
 else:
