@@ -18,7 +18,7 @@ def gettoken():
 def index():
     if token.validate_token(request.args.get('token', None)):
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-        if os.environ.get("Stockfish", None):
+        if os.environ.get("Production", None):
             engine = chess.uci.popen_engine(os.path.join(__location__, 'stockfish-prod'))
             print("Found")
         engine = chess.uci.popen_engine(os.path.join(__location__, 'stockfish-dev'))
