@@ -1,3 +1,3 @@
 #!/bin/sh
 
-heroku local
+heroku open
