@@ -16,13 +16,12 @@ if len(sys.argv) == 2:
             while True:
                 print("Enter admin username : ", end="")
                 admin_username = str(input())
-                print("Enter admin password : ", end="")
                 admin_password = str(getpass.getpass())
                 valid_username = bool(regex.match(USERNAME_REGEX, admin_username))
                 if valid_username:
                     if create_admin(db, admin_username, admin_password):
                         print(
-                            TERMINAL_COLORS['CRED'] + 
+                            TERMINAL_COLORS['CGREEN'] + 
                             "Admin added successfully to database!" + 
                             TERMINAL_COLORS['CEND']
                         )
