@@ -23,7 +23,6 @@ a:active {
     float: right;
     margin-right: 10%;
     margin-top: 4%;
-    min-width: 520px;
 }
 
 .logo {
@@ -59,3 +58,15 @@ canvas {
     left: 0;
     z-index: -1;
 } 
+
+@media only screen and (max-width: 815px) {
+    .user {
+        display: none;
+    }  
+    .chessboard {
+        margin: auto;
+        width: 50%;
+        float: none;
+        min-width: 400px;
+    }
+}
