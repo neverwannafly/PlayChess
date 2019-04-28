@@ -1,10 +1,11 @@
 from .client import client
+from .config import db_pass, db_user
 
 import string
 import random
 
 def test_login_logout(client):
-    return_login_status = client.post('/login', data={"username": "unittest", "password": "unittest"})
+    return_login_status = client.post('/login', data={"username": db_user, "password": db_pass})
     # Redirected to home
     assert return_login_status.status_code==302
     # Now that user is logged in, he can access home screen

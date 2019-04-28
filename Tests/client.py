@@ -2,6 +2,8 @@ import PlayChess
 import pytest
 import os
 
+from .config import db_pass, db_user
+
 @pytest.fixture
 def client():
     PlayChess.app.config['TESTING'] = True
@@ -10,6 +12,6 @@ def client():
 
 def login(client):
     return_login_status = client.post('/login', data={
-        "username": os.environ.get('TEST_DB_USER', None), 
-        "password": os.environ.get('TEST_DB_PASS', None),
+        "username": db_user, 
+        "password": db_pass,
     })
