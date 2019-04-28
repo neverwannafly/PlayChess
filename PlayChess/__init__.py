@@ -13,12 +13,13 @@ from .config import configurations
 
 app = Flask(__name__)
 
-# Read from environment file and load env variables
-__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-with open(os.path.join(__location__, '.env')) as f:
-    for line in f:
-        key, value = line.strip().split('=', 1)
-        os.environ[key] = value
+# Read from environment file and load local env variables
+if not os.environ.get('Production', False):
+    __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    with open(os.path.join(__location__, '.env')) as f:
+        for line in f:
+            key, value = line.strip().split('=', 1)
+            os.environ[key] = value
 
 # Add configurations
 app.secret_key = configurations['_SECRET_KEY']
