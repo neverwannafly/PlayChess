@@ -25,3 +25,7 @@ class SenderCannotBeVerified(Exception):
 class GameNotFound(Exception):
     """Is raised when a game url cannot be found"""
     pass
+
+class InvalidDatabaseURL(Exception):
+    "is raised when database url cannot be located"
+    pass
