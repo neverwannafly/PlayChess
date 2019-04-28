@@ -7,15 +7,12 @@ from email.mime.text import MIMEText
 
 def sendMail(id, email, username):
     try:
-        print("go")
         email_conn = SMTP(config.configurations['host'], config.configurations['port'])
         email_conn.starttls()
-        print("working1")
         email_conn.login(config.configurations['username'], config.configurations['password'])
-        print("working2")
         msg = MIMEMultipart("alternative")
         msg["Subject"] = "Email verification"
-        msg["From"] = "shubham_chess@live.com"
+        msg["From"] = "playchesswebsite@gmail.com"
         msg["To"] = email
         plain_text = "Use " + id + " as your verification code!"
         html_text = """
