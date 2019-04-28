@@ -29,8 +29,11 @@ def make_session_permanent():
 def init():
     print(
         TERMINAL_COLORS['CYELLOW'] + 
-        TERMINAL_COLORS['CBOLD'] + 
-        ADMIN_DICT + 
+        TERMINAL_COLORS['CBOLD'],
+        end=""
+    )
+    print(ADMIN_DICT, end="")
+    print(
         TERMINAL_COLORS['CEND'] + 
         TERMINAL_COLORS['CEND']
     )
