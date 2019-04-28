@@ -1,13 +1,16 @@
 import os
+from ..utils import exceptions
 
-from . import config
 from pymongo import MongoClient
 
-URL = os.environ.get("DATABASE_URL", None)
-if URL:
-    client = MongoClient(URL)
+URL_PROD = os.environ.get("DATABASE_URL", None)
+URL_DEV = os.environ.get("DATABASE_URL_DEV", None)
+
+if URL_PROD:
+    client = MongoClient(URL_PROD, serverSelectionTimeoutMS=10000)
     db = client.playchesswebsite
+elif URL_DEV:
+    client = MongoClient(URL_DEV, serverSelectionTimeoutMS=10000)
+    db = client.chess_database
 else:
-    configurations = config.configurations
-    client = MongoClient('mongodb://' + configurations['_USERNAME'] + ':' + configurations['_PASSWORD'] + '@ds151169.mlab.com:51169/chess_database', serverSelectionTimeoutMS=10000)
-    db = client.chess_database # Establishes connection to mlab database!
+    raise exceptions.InvalidDatabaseURL("Please Check your database URL")
