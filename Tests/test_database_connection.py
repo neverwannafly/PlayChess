@@ -3,8 +3,8 @@ from .client import client
 
 def test_find_user(client):
     obj = db.users.find_one({
-        'username' : 'mpkst4szSX99pwc'
+        'username' : 'test_user_'
     })
-    assert obj['username']=='mpkst4szSX99pwc'
-    assert obj['first_name']=='Keeny'
+    assert obj['username']=='test_user_'
+    assert obj['first_name']=='Test'
     
