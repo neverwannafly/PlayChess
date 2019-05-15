@@ -2,7 +2,7 @@
 
 import os
 
-from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
+from flask import Blueprint, request, jsonify
 from ..utils import token
 
 import chess, chess.uci
@@ -21,8 +21,9 @@ def index():
         if os.environ.get("Production", None):
             engine = chess.uci.popen_engine(os.path.join(__location__, 'stockfish-prod'))
             print("Found")
-        engine = chess.uci.popen_engine(os.path.join(__location__, 'stockfish-dev'))
-        print("Not Found")
+        else:
+            engine = chess.uci.popen_engine(os.path.join(__location__, 'stockfish-dev'))
+            print("Not Found")
         engine.uci()
         engine.ucinewgame()
         # Assign an info handler

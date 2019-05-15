@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
-from flask_socketio import send, emit
+from flask import Blueprint, jsonify
+from flask_socketio import emit
 
 mod = Blueprint('chat', __name__, template_folder='templates')
 

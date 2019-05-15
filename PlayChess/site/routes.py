@@ -1,5 +1,4 @@
 import time
-import random
 
 from flask import Blueprint, render_template, url_for, request, session, redirect, jsonify
 from datetime import timedelta, datetime
@@ -10,7 +9,7 @@ import re as regex
 mod = Blueprint('site', __name__, template_folder='templates')
 
 # Relative imports
-from .users import User, addNewUserToDatabase, loadUser
+from .users import addNewUserToDatabase, loadUser
 from ..utils import exceptions
 from ..utils import decorators
 from ..utils import game

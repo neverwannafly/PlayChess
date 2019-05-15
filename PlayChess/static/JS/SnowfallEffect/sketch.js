@@ -40,7 +40,7 @@ function draw() {
         snow.push(new Snowflake(design));
     }
 
-    for (flake of snow) {
+    for (let flake of snow) {
         flake.applyForce(gravity);
         // flake.applyForce(wind);
         // wind.x = sin(sinIndex);

@@ -2,7 +2,6 @@
 
 import random
 
-from functools import wraps
 from flask import jsonify
 
 from ..utils import chessboard, exceptions

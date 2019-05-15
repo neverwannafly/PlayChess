@@ -50,7 +50,7 @@ class User:
         
     def updateUserVerificationStatus(self):
         if self.username is not None:
-            status = self.db_object.update_one({
+            self.db_object.update_one({
                 'username': self.username
                 },
                 {'$set': {

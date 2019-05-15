@@ -10,7 +10,7 @@ from datetime import timedelta
 
 mod = Blueprint('admin', __name__, template_folder='admin_templates')
 
-from .admins import Admin, loadAdmin
+from .admins import loadAdmin
 from .decorators import login_required, logout_required
 # Import global vars
 from ..config import ADMIN_DICT, EMAIL_PATTERN_COMPILED, USERNAME_REGEX, TERMINAL_COLORS

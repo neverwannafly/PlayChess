@@ -1,6 +1,6 @@
 # Blog application could be accessed by both admins and the users!
 
-from flask import Blueprint, render_template, url_for, request, session, redirect
+from flask import Blueprint, session
 from functools import wraps
 
 mod = Blueprint('blog', __name__, template_folder='blog_templates')

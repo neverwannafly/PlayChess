@@ -191,7 +191,7 @@ class Chessboard:
             skips = 0
             for square in rank:
                 piece = config.CHESS_PIECES.get(square.piece.label, None)
-                if piece == None:
+                if piece is None:
                     skips += 1
                 else:
                     if skips is not 0:
@@ -372,7 +372,7 @@ class Chessboard:
     def is_square_under_attack(self, square, piece_color=None):
         indexes = self.return_index_as_tuple(square)
 
-        if piece_color == None:
+        if piece_color is None:
             piece_color = self.convert_to_index(square).piece.color
 
         def are_colors_opposite(destination_square):
@@ -569,9 +569,9 @@ class Chessboard:
 
     # Can be used for simple Board Editor
     def create_piece(self, piece_position, piece_name, piece_color=None):
-        if piece_color == None:
+        if piece_color is None:
             return getattr(sys.modules[__name__], piece_name)(piece_position)
-        if self.pieces[piece_color].get(piece_name, None) == None:
+        if self.pieces[piece_color].get(piece_name, None) is None:
             self.pieces[piece_color][piece_name] = [piece_position]
         else:
             self.pieces[piece_color][piece_name].append(piece_position)
