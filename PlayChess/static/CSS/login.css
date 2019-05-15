@@ -26,15 +26,13 @@ body, html {
     background-color: black;
 }
 .login-handler {
-    margin-top: 5%!important;
-    margin-left: 55%!important;
+    margin-left: 66%!important;
+    max-width: 30%!important;
 }
 .container {
-    margin-top: 100px ;
     max-width: 40%;
     width: 100%;
     padding: 10px;
-    max-width: 400px;
     border-radius: 2px;
     box-shadow:  0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) ;
     background-color: rgba(0,0,0,0.2);
@@ -107,3 +105,33 @@ input[type=password] {
 ::placeholder { /* Most modern browsers support this now. */
    color:    #fff !important;
 }
+
+.form {
+    margin-top: 45%;
+}
+
+@media only screen and (max-width: 800px) {
+    .login-handler {
+        margin-left: 30%!important;
+        max-width: 40%!important;
+    }
+    #register-form {
+        margin-top: 50px;
+    }
+    #login-form {
+        margin-top: 200px;
+    }
+}
+
+/* @media only screen and (max-width: 600px) {
+    .login-handler {
+        margin-left: 30%!important;
+        max-width: 40%!important;
+    }
+    .form {
+        margin-top: 50px;
+    }
+    form {
+        margin-top: 250px;
+    }
+} */
