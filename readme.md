@@ -3,6 +3,10 @@
 # PlayChess WebApp
 
 [![Build Status](https://travis-ci.org/neverwannafly/PlayChess.svg?branch=master)](https://travis-ci.org/neverwannafly/PlayChess)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/neverwannafly/PlayChess.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/neverwannafly/PlayChess/alerts/)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/neverwannafly/PlayChess.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/neverwannafly/PlayChess/context:javascript)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/neverwannafly/PlayChess.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/neverwannafly/PlayChess/context:python)
+
 
 ## Current Features
 <ul>
