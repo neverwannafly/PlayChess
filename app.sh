@@ -2,7 +2,7 @@
 
 runscript() {
     file_path="scripts/$1"
-    source $file_path
+    . $file_path
 }
 
 main() {
