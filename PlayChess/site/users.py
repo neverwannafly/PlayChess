@@ -1,7 +1,5 @@
 # Contains the classes for modeling of various user models.
 
-import random
-
 from ..utils import chessboard
 
 class User:
