@@ -27,7 +27,7 @@ def game(game_url):
         else:
             board = game.chessboard.draw_chessboard_for_black()
             game_title = "{0} vs {1}".format(game.player2, game.player1)
-            return render_template('game.html', game_title=game_title, board=board, player1=player2, player2=player1)
+            return render_template('game.html', game_title=game_title, board=board, player1=player1, player2=player2)
     abort(404)
 
 @mod.route('/<game_url>/generateLegalMoves/<init_pos>')
