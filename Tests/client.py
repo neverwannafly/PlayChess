@@ -14,3 +14,6 @@ def login(client):
         "username": db_user, 
         "password": db_pass,
     })
+
+def logout(client):
+    client.get('/logout')
