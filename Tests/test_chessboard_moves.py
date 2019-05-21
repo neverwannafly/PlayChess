@@ -1,5 +1,5 @@
 from .client import client
-from .client import login
+from .client import login, logout
 
 def test_legal_pawn_moves(client):
     # Simple Pawn Moves
@@ -18,18 +18,32 @@ def test_legal_pawn_moves(client):
     ]
     for test_case in corner_pawn_moves:
         assert test_case.status_code==200
+
     # Enpassant
     client.get('/makemove/c7-c5')
     client.get('/makemove/c2-c4')
-    pawn_elapsed_ep = client.get('/makemove/d5-c6')
+    pawn_fail_ep = client.get('/makemove/d5-c6')
+    assert b'"success":false' in pawn_fail_ep.data
     
-
-
+    client.get('/makemove/e7-e5')
+    pawn_succ_ep = client.get('/makemove/d5-e6')
+    assert b'"success":true' in pawn_succ_ep.data
 
 def test_castling(client):
     login(client)
-    # vestigial moves to clear away first rank to enable castling
+    # Check short castle
     client.get('/makemove/e2-e4')
     client.get('/makemove/e7-e5')
     client.get('/makemove/g1-f3')
     client.get('/makemove/g8-f6')
+    client.get('/makemove/f1-c4')
+    client.get('/makemove/f8-c5')
+    white_castle = client.get('/makemove/e1-g1')
+    black_castle = client.get('/makemove/e8-g8')
+    assert b'"success":true' in white_castle.data
+    assert b'"success":true' in black_castle.data
+    logout(client)
+
+    # Check long castle
+    login(client)
+    
