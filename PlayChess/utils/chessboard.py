@@ -121,72 +121,58 @@ class Chessboard:
     def __init__(self, fen_notation=config.START_POSITION_NOTATION):
 
         # An array holding recent changes in board position
-        self.changes = []
+        self._changes = []
 
-        self.castling_rights_white = {
+        # Castling Parameters
+        self._castling_rights_white = {
             "white_side_castled": False,
             "has_white_king_moved": False,
             "has_a1_rook_moved": False,
             "has_h1_rook_moved": False,
         }
-        self.castling_rights_black = {
+        self._castling_rights_black = {
             "black_side_castled": False,
             "has_black_king_moved": False,
             "has_a8_rook_moved": False,
             "has_h8_rook_moved": False,
         }
 
-        self.enpassant_target_square = None
-        self.enpassant_flag_life = 0
-        self.moves = 0
+        # Vars to keep track of enpassant captures
+        self._enpassant_target_square = None
+        self._enpassant_flag_life = 0
+
+        # Full move and half move counters
+        self._moves = 0
+        self._half_moves = 0
 
         # Stores position of black and white pieces for quick checkmate lookup
-        self.pieces = {
+        self._pieces = {
             'white': {},
             'black': {},
         }
 
-        self.configuration = 1
-        # config of 2 means chessboard is drawn for black player at bottom!
-        # config of 1 means chessboard is drawn for white player at bottom!
-        self.chessboard = self.create_chessboard()
-
-        if fen_notation is None:
-            # making chessboard from fen notation should be better
-            self.initialise_board()
-            self.pieces['white']['King'] = ['e1']
-            self.pieces['white']['Queen'] = ['d1']
-            self.pieces['white']['Bishop'] = ['c1', 'f1']
-            self.pieces['white']['Knight'] = ['b1', 'g1']
-            self.pieces['white']['Rook'] = ['a1', 'h1']
-            self.pieces['white']['Pawn'] = ['a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2']
-            self.pieces['black']['King'] = ['e8']
-            self.pieces['black']['Queen'] = ['d8']
-            self.pieces['black']['Bishop'] = ['c8', 'f8']
-            self.pieces['black']['Knight'] = ['b8', 'g8']
-            self.pieces['black']['Rook'] = ['a8', 'h8']
-            self.pieces['black']['Pawn'] = ['a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7']
-        else:
-            self.load_position(fen_notation)
+        # config of 2 means chessboard is drawn for black player at bottom
+        # config of 1 means chessboard is drawn for white player at bottom
+        self._configuration = 1
+        
+        self._chessboard = self.create_chessboard()
+        self.load_position(fen_notation)
 
     @property
     def can_white_castle(self):
-        castling_flag = (self.castling_rights_white["white_side_castled"]^self.castling_rights_white["has_white_king_moved"])^(self.castling_rights_white["has_a1_rook_moved"]&self.castling_rights_white["has_h1_rook_moved"])
+        castling_flag = (self._castling_rights_white["white_side_castled"]^self._castling_rights_white["has_white_king_moved"])^(self._castling_rights_white["has_a1_rook_moved"]&self._castling_rights_white["has_h1_rook_moved"])
         return not castling_flag
 
     @property
     def can_black_castle(self):
-        castling_flag = (self.castling_rights_black["black_side_castled"]^self.castling_rights_black["has_black_king_moved"])^(self.castling_rights_black["has_a8_rook_moved"]&self.castling_rights_black["has_h8_rook_moved"])
+        castling_flag = (self._castling_rights_black["black_side_castled"]^self._castling_rights_black["has_black_king_moved"])^(self._castling_rights_black["has_a8_rook_moved"]&self._castling_rights_black["has_h8_rook_moved"])
         return not castling_flag
 
-    # generates a rudimentary fen notation of a position with placeholders and
-    # these placeholders in fen notation would be filled upon by the Game class.
-    # A placeholer will be represented by '*'.
     @property
     def fen_notation(self):
         fen_notation = ""
         # Set board position
-        for rank in self.chessboard:
+        for rank in self._chessboard:
             rank_notation = ""
             skips = 0
             for square in rank:
@@ -207,34 +193,39 @@ class Chessboard:
         # remove trailing slash
         fen_notation = fen_notation[:-1]
 
-        # Create placeholder for player to move
-        # A chessboard is an object that doesnt concerns itself with 
-        # which player has to make a move. That behavior is handled 
-        # By the game class hence unrequired parameters in fen notations
-        # are being filled by placeholders
-        fen_notation = fen_notation + " * "
+        # Color to make the move
+        color = 'w' if self._moves % 2 == 0 else 'b' 
+        fen_notation = fen_notation + color
 
         # Castling Parameters
-        if not self.castling_rights_white['white_side_castled'] and not self.castling_rights_white['has_white_king_moved']:
-            if not self.castling_rights_white['has_h1_rook_moved']:
-                fen_notation = fen_notation + "K"
-            if not self.castling_rights_white['has_a1_rook_moved']:
-                fen_notation = fen_notation + "Q"
-        if not self.castling_rights_black['black_side_castled'] and not self.castling_rights_black['has_black_king_moved']:
-            if not self.castling_rights_black['has_h8_rook_moved']:
-                fen_notation = fen_notation + "k"
-            if not self.castling_rights_black['has_a8_rook_moved']:
-                fen_notation = fen_notation + "q"
+        castling_params = ""
+        if not self._castling_rights_white['white_side_castled'] and not self._castling_rights_white['has_white_king_moved']:
+            if not self._castling_rights_white['has_h1_rook_moved']:
+                castling_params += "K"
+            if not self._castling_rights_white['has_a1_rook_moved']:
+                castling_params += "Q"
+        if not self._castling_rights_black['black_side_castled'] and not self._castling_rights_black['has_black_king_moved']:
+            if not self._castling_rights_black['has_h8_rook_moved']:
+                castling_params += "k"
+            if not self._castling_rights_black['has_a8_rook_moved']:
+                castling_params += "q"
+        
+        if castling_params == "":
+            castling_params = "-"
+
+        fen_notation += castling_params
 
         # Enpassant Target Square
-        if self.enpassant_target_square is not None:
-            fen_notation = fen_notation + " " + str(self.enpassant_target_square)
+        if self._enpassant_target_square is not None:
+            fen_notation += " " + str(self._enpassant_target_square)
         else:
-            fen_notation = fen_notation + " - "
+            fen_notation += " - "
 
-        # Halfmove placeholder and full move placeholders. Again a delegate
-        # of the Game class and not the chessboard class
-        fen_notation = fen_notation + " * *"
+        # Half Move 
+        fen_notation += str((self._half_moves // 2) + 1)
+
+        # Full Move params
+        fen_notation += str((self._moves // 2) + 1)
 
         return fen_notation
 
@@ -242,8 +233,11 @@ class Chessboard:
         # Extract required parameters for the Chessboard class from fen_notation
         fen_components = fen_notation.split(' ')
         game_component = fen_components[0] + "/"
+        move = 0 if fen_components[1]=='w' else 1
         castling_info = fen_components[2]
         enpassant_target_square = fen_components[3]
+        half_move = int(fen_components[4])
+        full_move = int(fen_components[5])
 
         def get_position(file, rank):
             return str(chr(ord('a') + file -1)) + str(rank)
@@ -269,68 +263,46 @@ class Chessboard:
                         file += 1
                         squares -= 1
                 else:
-
                     board_row.append(self.create_piece(get_position(file, rank), piece[0], piece[1]))
+                    if self._pieces[piece[1]].get(piece[0], None) is None:
+                        self._pieces[piece[1]][piece[0]] = [get_position(file, rank)]
+                    else:
+                        self._pieces[piece[1]][piece[0]].append(get_position(file, rank))
                     file += 1
 
         # Create the chessboard
         for i in range(8):
             for j in range(8):
-                self.chessboard[i][j].piece = temp_board[i][j]
-                self.chessboard[i][j].html_class += temp_board[i][j].label
-                self.chessboard[i][j].css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
-                    html_class = self.chessboard[i][j].html_class,
-                    html_id = self.chessboard[i][j].html_id
+                self._chessboard[i][j].piece = temp_board[i][j]
+                self._chessboard[i][j].html_class += temp_board[i][j].label
+                self._chessboard[i][j].css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
+                    html_class = self._chessboard[i][j].html_class,
+                    html_id = self._chessboard[i][j].html_id
                 )
 
         # Parse Castling info
         if not "K" in castling_info:
-            self.castling_rights_white['has_h1_rook_moved'] = True
+            self._castling_rights_white['has_h1_rook_moved'] = True
         if not "Q" in castling_info:
-            self.castling_rights_white['has_a1_rook_moved'] = True
+            self._castling_rights_white['has_a1_rook_moved'] = True
         if not "k" in castling_info:
-            self.castling_rights_black['has_h8_rook_moved'] = True
+            self._castling_rights_black['has_h8_rook_moved'] = True
         if not "q" in castling_info:
-            self.castling_rights_black['has_a8_rook_moved'] = True
+            self._castling_rights_black['has_a8_rook_moved'] = True
         if "-" in castling_info:
-            self.castling_rights_black['has_black_king_moved'] = True
-            self.castling_rights_white['has_white_king_moved'] = True
+            self._castling_rights_black['has_black_king_moved'] = True
+            self._castling_rights_white['has_white_king_moved'] = True
 
         # Enpassant Setting
         if enpassant_target_square is not None:
-            self.enpassant_target_square = enpassant_target_square
-            self.enpassant_flag_life = 1
+            self._enpassant_target_square = enpassant_target_square
+            self._enpassant_flag_life = 1
 
-    @deprecated
-    def initialise_board(self):
-        # White chess pieces
-        white_rooks = [Rook("a1", "white"), Rook("h1", "white")]
-        white_knights = [Knight("b1", "white"), Knight("g1", "white")]
-        white_bishops = [Bishop("c1", "white"), Bishop("f1", "white")]
-        white_row1 = [white_rooks[0], white_knights[0], white_bishops[0], Queen("d1", "white"), King("e1", "white"), white_bishops[1], white_knights[1], white_rooks[1]]
-        white_row2 = [Pawn(chr(ord("a")+i)+"2", "white") for i in range(0,8)]
-        # Black chess pieces
-        black_rooks = [Rook("a8", "black"), Rook("h8", "black")]
-        black_knights = [Knight("b8", "black"), Knight("g8", "black")]
-        black_bishops = [Bishop("c8", "black"), Bishop("f8", "black")]
-        black_row7 = [Pawn(chr(ord("a")+i)+"7", "black") for i in range(0,8)]
-        black_row8 = [black_rooks[0], black_knights[0], black_bishops[0], Queen("d8", "black"), King("e8", "black"), black_bishops[1], black_knights[1], black_rooks[1]]
-        # Blank chess rows
-        blank_row3 = [Blank(chr(ord("a")+i)+"3") for i in range(0,8)]
-        blank_row4 = [Blank(chr(ord("a")+i)+"4") for i in range(0,8)]
-        blank_row5 = [Blank(chr(ord("a")+i)+"5") for i in range(0,8)]
-        blank_row6 = [Blank(chr(ord("a")+i)+"6") for i in range(0,8)]
-        # Create a board
-        temp_board = [black_row8, black_row7, blank_row6, blank_row5, blank_row4, blank_row3, white_row2, white_row1]
-        # Assign pieces to visual board
-        for i in range(8):
-            for j in range(8):
-                self.chessboard[i][j].piece = temp_board[i][j]
-                self.chessboard[i][j].html_class += temp_board[i][j].label
-                self.chessboard[i][j].css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
-                    html_class = self.chessboard[i][j].html_class,
-                    html_id = self.chessboard[i][j].html_id
-                )
+        # Half move
+        self._half_moves = (half_move-1)*2 + move
+
+        # Full move
+        self._moves = (full_move-1)*2 + move
 
     def create_chessboard(self):
         chessboard = []
@@ -351,19 +323,19 @@ class Chessboard:
         return chessboard
 
     def draw_chessboard(self):
-        if self.configuration==1:
+        if self._configuration==1:
             return self.draw_chessboard_for_white()
         else:
             return self.draw_chessboard_for_black()
 
     def swap_board(self):
-        if self.configuration == 1:
-            self.configuration = 2
+        if self._configuration == 1:
+            self._configuration = 2
         else:
-            self.configuration = 1
+            self._configuration = 1
 
     def convert_to_index(self, notation):
-        return self.chessboard[ord('8')-ord(notation[1])][ord(notation[0])-ord('a')]
+        return self._chessboard[ord('8')-ord(notation[1])][ord(notation[0])-ord('a')]
 
     def return_index_as_tuple(self, notation):
         return (ord('8')-ord(notation[1]), ord(notation[0])-ord('a'))
@@ -385,7 +357,7 @@ class Chessboard:
         
         # Check along horizontal
         for y in range(Y+1, 8):
-            destination_square = self.chessboard[X][y]
+            destination_square = self._chessboard[X][y]
 
             if y==Y+1 and destination_square.piece.name == "King" and are_colors_opposite(destination_square):
                 return True
@@ -400,7 +372,7 @@ class Chessboard:
                 break
 
         for y in range(Y-1, -1, -1):
-            destination_square = self.chessboard[X][y]
+            destination_square = self._chessboard[X][y]
 
             if y==Y-1 and destination_square.piece.name == "King" and are_colors_opposite(destination_square):
                 return True
@@ -416,7 +388,7 @@ class Chessboard:
 
         # Check along vertcial 
         for x in range(X+1, 8):
-            destination_square = self.chessboard[x][Y]
+            destination_square = self._chessboard[x][Y]
 
             if x==X+1 and destination_square.piece.name == "King" and are_colors_opposite(destination_square):
                 return True
@@ -431,7 +403,7 @@ class Chessboard:
                 break
 
         for x in range(X-1, -1, -1):
-            destination_square = self.chessboard[x][Y]
+            destination_square = self._chessboard[x][Y]
 
             if x==X-1 and destination_square.piece.name == "King" and are_colors_opposite(destination_square):
                 return True
@@ -449,7 +421,7 @@ class Chessboard:
         x = X-1
         y = Y+1
         while x>=0 and y<=7:
-            destination_square = self.chessboard[x][y]
+            destination_square = self._chessboard[x][y]
 
             if x==X-1 and y==Y+1:
                 if destination_square.piece.name == "King" and are_colors_opposite(destination_square):
@@ -473,7 +445,7 @@ class Chessboard:
         x = X+1
         y = Y-1
         while x<=7 and y>=0:
-            destination_square = self.chessboard[x][y]
+            destination_square = self._chessboard[x][y]
 
             if x==X+1 and y==Y-1:
                 if destination_square.piece.name == "King" and are_colors_opposite(destination_square):
@@ -498,7 +470,7 @@ class Chessboard:
         x = X-1
         y = Y-1
         while x>=0 and y>=0:
-            destination_square = self.chessboard[x][y]
+            destination_square = self._chessboard[x][y]
 
             if x==X-1 and y==Y-1:
                 if destination_square.piece.name == "King" and are_colors_opposite(destination_square):
@@ -522,7 +494,7 @@ class Chessboard:
         x = X+1
         y = Y+1
         while x<=7 and y<=7:
-            destination_square = self.chessboard[x][y]
+            destination_square = self._chessboard[x][y]
 
             if x==X+1 and y==Y+1:
                 if destination_square.piece.name == "King" and are_colors_opposite(destination_square):
@@ -547,7 +519,7 @@ class Chessboard:
         possible_skew_moves = [(2, 1), (-2, 1), (2, -1), (-2, -1), (1, 2), (-1, 2), (1, -2), (-1, -2)]
         for move in possible_skew_moves:
             if X+move[0] <=7 and X+move[0]>=0 and Y+move[1] <= 7 and Y+move[1]>=0:
-                destination_square = self.chessboard[X+move[0]][Y+move[1]]
+                destination_square = self._chessboard[X+move[0]][Y+move[1]]
 
                 if destination_square.piece.name == "Knight" and are_colors_opposite(destination_square):
                     return True
@@ -557,7 +529,7 @@ class Chessboard:
     # Need to be used for pawn promotion, en-passant and board editor
     def delete_piece(self, piece_position):
         obj = self.convert_to_index(piece_position)
-        self.pieces[obj.piece.color][obj.piece.name].remove(piece_position)
+        self._pieces[obj.piece.color][obj.piece.name].remove(piece_position)
         obj.piece = Blank(piece_position)
         obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p")
         obj.html_class += " " + obj.piece.label
@@ -565,16 +537,16 @@ class Chessboard:
             html_class = obj.html_class,
             html_id = obj.html_id
         )
-        self.changes.append({'pos': piece_position, 'class': obj.html_class})
+        self._changes.append({'pos': piece_position, 'class': obj.html_class})
 
     # Can be used for simple Board Editor
     def create_piece(self, piece_position, piece_name, piece_color=None):
         if piece_color is None:
             return getattr(sys.modules[__name__], piece_name)(piece_position)
-        if self.pieces[piece_color].get(piece_name, None) is None:
-            self.pieces[piece_color][piece_name] = [piece_position]
+        if self._pieces[piece_color].get(piece_name, None) is None:
+            self._pieces[piece_color][piece_name] = [piece_position]
         else:
-            self.pieces[piece_color][piece_name].append(piece_position)
+            self._pieces[piece_color][piece_name].append(piece_position)
         return getattr(sys.modules[__name__], piece_name)(piece_position, piece_color)
 
     # This method changes the current state of board, i.e modifies id's and classes of 
@@ -583,7 +555,7 @@ class Chessboard:
         obj = self.convert_to_index(initial_pos)
         #temporarily delete piece from pieces object
         if obj.piece.name!="Blank":
-            self.pieces[obj.piece.color][obj.piece.name].remove(initial_pos)
+            self._pieces[obj.piece.color][obj.piece.name].remove(initial_pos)
         temp_piece = obj.piece
         obj.piece = Blank(initial_pos)
         obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p")
@@ -592,10 +564,10 @@ class Chessboard:
             html_class = obj.html_class,
             html_id = obj.html_id
         )
-        self.changes.append({'pos': initial_pos, 'class': obj.html_class})
+        self._changes.append({'pos': initial_pos, 'class': obj.html_class})
         obj = self.convert_to_index(final_pos)
         if obj.piece.name != "Blank":
-            self.pieces[obj.piece.color][obj.piece.name].remove(final_pos)
+            self._pieces[obj.piece.color][obj.piece.name].remove(final_pos)
         obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-pnone_-")
         obj.piece = temp_piece
         obj.html_class += " " + obj.piece.label
@@ -605,14 +577,14 @@ class Chessboard:
         )
         # Add the deleted piece back to pieces object
         if obj.piece.name!="Blank":
-            self.pieces[obj.piece.color][obj.piece.name].append(final_pos)
-        self.changes.append({'pos': final_pos, 'class': obj.html_class})
+            self._pieces[obj.piece.color][obj.piece.name].append(final_pos)
+        self._changes.append({'pos': final_pos, 'class': obj.html_class})
 
     def make_move(self, initial_pos, final_pos):
 
         if self.is_checkmate:
             print("Mate")
-            raise Checkmate(self.moves%2)
+            raise Checkmate(self._moves%2)
 
         draw = self.is_draw()
 
@@ -620,22 +592,22 @@ class Chessboard:
             raise Draw(draw[1])
 
         color = self.convert_to_index(initial_pos).piece.color
-        if (self.moves % 2 == 0 and color == "black") or (self.moves % 2 != 0 and color == "white"):
+        if (self._moves % 2 == 0 and color == "black") or (self._moves % 2 != 0 and color == "white"):
             raise SideNotAuthorizedToMakeMove()
 
-        self.changes = []
+        self._changes = []
         try:
             self.make_move_private(initial_pos, final_pos)
-            self.moves += 1
-            if self.enpassant_flag_life >= 1:
-                self.enpassant_flag_life = 0
-                self.enpassant_target_square = None
-            elif self.enpassant_target_square:
-                self.enpassant_flag_life += 1
+            self._moves += 1
+            if self._enpassant_flag_life >= 1:
+                self._enpassant_flag_life = 0
+                self._enpassant_target_square = None
+            elif self._enpassant_target_square:
+                self._enpassant_flag_life += 1
         except InvalidMoveError:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
 
-        return self.changes
+        return self._changes
 
     def make_move_private(self, initial_pos, final_pos):
         if initial_pos==final_pos:
@@ -650,22 +622,22 @@ class Chessboard:
                 if initial_pos=="e1" and final_pos=="g1":
                     self.change_chessboard_state("e1", "g1")
                     self.change_chessboard_state("h1", "f1")
-                    self.castling_rights_white["white_side_castled"] = True
+                    self._castling_rights_white["white_side_castled"] = True
                 # Queen side castle
                 elif initial_pos=="e1" and final_pos=="c1":
                     self.change_chessboard_state("e1", "c1")
                     self.change_chessboard_state("a1", "d1")
-                    self.castling_rights_white["white_side_castled"] = True
+                    self._castling_rights_white["white_side_castled"] = True
                 # King side castle
                 elif initial_pos=="e8" and final_pos=="g8":
                     self.change_chessboard_state("e8", "g8")
                     self.change_chessboard_state("h8", "f8")
-                    self.castling_rights_black["black_side_castled"] = True
+                    self._castling_rights_black["black_side_castled"] = True
                 # Queen side castle
                 elif initial_pos=="e8" and final_pos=="c8":
                     self.change_chessboard_state("e8", "c8")
                     self.change_chessboard_state("a8", "d8")
-                    self.castling_rights_black["black_side_castled"] = True
+                    self._castling_rights_black["black_side_castled"] = True
                 else:
                     self.change_chessboard_state(initial_pos, final_pos)
             # Check for special pawn moves - enpassant
@@ -673,13 +645,13 @@ class Chessboard:
                 ini_index = self.return_index_as_tuple(initial_pos)
                 fin_index = self.return_index_as_tuple(final_pos)
                 diagonal_flag = abs(ini_index[0]-fin_index[0]) & abs(ini_index[1]-fin_index[1])
-                if self.enpassant_target_square is not None and diagonal_flag:
+                if self._enpassant_target_square is not None and diagonal_flag:
                     # Black attacked pawn -> 6, white attacked pawn -> 3
-                    if self.enpassant_target_square[1]=="6":
+                    if self._enpassant_target_square[1]=="6":
                         direction = -1
-                    elif self.enpassant_target_square[1]=="3":
+                    elif self._enpassant_target_square[1]=="3":
                         direction = 1
-                    attacked_pawn = self.enpassant_target_square[0] + str(int(self.enpassant_target_square[1])+direction)
+                    attacked_pawn = self._enpassant_target_square[0] + str(int(self._enpassant_target_square[1])+direction)
                     self.delete_piece(attacked_pawn)
                 self.change_chessboard_state(initial_pos, final_pos)
             else:
@@ -687,34 +659,34 @@ class Chessboard:
         else:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
 
-        # white_king = self.pieces["white"]["King"][0]
+        # white_king = self._pieces["white"]["King"][0]
         # if (self.is_square_under_attack(white_king)):
-        #     self.changes.append({'pos': white_king, 'class': self.convert_to_index(white_king).html_class + ' check'})
+        #     self._changes.append({'pos': white_king, 'class': self.convert_to_index(white_king).html_class + ' check'})
 
-        # black_king = self.pieces["black"]["King"][0]
+        # black_king = self._pieces["black"]["King"][0]
         # if (self.is_square_under_attack(black_king)):
-        #     self.changes.append({'pos': black_king, 'class': self.convert_to_index(black_king).html_class + ' check'})
+        #     self._changes.append({'pos': black_king, 'class': self.convert_to_index(black_king).html_class + ' check'})
 
     @property
     def is_checkmate(self):
-        color = "white" if self.moves%2==0 else "black"
-        if self.is_square_under_attack(self.pieces[color]["King"][0]):
+        color = "white" if self._moves%2==0 else "black"
+        if self.is_square_under_attack(self._pieces[color]["King"][0]):
             moves = []
-            for piece in self.pieces[color]:
-                for square in self.pieces[color][piece]:
+            for piece in self._pieces[color]:
+                for square in self._pieces[color][piece]:
                     moves += self.generate_legal_moves(square)
             # print(moves)
-            # print(self.pieces)
+            # print(self._pieces)
             return True if len(moves)==0 else False
         return False
 
     @property
     def is_stalemate(self):
-        color = "white" if self.moves%2==0 else "black"
-        if not self.is_square_under_attack(self.pieces[color]["King"]):
+        color = "white" if self._moves%2==0 else "black"
+        if not self.is_square_under_attack(self._pieces[color]["King"]):
             moves = []
-            for piece in self.pieces[color]:
-                moves += self.generate_legal_moves(self.pieces[color][piece])
+            for piece in self._pieces[color]:
+                moves += self.generate_legal_moves(self._pieces[color][piece])
             print(moves)
             return True if len(moves)==0 else False
         return True
@@ -725,132 +697,132 @@ class Chessboard:
     def move_top(self, initial_pos, limit=10):
         indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
-        init_piece_color = self.chessboard[X][Y].piece.color
+        init_piece_color = self._chessboard[X][Y].piece.color
         move_list = []
         while X<=7 and X>0 and limit>0:
             X -= 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
                 break
-            if self.chessboard[X][Y].piece.color != "none":
-                move_list.append(self.chessboard[X][Y].html_id)
+            if self._chessboard[X][Y].piece.color != "none":
+                move_list.append(self._chessboard[X][Y].html_id)
                 break
-            move_list.append(self.chessboard[X][Y].html_id)
+            move_list.append(self._chessboard[X][Y].html_id)
             limit -= 1
         return move_list
 
     def move_bottom(self, initial_pos, limit=10):
         indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
-        init_piece_color = self.chessboard[X][Y].piece.color
+        init_piece_color = self._chessboard[X][Y].piece.color
         move_list = []
         while X<7 and X>=0 and limit>0:
             X += 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
                 break
-            if self.chessboard[X][Y].piece.color != "none":
-                move_list.append(self.chessboard[X][Y].html_id)
+            if self._chessboard[X][Y].piece.color != "none":
+                move_list.append(self._chessboard[X][Y].html_id)
                 break
-            move_list.append(self.chessboard[X][Y].html_id)
+            move_list.append(self._chessboard[X][Y].html_id)
             limit -= 1
         return move_list
 
     def move_left(self, initial_pos, limit=10):
         indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
-        init_piece_color = self.chessboard[X][Y].piece.color
+        init_piece_color = self._chessboard[X][Y].piece.color
         move_list = []
         while Y<=7 and Y>0 and limit>0:
             Y -= 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
                 break
-            if self.chessboard[X][Y].piece.color != "none":
-                move_list.append(self.chessboard[X][Y].html_id)
+            if self._chessboard[X][Y].piece.color != "none":
+                move_list.append(self._chessboard[X][Y].html_id)
                 break
-            move_list.append(self.chessboard[X][Y].html_id)
+            move_list.append(self._chessboard[X][Y].html_id)
             limit -= 1
         return move_list
 
     def move_right(self, initial_pos, limit=10):
         indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
-        init_piece_color = self.chessboard[X][Y].piece.color
+        init_piece_color = self._chessboard[X][Y].piece.color
         move_list = []
         while Y<7 and Y>=0 and limit>0:
             Y += 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
                 break
-            if self.chessboard[X][Y].piece.color != "none":
-                move_list.append(self.chessboard[X][Y].html_id)
+            if self._chessboard[X][Y].piece.color != "none":
+                move_list.append(self._chessboard[X][Y].html_id)
                 break
-            move_list.append(self.chessboard[X][Y].html_id)
+            move_list.append(self._chessboard[X][Y].html_id)
             limit -= 1
         return move_list
 
     def move_top_right(self, initial_pos, limit=10):
         indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
-        init_piece_color = self.chessboard[X][Y].piece.color
+        init_piece_color = self._chessboard[X][Y].piece.color
         move_list = []
         while X<=7 and X>0 and Y<7 and Y>=0 and limit>0:
             X -= 1
             Y += 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
                 break
-            if self.chessboard[X][Y].piece.color != "none":
-                move_list.append(self.chessboard[X][Y].html_id)
+            if self._chessboard[X][Y].piece.color != "none":
+                move_list.append(self._chessboard[X][Y].html_id)
                 break
-            move_list.append(self.chessboard[X][Y].html_id)
+            move_list.append(self._chessboard[X][Y].html_id)
             limit -= 1
         return move_list
 
     def move_bottom_right(self, initial_pos, limit=10):
         indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
-        init_piece_color = self.chessboard[X][Y].piece.color
+        init_piece_color = self._chessboard[X][Y].piece.color
         move_list = []
         while X<7 and X>=0 and Y<7 and Y>=0 and limit>0:
             X += 1
             Y += 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
                 break
-            if self.chessboard[X][Y].piece.color != "none":
-                move_list.append(self.chessboard[X][Y].html_id)
+            if self._chessboard[X][Y].piece.color != "none":
+                move_list.append(self._chessboard[X][Y].html_id)
                 break
-            move_list.append(self.chessboard[X][Y].html_id)
+            move_list.append(self._chessboard[X][Y].html_id)
             limit -= 1
         return move_list
 
     def move_top_left(self, initial_pos, limit=10):
         indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
-        init_piece_color = self.chessboard[X][Y].piece.color
+        init_piece_color = self._chessboard[X][Y].piece.color
         move_list = []
         while Y<=7 and Y>0 and X<=7 and X>0 and limit>0:
             Y -= 1
             X -= 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
                 break
-            if self.chessboard[X][Y].piece.color != "none":
-                move_list.append(self.chessboard[X][Y].html_id)
+            if self._chessboard[X][Y].piece.color != "none":
+                move_list.append(self._chessboard[X][Y].html_id)
                 break
-            move_list.append(self.chessboard[X][Y].html_id)
+            move_list.append(self._chessboard[X][Y].html_id)
             limit -= 1
         return move_list
 
     def move_bottom_left(self, initial_pos, limit=10):
         indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
-        init_piece_color = self.chessboard[X][Y].piece.color
+        init_piece_color = self._chessboard[X][Y].piece.color
         move_list = []
         while Y<=7 and Y>0 and X<7 and X>=0 and limit>0:
             Y -= 1
             X += 1
-            if self.chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
+            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
                 break
-            if self.chessboard[X][Y].piece.color != "none":
-                move_list.append(self.chessboard[X][Y].html_id)
+            if self._chessboard[X][Y].piece.color != "none":
+                move_list.append(self._chessboard[X][Y].html_id)
                 break
-            move_list.append(self.chessboard[X][Y].html_id)
+            move_list.append(self._chessboard[X][Y].html_id)
             limit -= 1
         return move_list
 
@@ -878,21 +850,21 @@ class Chessboard:
                 limit=1
             while tempX<=7 and tempX>0 and limit>0:
                 tempX -= 1
-                if self.chessboard[tempX][tempY].piece.color !="none":
+                if self._chessboard[tempX][tempY].piece.color !="none":
                     break
-                move_list.append(self.chessboard[tempX][tempY].html_id)
+                move_list.append(self._chessboard[tempX][tempY].html_id)
                 limit -= 1
             # check for captures at top-right and top-left
             if X-1<=7 and Y+1<=7:
-                if self.enpassant_target_square==self.chessboard[X-1][Y+1].html_id:
-                    move_list.append(self.enpassant_target_square)
-                elif self.chessboard[X-1][Y+1].piece.color == "black":
-                    move_list.append(self.chessboard[X-1][Y+1].html_id)
+                if self._enpassant_target_square==self._chessboard[X-1][Y+1].html_id:
+                    move_list.append(self._enpassant_target_square)
+                elif self._chessboard[X-1][Y+1].piece.color == "black":
+                    move_list.append(self._chessboard[X-1][Y+1].html_id)
             if X-1<=7 and Y-1>=0:
-                if self.enpassant_target_square==self.chessboard[X-1][Y-1].html_id:
-                    move_list.append(self.enpassant_target_square)
-                elif self.chessboard[X-1][Y-1].piece.color == "black":
-                    move_list.append(self.chessboard[X-1][Y-1].html_id)
+                if self._enpassant_target_square==self._chessboard[X-1][Y-1].html_id:
+                    move_list.append(self._enpassant_target_square)
+                elif self._chessboard[X-1][Y-1].piece.color == "black":
+                    move_list.append(self._chessboard[X-1][Y-1].html_id)
         else:
             if int(self.convert_to_index(initial_pos).html_id[1])==7:
                 limit=2
@@ -900,21 +872,21 @@ class Chessboard:
                 limit=1
             while tempX<7 and tempX>=0 and limit>0:
                 tempX += 1
-                if self.chessboard[tempX][tempY].piece.color !="none":
+                if self._chessboard[tempX][tempY].piece.color !="none":
                     break
-                move_list.append(self.chessboard[tempX][tempY].html_id)
+                move_list.append(self._chessboard[tempX][tempY].html_id)
                 limit -= 1
             # check for captures at bottom-right and bottom-left
             if X+1>=0 and Y-1>=0:
-                if self.enpassant_target_square==self.chessboard[X+1][Y-1].html_id:
-                    move_list.append(self.enpassant_target_square)
-                elif self.chessboard[X+1][Y-1].piece.color == "white":
-                    move_list.append(self.chessboard[X+1][Y-1].html_id)
+                if self._enpassant_target_square==self._chessboard[X+1][Y-1].html_id:
+                    move_list.append(self._enpassant_target_square)
+                elif self._chessboard[X+1][Y-1].piece.color == "white":
+                    move_list.append(self._chessboard[X+1][Y-1].html_id)
             if X+1>=0 and Y+1<=7:
-                if self.enpassant_target_square==self.chessboard[X+1][Y+1].html_id:
-                    move_list.append(self.enpassant_target_square)
-                elif self.chessboard[X+1][Y+1].piece.color == "white":
-                    move_list.append(self.chessboard[X+1][Y+1].html_id)
+                if self._enpassant_target_square==self._chessboard[X+1][Y+1].html_id:
+                    move_list.append(self._enpassant_target_square)
+                elif self._chessboard[X+1][Y+1].piece.color == "white":
+                    move_list.append(self._chessboard[X+1][Y+1].html_id)
         return move_list
 
     def generate_knight_moves(self, initial_pos):
@@ -924,8 +896,8 @@ class Chessboard:
         X, Y = indexes[0], indexes[1]
         for move in possible_skew_moves:
             if X+move[0] <=7 and X+move[0]>=0 and Y+move[1] <= 7 and Y+move[1]>=0:
-                if self.chessboard[X+move[0]][Y+move[1]].piece.color != self.convert_to_index(initial_pos).piece.color:
-                    move_list.append(self.chessboard[X+move[0]][Y+move[1]].html_id)
+                if self._chessboard[X+move[0]][Y+move[1]].piece.color != self.convert_to_index(initial_pos).piece.color:
+                    move_list.append(self._chessboard[X+move[0]][Y+move[1]].html_id)
         return move_list
 
     def special_king_moves(self, initial_pos):
@@ -936,21 +908,21 @@ class Chessboard:
         if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
             if self.can_white_castle and self.convert_to_index(initial_pos).piece.color=="white":
                 # King side castle
-                if initial_pos=="e1" and self.castling_rights_white["has_h1_rook_moved"] is not True:
-                    if self.chessboard[X][Y+1].piece.color=="none" and self.chessboard[X][Y+2].piece.color=="none":
+                if initial_pos=="e1" and self._castling_rights_white["has_h1_rook_moved"] is not True:
+                    if self._chessboard[X][Y+1].piece.color=="none" and self._chessboard[X][Y+2].piece.color=="none":
                         move_list.append("g1")
                 # Queen side castle
-                if initial_pos=="e1" and self.castling_rights_white["has_a1_rook_moved"] is not True:
-                    if self.chessboard[X][Y-1].piece.color=="none" and self.chessboard[X][Y-2].piece.color=="none":
+                if initial_pos=="e1" and self._castling_rights_white["has_a1_rook_moved"] is not True:
+                    if self._chessboard[X][Y-1].piece.color=="none" and self._chessboard[X][Y-2].piece.color=="none":
                         move_list.append("c1")
             if self.can_black_castle and self.convert_to_index(initial_pos).piece.color=="black":
                 # King side castle
-                if initial_pos=="e8" and self.castling_rights_black["has_h8_rook_moved"] is not True:
-                    if self.chessboard[X][Y+1].piece.color=="none" and self.chessboard[X][Y+2].piece.color=="none":
+                if initial_pos=="e8" and self._castling_rights_black["has_h8_rook_moved"] is not True:
+                    if self._chessboard[X][Y+1].piece.color=="none" and self._chessboard[X][Y+2].piece.color=="none":
                         move_list.append("g8")
                 # Queen side castle
-                if initial_pos=="e8" and self.castling_rights_black["has_a8_rook_moved"] is not True:
-                    if self.chessboard[X][Y-1].piece.color=="none" and self.chessboard[X][Y-2].piece.color=="none":
+                if initial_pos=="e8" and self._castling_rights_black["has_a8_rook_moved"] is not True:
+                    if self._chessboard[X][Y-1].piece.color=="none" and self._chessboard[X][Y-2].piece.color=="none":
                         move_list.append("c8")
         return move_list
 
@@ -965,34 +937,34 @@ class Chessboard:
             if abs(int(final_pos[1])-int(initial_pos[1]))==2:
                 direction = (int(final_pos[1])-int(initial_pos[1]))//2
                 if Y+1<=7:
-                    if self.chessboard[X][Y+1].piece.label.split('-')[1]=='p' and self.chessboard[oX][oY].piece.color!=self.chessboard[X][Y+1].piece.color:
-                        self.enpassant_target_square = self.chessboard[X+direction][Y].html_id
+                    if self._chessboard[X][Y+1].piece.label.split('-')[1]=='p' and self._chessboard[oX][oY].piece.color!=self._chessboard[X][Y+1].piece.color:
+                        self._enpassant_target_square = self._chessboard[X+direction][Y].html_id
                 if Y-1>=0:
-                    if self.chessboard[X][Y-1].piece.label.split('-')[1]=='p' and self.chessboard[oX][oY].piece.color!=self.chessboard[X][Y-1].piece.color:
-                        self.enpassant_target_square = self.chessboard[X+direction][Y].html_id
+                    if self._chessboard[X][Y-1].piece.label.split('-')[1]=='p' and self._chessboard[oX][oY].piece.color!=self._chessboard[X][Y-1].piece.color:
+                        self._enpassant_target_square = self._chessboard[X+direction][Y].html_id
 
         # Set Castling Flags
         if self.can_white_castle and self.convert_to_index(initial_pos).piece.color=="white":
             # Check if piece moved is king
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
-                self.castling_rights_white["has_white_king_moved"] = True
+                self._castling_rights_white["has_white_king_moved"] = True
             # Check if piece moved is rook
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="R":
                 if initial_pos=="a1":
-                    self.castling_rights_white["has_a1_rook_moved"] = True
+                    self._castling_rights_white["has_a1_rook_moved"] = True
                 elif initial_pos=="h1":
-                    self.castling_rights_white["has_h1_rook_moved"] = True
+                    self._castling_rights_white["has_h1_rook_moved"] = True
 
         if self.can_black_castle and self.convert_to_index(initial_pos).piece.color=="black":
             # Check if piece moved is king
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
-                self.castling_rights_black["has_black_king_moved"] = True
+                self._castling_rights_black["has_black_king_moved"] = True
             # Check if piece moved is rook
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="R":
                 if initial_pos=="a8":
-                    self.castling_rights_white["has_a8_rook_moved"] = True
+                    self._castling_rights_white["has_a8_rook_moved"] = True
                 elif initial_pos=="h8":
-                    self.castling_rights_white["has_h8_rook_moved"] = True
+                    self._castling_rights_white["has_h8_rook_moved"] = True
             
     def is_move_legal(self, initial_pos, final_pos):
         # Will make use of generate legal move only.
@@ -1003,7 +975,7 @@ class Chessboard:
 
     def make_temp_move(self, initial_pos, final_pos):
 
-        color = "white" if self.moves%2==0 else "black"
+        color = "white" if self._moves%2==0 else "black"
 
         initial_piece = self.convert_to_index(initial_pos).piece
         final_piece = self.convert_to_index(final_pos).piece
@@ -1011,20 +983,20 @@ class Chessboard:
         self.convert_to_index(initial_pos).piece = final_piece
         self.convert_to_index(final_pos).piece = initial_piece
 
-        self.pieces[initial_piece.color][initial_piece.name].remove(initial_pos)
-        self.pieces[initial_piece.color][initial_piece.name].append(final_pos)
+        self._pieces[initial_piece.color][initial_piece.name].remove(initial_pos)
+        self._pieces[initial_piece.color][initial_piece.name].append(final_pos)
         if final_piece.name != "Blank":
-            self.pieces[final_piece.color][final_piece.name].remove(final_pos)
+            self._pieces[final_piece.color][final_piece.name].remove(final_pos)
 
         def reset_pos():
             self.convert_to_index(initial_pos).piece = initial_piece
             self.convert_to_index(final_pos).piece = final_piece
-            self.pieces[initial_piece.color][initial_piece.name].remove(final_pos)
-            self.pieces[initial_piece.color][initial_piece.name].append(initial_pos)
+            self._pieces[initial_piece.color][initial_piece.name].remove(final_pos)
+            self._pieces[initial_piece.color][initial_piece.name].append(initial_pos)
             if final_piece.name != "Blank":
-                self.pieces[final_piece.color][final_piece.name].append(final_pos)
+                self._pieces[final_piece.color][final_piece.name].append(final_pos)
 
-        if self.is_square_under_attack(self.pieces[color]["King"][0]):
+        if self.is_square_under_attack(self._pieces[color]["King"][0]):
             reset_pos()
             return True
         else:
@@ -1034,12 +1006,12 @@ class Chessboard:
 
     def generate_legal_moves(self, initial_pos):
 
-        color = "white" if self.moves%2==0 else "black"
+        color = "white" if self._moves%2==0 else "black"
 
-        if (self.moves % 2 == 0 and color == "black") or (self.moves % 2 != 0 and color == "white"):
+        if (self._moves % 2 == 0 and color == "black") or (self._moves % 2 != 0 and color == "white"):
             raise SideNotAuthorizedToMakeMove()
 
-        if self.is_square_under_attack(self.pieces[color]["King"][0]):
+        if self.is_square_under_attack(self._pieces[color]["King"][0]):
             piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
             moveList = []
             if piece_label=="K":
@@ -1081,27 +1053,40 @@ class Chessboard:
         board_html_view = "<tr>"
         for i in range(8):
             for j in range(8):
-                board_html_view += self.chessboard[i][j].css
+                board_html_view += self._chessboard[i][j].css
             board_html_view = board_html_view + "</tr>"
-        self.configuration = 1
+        self._configuration = 1
         return board_html_view
 
     def draw_chessboard_for_black(self):
         board_html_view = "<tr>"
         for i in range(7,-1,-1):
             for j in range(7, -1, -1):
-                board_html_view += self.chessboard[i][j].css
+                board_html_view += self._chessboard[i][j].css
             board_html_view = board_html_view + "</tr>"
-        self.configuration = 2
+        self._configuration = 2
         return board_html_view
 
-    def reset_chessboard(self):
-        # Change these settings in accordance with FEN Notation
-        self.moves = 0
-        self.enpassant_target_square = None
-        self.enpassant_flag_life = 0
-        self.configuration = 1
-        self.changes = []
-        
-        self.chessboard = self.create_chessboard()
-        self.load_position(config.START_POSITION_NOTATION)
+    def reset_chessboard(self, fen_notation=config.START_POSITION_NOTATION):
+        self._reset_config_vars()
+        self._chessboard = self.create_chessboard()
+        self.load_position(fen_notation)
+
+    def _reset_config_vars(self):
+        self._changes = []
+        self._pieces = {
+            "white": {},
+            "black": {},
+        }
+        self._castling_rights_white = {
+            "white_side_castled": False,
+            "has_white_king_moved": False,
+            "has_a1_rook_moved": False,
+            "has_h1_rook_moved": False,
+        }
+        self._castling_rights_black = {
+            "black_side_castled": False,
+            "has_black_king_moved": False,
+            "has_a8_rook_moved": False,
+            "has_h8_rook_moved": False,
+        }
