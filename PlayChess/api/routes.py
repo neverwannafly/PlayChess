@@ -14,7 +14,7 @@ mod = Blueprint('api', __name__)
 def gettoken():
     return "token: hello"
 
-@mod.route('/bestmove/', methods=['GET'])
+@mod.route('/stockfish/', methods=['GET'])
 def index():
     if token.validate_token(request.args.get('token', None)):
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
