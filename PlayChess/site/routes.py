@@ -169,7 +169,7 @@ def resetBoard():
     reset_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": reset_board})
 
-@mod.route('/generateLegalMoves/<init_pos>')
+@mod.route('/board/generateLegalMoves/<init_pos>')
 @decorators.login_required
 def generateLegalMoves(init_pos):
     try:
@@ -178,13 +178,13 @@ def generateLegalMoves(init_pos):
         return jsonify({'moves': []})
     return jsonify({'moves': moves})
 
-@mod.route('/generateFenNotation')
+@mod.route('/board/generateFenNotation')
 @decorators.login_required
 def generateFenNotation():
     notation = USER_DICT['current_user_' + str(session['username'])].chessboard.fen_notation
     return jsonify({'notation': notation})
 
-@mod.route('/makemove/<move>')
+@mod.route('/board/makemove/<move>')
 @decorators.login_required
 def make_move(move):
     positions = move.split('-')

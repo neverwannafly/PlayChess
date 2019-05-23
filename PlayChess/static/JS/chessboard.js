@@ -35,7 +35,7 @@
                 } 
                 else {
                     $("#"+initial_pos).addClass("active-cell");
-                    const url = "generateLegalMoves/" + initial_pos;
+                    const url = "board/generateLegalMoves/" + initial_pos;
                     $.ajax({
                         url: url,
                     })
@@ -47,7 +47,7 @@
             }
             else {
                 final_pos = $(target).attr('id');
-                const url = "makemove/" + initial_pos + "-" + final_pos;
+                const url = "board/makemove/" + initial_pos + "-" + final_pos;
                 $.ajax({
                     url: url,
                 })
