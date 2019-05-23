@@ -8,26 +8,26 @@
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/neverwannafly/PlayChess.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/neverwannafly/PlayChess/context:python)
 
 
-## Current Features
+## Features
 <ul>
-    <li>User signin</li>
     <li>Admin dashboard</li>
-    <li>Creating new admin through command line</li>
-    <li>Functional chessboard with basic legal move checks</li>
+    <li>User Dashboard</li>
+    <li>Functional Chessboard</li>
     <li>Working Game Finding Mechanism</li>
-    <li>Players can play realtime chess game against each other</li>
-    <li>Working Global chat at '/chat' (It currently has basic functionality and no styling)</li>
+    <li>Realtime Gameplay</li>
+    <li>Engine evaluation at /api/stockfish</li>
+    <li>Simple Global Chat at /chat</li>
 </ul>
 
 ## Checkpoints
 These are the likely goals that would be achieved in the near future (in order of decreasing priority)
 <ul>
     <li>Pawn promotion</li>
-    <li>assert if king is in check and devise legal moves accordingly</li>
-    <li>Create in game chat for ongoing games</li>
+    <li>Enforce End game condition</li>
+    <li>Create a proper game lobby</li>
     <li>Make user profile page for logged in users</li>
     <li>Styling and more Functionality for Global Chat</li>
-    <li>Implement necessary styling till now</li>
+    <li>Store people's games and devise rating system</li>
 </ul>
 
 ## Hosting
@@ -62,7 +62,7 @@ Write in the following commands to set up your virtualenv
 ```
 
 ## Manage.py Script
-This script is an easy interface to navigate through the webapp. Currently this script can create an admin, run  the development server and for individuals having access to heroku credentials (where the site is hosted), concurrently push changes to both origin and heroku branch at the same time. It's different interfaces are as follows->
+This script is an easy interface to navigate through the webapp. Currently this script can create an admin, run  the development server and for individuals having access to heroku credentials (where the site is hosted), concurrently push changes to both origin and heroku branch at the same time. You can also see different interfaces of this script by just typing <strong>python manage.py</strong>. It's different interfaces are as follows->
 #### Creating An Admin 
 
 ```shell
@@ -103,7 +103,17 @@ $ python manage.py dev
 
 <ul>
 <li>It'll start a dev Gunicorn server on port 8000</li>
-<li><strong>NOTE: </strong>Donot use flask development server as it will only serve one client at a time and would only move to the second client when done with 1st. So this will make finding game algorithm impossible to execute.</li>
+<li><strong>NOTE: </strong>Donot use flask development server as it will only serve one client at a time and would only move to the second client when done with 1st. The game finding mechanism won't be able to execute.</li>
+</ul>
+
+#### Opening Production Shell
+
+```shell
+$ python manage.py shell
+```
+
+<ul>
+<li>It opens the production shell</li>
 </ul>
 
 ## Routes
@@ -112,6 +122,7 @@ $ python manage.py dev
 <li>Use http://127.0.0.1:8000/admin/ to access the admin interface</li>
 <li>Use http://127.0.0.1:8000/blog/ to access the blog interface (NOT MADE)</li>
 <li>Use http://127.0.0.1:8000/chat/ to access the global chat and chat with other players.</li>
+<li>Use http://127.0.0.1:8000/api/stockfish to access the stockfish api.</li>
 </ul>
 
 ## Testing
@@ -168,13 +179,15 @@ def test_database(client):
 To run this flask app-><br>
 <ul>
 <li>Download the zip or fork the repo</li>
+<li>Set up virtual env as prescribed</li>
+<li>Get the .env file from owner of this repo and place it in correct directory</li>
 <li>Go to the main directory(where manage.py is) through terminal and run the following command-></li>
 
 ```shell
 $ python manage.py dev
 ```
 
-<li>goto <strong>http://127.0.0.1:8000/</strong> on your browser and mendle around with the app!</li>
+<li>Goto <strong>http://127.0.0.1:8000/</strong> on your browser and play around around with the app!</li>
 <li>To exit the application, press Ctrl+C</li>
 <li>Do drop in your suggestions via pull requests <3 </li>
 
@@ -183,9 +196,13 @@ $ python manage.py dev
 ## Import Closures
 
 <ul>
-<li> <h4>This project is only compatible with python3!</h4></li>
-<li> <h4>If you encounter any bugs related to bcrypt library, make sure to have the same version as in requirnments.txt </h4></li>
-<li> <h4><strong>NOTE: It's highly recommended to set up the virtual environment as described <a href="#env">here</a> </h4></strong></li>
+<li> This project is only compatible with python3</li>
+<li> Windows users will have trouble running manage.py script now, instead they can use-></li>
+```shell
+$ gunicorn --reload --threads 12 -w 1 run:app
+```
+
+<li>Documentation regarding certain aspects like chessboard class, stockfish api will be made available later</li>
 </ul>
 
 <hr>
