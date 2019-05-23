@@ -178,6 +178,12 @@ def generateLegalMoves(init_pos):
         return jsonify({'moves': []})
     return jsonify({'moves': moves})
 
+@mod.route('/generateFenNotation')
+@decorators.login_required
+def generateFenNotation():
+    notation = USER_DICT['current_user_' + str(session['username'])].chessboard.fen_notation
+    return jsonify({'notation': notation})
+
 @mod.route('/makemove/<move>')
 @decorators.login_required
 def make_move(move):
