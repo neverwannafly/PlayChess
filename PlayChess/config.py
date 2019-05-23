@@ -70,4 +70,4 @@ CHESS_PIECE_CLASS = {
 }
 
 # Starting Position Notation
-START_POSITION_NOTATION = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR * KQkq -  * *'
+START_POSITION_NOTATION = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0'
