@@ -4,8 +4,9 @@
 # This would serve as the parent class for other pieces.
 
 import sys
+import re as regex
 
-from .exceptions import (InvalidMoveError, SideNotAuthorizedToMakeMove, Checkmate, Draw)
+from .exceptions import (InvalidFenNotation, InvalidMoveError, SideNotAuthorizedToMakeMove, Checkmate, Draw)
 from .decorators import deprecated
 from .. import config
 
@@ -120,6 +121,10 @@ class LightSquare(Square):
 class Chessboard:
     def __init__(self, fen_notation=config.START_POSITION_NOTATION):
 
+        valid_fen = bool(regex.match(config.FEN_NOTATION_REGEX, fen_notation))
+        if not valid_fen:
+            fen_notation = config.START_POSITION_NOTATION
+
         # An array holding recent changes in board position
         self._changes = []
 
@@ -156,7 +161,10 @@ class Chessboard:
         self._configuration = 1
         
         self._chessboard = self.create_chessboard()
-        self.load_position(fen_notation)
+        try:
+            self.load_position(fen_notation)
+        except:
+            self.load_position(config.START_POSITION_NOTATION)
 
     @property
     def can_white_castle(self):
@@ -425,7 +433,10 @@ class Chessboard:
     def reset_chessboard(self, fen_notation=config.START_POSITION_NOTATION):
         self._reset_config_vars()
         self._chessboard = self.create_chessboard()
-        self.load_position(fen_notation)
+        try:
+            self.load_position(fen_notation)
+        except:
+            raise InvalidFenNotation("There's some issue with the fen notation provided")
 
     def convert_to_index(self, notation):
         return self._chessboard[ord('8')-ord(notation[1])][ord(notation[0])-ord('a')]
