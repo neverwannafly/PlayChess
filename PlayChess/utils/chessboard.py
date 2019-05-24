@@ -169,6 +169,33 @@ class Chessboard:
         return not castling_flag
 
     @property
+    def is_checkmate(self):
+        color = "white" if self._moves%2==0 else "black"
+        if self.is_square_under_attack(self._pieces[color]["King"][0]):
+            moves = []
+            for piece in self._pieces[color]:
+                for square in self._pieces[color][piece]:
+                    moves += self.generate_legal_moves(square)
+            # print(moves)
+            # print(self._pieces)
+            return True if len(moves)==0 else False
+        return False
+
+    @property
+    def is_stalemate(self):
+        color = "white" if self._moves%2==0 else "black"
+        if not self.is_square_under_attack(self._pieces[color]["King"]):
+            moves = []
+            for piece in self._pieces[color]:
+                moves += self.generate_legal_moves(self._pieces[color][piece])
+            print(moves)
+            return True if len(moves)==0 else False
+        return True
+
+    def is_draw(self):
+        return [False, "stalemate"]
+
+    @property
     def fen_notation(self):
         fen_notation = ""
         # Set board position
@@ -322,6 +349,25 @@ class Chessboard:
             chessboard.append(chess_row)
         return chessboard
 
+    def draw_chessboard_for_white(self):
+        board_html_view = "<tr>"
+        for i in range(8):
+            for j in range(8):
+                board_html_view += self._chessboard[i][j].css
+            board_html_view = board_html_view + "</tr>"
+        self._configuration = 1
+        return board_html_view
+
+    def draw_chessboard_for_black(self):
+        board_html_view = "<tr>"
+        for i in range(7,-1,-1):
+            for j in range(7, -1, -1):
+                board_html_view += self._chessboard[i][j].css
+            board_html_view = board_html_view + "</tr>"
+        self._configuration = 2
+        return board_html_view
+
+
     def draw_chessboard(self):
         if self._configuration==1:
             return self.draw_chessboard_for_white()
@@ -333,6 +379,53 @@ class Chessboard:
             self._configuration = 2
         else:
             self._configuration = 1
+
+    # Need to be used for pawn promotion, en-passant and board editor
+    def delete_piece(self, piece_position):
+        obj = self.convert_to_index(piece_position)
+        self._pieces[obj.piece.color][obj.piece.name].remove(piece_position)
+        obj.piece = Blank(piece_position)
+        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p")
+        obj.html_class += " " + obj.piece.label
+        obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
+            html_class = obj.html_class,
+            html_id = obj.html_id
+        )
+        self._changes.append({'pos': piece_position, 'class': obj.html_class})
+
+    # Can be used for simple Board Editor
+    def create_piece(self, piece_position, piece_name, piece_color=None):
+        if piece_color is None:
+            return getattr(sys.modules[__name__], piece_name)(piece_position)
+        if self._pieces[piece_color].get(piece_name, None) is None:
+            self._pieces[piece_color][piece_name] = [piece_position]
+        else:
+            self._pieces[piece_color][piece_name].append(piece_position)
+        return getattr(sys.modules[__name__], piece_name)(piece_position, piece_color)
+
+    def _reset_config_vars(self):
+        self._changes = []
+        self._pieces = {
+            "white": {},
+            "black": {},
+        }
+        self._castling_rights_white = {
+            "white_side_castled": False,
+            "has_white_king_moved": False,
+            "has_a1_rook_moved": False,
+            "has_h1_rook_moved": False,
+        }
+        self._castling_rights_black = {
+            "black_side_castled": False,
+            "has_black_king_moved": False,
+            "has_a8_rook_moved": False,
+            "has_h8_rook_moved": False,
+        }
+
+    def reset_chessboard(self, fen_notation=config.START_POSITION_NOTATION):
+        self._reset_config_vars()
+        self._chessboard = self.create_chessboard()
+        self.load_position(fen_notation)
 
     def convert_to_index(self, notation):
         return self._chessboard[ord('8')-ord(notation[1])][ord(notation[0])-ord('a')]
@@ -526,29 +619,6 @@ class Chessboard:
 
         return False
 
-    # Need to be used for pawn promotion, en-passant and board editor
-    def delete_piece(self, piece_position):
-        obj = self.convert_to_index(piece_position)
-        self._pieces[obj.piece.color][obj.piece.name].remove(piece_position)
-        obj.piece = Blank(piece_position)
-        obj.html_class = obj.html_class.strip("white-Kwhite-Qwhite-Rwhite-Bwhite-Nwhite-pblack-Kblack-Qblack-Rblack-Bblack-Nblack-p")
-        obj.html_class += " " + obj.piece.label
-        obj.css = """<td><div class="{html_class}" id="{html_id}"></div></td>""".format(
-            html_class = obj.html_class,
-            html_id = obj.html_id
-        )
-        self._changes.append({'pos': piece_position, 'class': obj.html_class})
-
-    # Can be used for simple Board Editor
-    def create_piece(self, piece_position, piece_name, piece_color=None):
-        if piece_color is None:
-            return getattr(sys.modules[__name__], piece_name)(piece_position)
-        if self._pieces[piece_color].get(piece_name, None) is None:
-            self._pieces[piece_color][piece_name] = [piece_position]
-        else:
-            self._pieces[piece_color][piece_name].append(piece_position)
-        return getattr(sys.modules[__name__], piece_name)(piece_position, piece_color)
-
     # This method changes the current state of board, i.e modifies id's and classes of 
     # class members of Sqaure class and also change the values of chessboard array.
     def change_chessboard_state(self, initial_pos, final_pos):
@@ -666,33 +736,6 @@ class Chessboard:
         # black_king = self._pieces["black"]["King"][0]
         # if (self.is_square_under_attack(black_king)):
         #     self._changes.append({'pos': black_king, 'class': self.convert_to_index(black_king).html_class + ' check'})
-
-    @property
-    def is_checkmate(self):
-        color = "white" if self._moves%2==0 else "black"
-        if self.is_square_under_attack(self._pieces[color]["King"][0]):
-            moves = []
-            for piece in self._pieces[color]:
-                for square in self._pieces[color][piece]:
-                    moves += self.generate_legal_moves(square)
-            # print(moves)
-            # print(self._pieces)
-            return True if len(moves)==0 else False
-        return False
-
-    @property
-    def is_stalemate(self):
-        color = "white" if self._moves%2==0 else "black"
-        if not self.is_square_under_attack(self._pieces[color]["King"]):
-            moves = []
-            for piece in self._pieces[color]:
-                moves += self.generate_legal_moves(self._pieces[color][piece])
-            print(moves)
-            return True if len(moves)==0 else False
-        return True
-
-    def is_draw(self):
-        return [False, "stalemate"]
 
     def move_top(self, initial_pos, limit=10):
         indexes = self.return_index_as_tuple(initial_pos)
@@ -1048,45 +1091,3 @@ class Chessboard:
             return self.generate_pawn_moves(initial_pos)
         else:
             return []
-
-    def draw_chessboard_for_white(self):
-        board_html_view = "<tr>"
-        for i in range(8):
-            for j in range(8):
-                board_html_view += self._chessboard[i][j].css
-            board_html_view = board_html_view + "</tr>"
-        self._configuration = 1
-        return board_html_view
-
-    def draw_chessboard_for_black(self):
-        board_html_view = "<tr>"
-        for i in range(7,-1,-1):
-            for j in range(7, -1, -1):
-                board_html_view += self._chessboard[i][j].css
-            board_html_view = board_html_view + "</tr>"
-        self._configuration = 2
-        return board_html_view
-
-    def reset_chessboard(self, fen_notation=config.START_POSITION_NOTATION):
-        self._reset_config_vars()
-        self._chessboard = self.create_chessboard()
-        self.load_position(fen_notation)
-
-    def _reset_config_vars(self):
-        self._changes = []
-        self._pieces = {
-            "white": {},
-            "black": {},
-        }
-        self._castling_rights_white = {
-            "white_side_castled": False,
-            "has_white_king_moved": False,
-            "has_a1_rook_moved": False,
-            "has_h1_rook_moved": False,
-        }
-        self._castling_rights_black = {
-            "black_side_castled": False,
-            "has_black_king_moved": False,
-            "has_a8_rook_moved": False,
-            "has_h8_rook_moved": False,
-        }
