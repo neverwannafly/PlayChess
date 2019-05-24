@@ -47,3 +47,28 @@ def test_castling(client):
     # Check long castle
     login(client)
     
+def test_checks(client):
+    login(client)
+    client.get('/board/reset?fen=rn1qkb1r/ppp2Bpp/3p1n2/4N3/4P3/2N5/PPPP1PPP/R1BbK2R b KQkq - 1 6')
+    king_move = client.get('/board/makemove/e8-e7')
+    assert b'"success":true' in king_move.data
+
+def test_fen_sanity(client):
+    login(client)
+    # Match with regex, should result in default board
+    client.get('/board/reset?fen=abcd')
+    pawn_move = client.get('/board/makemove/e2-e4')
+    assert b'"success":true' in pawn_move.data
+
+    # Try a valid fen and play some moves
+    client.get('/board/reset?fen=rnb2rk1/pp1qppbp/2p2np1/3p4/2PP4/1PN1PNP1/PB3PBP/R2QK2R w KQ - 0 10')
+    moves = [
+        client.get('/board/makemove/c4-d5'),
+        client.get('/board/makemove/f6-d5'),
+        client.get('/board/makemove/c3-d5'),
+        client.get('/board/makemove/d7-d5'),
+        client.get('/board/makemove/e1-g1'),
+    ]
+    assertions = [b'"success":true' in move.data for move in moves]
+    for clause in assertions:
+        assert clause
