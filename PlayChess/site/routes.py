@@ -166,18 +166,17 @@ def flipBoard():
 @decorators.login_required
 def resetBoard():
     fen_notation = request.args.get('fen', None)
-    if not fen_notation:
-        fen_notation = START_POSITION_NOTATION
-    valid_fen = bool(regex.match(FEN_NOTATION_REGEX, fen_notation))
-    if not valid_fen:
-        return jsonify({"error": "Invalid fen notation"})
     if fen_notation == 'default':
         USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard()
     else:
-        try:
-            USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard(fen_notation)
-        except exceptions.InvalidFenNotation:
+        valid_fen = bool(regex.match(FEN_NOTATION_REGEX, fen_notation))
+        if not valid_fen:
             USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard()
+        else:
+            try:
+                USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard(fen_notation)
+            except exceptions.InvalidFenNotation:
+                USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard()
     reset_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": reset_board})
 
