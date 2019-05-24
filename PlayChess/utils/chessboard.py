@@ -189,6 +189,15 @@ class Chessboard:
             return True if len(moves)==0 else False
         return False
 
+    def get_legal_moves(self):
+        color = "white" if self._moves%2==0 else "black"
+        if self.is_square_under_attack(self._pieces[color]["King"][0]):
+            moves = []
+            for piece in self._pieces[color]:
+                for square in self._pieces[color][piece]:
+                    moves += self.generate_legal_moves(square)
+        return moves
+
     @property
     def is_stalemate(self):
         color = "white" if self._moves%2==0 else "black"
@@ -230,7 +239,7 @@ class Chessboard:
 
         # Color to make the move
         color = 'w' if self._moves % 2 == 0 else 'b' 
-        fen_notation = fen_notation + color
+        fen_notation = fen_notation + " " + color + " "
 
         # Castling Parameters
         castling_params = ""
@@ -257,7 +266,7 @@ class Chessboard:
             fen_notation += " - "
 
         # Half Move 
-        fen_notation += str((self._half_moves // 2) + 1)
+        fen_notation += str((self._half_moves // 2) + 1) + " "
 
         # Full Move params
         fen_notation += str((self._moves // 2) + 1)
@@ -672,8 +681,9 @@ class Chessboard:
         if draw[0]:
             raise Draw(draw[1])
 
-        color = self.convert_to_index(initial_pos).piece.color
-        if (self._moves % 2 == 0 and color == "black") or (self._moves % 2 != 0 and color == "white"):
+        color = "white" if self._moves%2==0 else "black"
+        if self.convert_to_index(initial_pos).piece.color!=color:
+            print("make_move")
             raise SideNotAuthorizedToMakeMove()
 
         self._changes = []
@@ -1034,7 +1044,7 @@ class Chessboard:
         return False
 
     def make_temp_move(self, initial_pos, final_pos):
-
+    
         color = "white" if self._moves%2==0 else "black"
 
         initial_piece = self.convert_to_index(initial_pos).piece
@@ -1067,8 +1077,10 @@ class Chessboard:
     def generate_legal_moves(self, initial_pos):
 
         color = "white" if self._moves%2==0 else "black"
+        print(color, self.convert_to_index(initial_pos).piece.color)
 
-        if (self._moves % 2 == 0 and color == "black") or (self._moves % 2 != 0 and color == "white"):
+        if self.convert_to_index(initial_pos).piece.color!=color:
+            print("gen_legal")
             raise SideNotAuthorizedToMakeMove()
 
         piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
