@@ -23,6 +23,8 @@ EMAIL_PATTERN_COMPILED = regex.compile(r"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0
 # Username regex also limits the string to be b/w 5 and 30!
 USERNAME_REGEX = regex.compile("^[a-zA-Z0-9_]{5,30}$")
 
+FEN_NOTATION_REGEX = regex.compile(r"\s*([rnbqkpRNBQKP1-8]+\/){7}([rnbqkpRNBQKP1-8]+)\s[bw-]\s(([a-hkqA-HKQ]{1,4})|(-))\s(([a-h][36])|(-))\s\d+\s\d+\s*")
+
 # Codes for terminal colors
 TERMINAL_COLORS = {
     'CBOLD': '\33[1m',
@@ -70,4 +72,4 @@ CHESS_PIECE_CLASS = {
 }
 
 # Starting Position Notation
-START_POSITION_NOTATION = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0'
+START_POSITION_NOTATION = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
