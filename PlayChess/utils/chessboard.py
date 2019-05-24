@@ -7,7 +7,6 @@ import sys
 import re as regex
 
 from .exceptions import (InvalidFenNotation, InvalidMoveError, SideNotAuthorizedToMakeMove, Checkmate, Draw)
-from .decorators import deprecated
 from .. import config
 
 class Piece:
@@ -739,128 +738,53 @@ class Chessboard:
         #     self._changes.append({'pos': black_king, 'class': self.convert_to_index(black_king).html_class + ' check'})
 
     def move_top(self, initial_pos, limit=10):
-        indexes = self.return_index_as_tuple(initial_pos)
-        X, Y = indexes[0], indexes[1]
-        init_piece_color = self._chessboard[X][Y].piece.color
-        move_list = []
-        while X<=7 and X>0 and limit>0:
-            X -= 1
-            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self._chessboard[X][Y].piece.color != "none":
-                move_list.append(self._chessboard[X][Y].html_id)
-                break
-            move_list.append(self._chessboard[X][Y].html_id)
-            limit -= 1
-        return move_list
+        def cond(X, Y, limit):
+            return X<=7 and X>0 and limit>0
+        return self.move(initial_pos, -1, 0, cond, limit)
 
     def move_bottom(self, initial_pos, limit=10):
-        indexes = self.return_index_as_tuple(initial_pos)
-        X, Y = indexes[0], indexes[1]
-        init_piece_color = self._chessboard[X][Y].piece.color
-        move_list = []
-        while X<7 and X>=0 and limit>0:
-            X += 1
-            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self._chessboard[X][Y].piece.color != "none":
-                move_list.append(self._chessboard[X][Y].html_id)
-                break
-            move_list.append(self._chessboard[X][Y].html_id)
-            limit -= 1
-        return move_list
+        def cond(X, Y, limit):
+            return X<7 and X>=0 and limit>0
+        return self.move(initial_pos, 1, 0, cond, limit)
 
     def move_left(self, initial_pos, limit=10):
-        indexes = self.return_index_as_tuple(initial_pos)
-        X, Y = indexes[0], indexes[1]
-        init_piece_color = self._chessboard[X][Y].piece.color
-        move_list = []
-        while Y<=7 and Y>0 and limit>0:
-            Y -= 1
-            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self._chessboard[X][Y].piece.color != "none":
-                move_list.append(self._chessboard[X][Y].html_id)
-                break
-            move_list.append(self._chessboard[X][Y].html_id)
-            limit -= 1
-        return move_list
+        def cond(X, Y, limit):
+            return Y<=7 and Y>0 and limit>0
+        return self.move(initial_pos, 0, -1, cond, limit)
 
     def move_right(self, initial_pos, limit=10):
-        indexes = self.return_index_as_tuple(initial_pos)
-        X, Y = indexes[0], indexes[1]
-        init_piece_color = self._chessboard[X][Y].piece.color
-        move_list = []
-        while Y<7 and Y>=0 and limit>0:
-            Y += 1
-            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self._chessboard[X][Y].piece.color != "none":
-                move_list.append(self._chessboard[X][Y].html_id)
-                break
-            move_list.append(self._chessboard[X][Y].html_id)
-            limit -= 1
-        return move_list
+        def cond(X, Y, limit):
+            return Y<7 and Y>=0 and limit>0
+        return self.move(initial_pos, 0, 1, cond, limit)
 
     def move_top_right(self, initial_pos, limit=10):
-        indexes = self.return_index_as_tuple(initial_pos)
-        X, Y = indexes[0], indexes[1]
-        init_piece_color = self._chessboard[X][Y].piece.color
-        move_list = []
-        while X<=7 and X>0 and Y<7 and Y>=0 and limit>0:
-            X -= 1
-            Y += 1
-            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self._chessboard[X][Y].piece.color != "none":
-                move_list.append(self._chessboard[X][Y].html_id)
-                break
-            move_list.append(self._chessboard[X][Y].html_id)
-            limit -= 1
-        return move_list
+        def cond(X, Y, limit):
+            return X<=7 and X>0 and Y<7 and Y>=0 and limit>0
+        return self.move(initial_pos, -1, 1, cond, limit)
 
     def move_bottom_right(self, initial_pos, limit=10):
-        indexes = self.return_index_as_tuple(initial_pos)
-        X, Y = indexes[0], indexes[1]
-        init_piece_color = self._chessboard[X][Y].piece.color
-        move_list = []
-        while X<7 and X>=0 and Y<7 and Y>=0 and limit>0:
-            X += 1
-            Y += 1
-            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self._chessboard[X][Y].piece.color != "none":
-                move_list.append(self._chessboard[X][Y].html_id)
-                break
-            move_list.append(self._chessboard[X][Y].html_id)
-            limit -= 1
-        return move_list
+        def cond(X, Y, limit):
+            return X<7 and X>=0 and Y<7 and Y>=0 and limit>0
+        return self.move(initial_pos, 1, 1, cond, limit)
 
     def move_top_left(self, initial_pos, limit=10):
-        indexes = self.return_index_as_tuple(initial_pos)
-        X, Y = indexes[0], indexes[1]
-        init_piece_color = self._chessboard[X][Y].piece.color
-        move_list = []
-        while Y<=7 and Y>0 and X<=7 and X>0 and limit>0:
-            Y -= 1
-            X -= 1
-            if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
-                break
-            if self._chessboard[X][Y].piece.color != "none":
-                move_list.append(self._chessboard[X][Y].html_id)
-                break
-            move_list.append(self._chessboard[X][Y].html_id)
-            limit -= 1
-        return move_list
+        def cond(X, Y, limit):
+            return Y<=7 and Y>0 and X<=7 and X>0 and limit>0
+        return self.move(initial_pos, -1, -1, cond, limit)
 
     def move_bottom_left(self, initial_pos, limit=10):
+        def cond(X, Y, limit):
+            return Y<=7 and Y>0 and X<7 and X>=0 and limit>0
+        return self.move(initial_pos, 1, -1, cond, limit)
+
+    def move(self, initial_pos, diffX, diffY, cond, limit=10):
         indexes = self.return_index_as_tuple(initial_pos)
         X, Y = indexes[0], indexes[1]
         init_piece_color = self._chessboard[X][Y].piece.color
         move_list = []
-        while Y<=7 and Y>0 and X<7 and X>=0 and limit>0:
-            Y -= 1
-            X += 1
+        while cond(X, Y, limit):
+            Y += diffY
+            X += diffX
             if self._chessboard[X][Y].piece.color == init_piece_color and init_piece_color != "none":
                 break
             if self._chessboard[X][Y].piece.color != "none":
