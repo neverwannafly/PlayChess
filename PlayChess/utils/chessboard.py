@@ -202,7 +202,7 @@ class Chessboard:
         color = "white" if self._moves%2==0 else "black"
         # Single Bishop or Single Knight
         if len(self._pieces[color])==2:
-            return self._pieces[color].get('Knight', False) or self._pieces[color].get('Bishop', False):
+            return self._pieces[color].get('Knight', False) or self._pieces[color].get('Bishop', False)
         return False
 
     def is_draw(self):
