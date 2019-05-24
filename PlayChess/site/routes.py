@@ -199,8 +199,9 @@ def generateFenNotation():
 @decorators.login_required
 def make_move(move):
     positions = move.split('-')
+    dest_square = positions[2] if len(position)==3 else None
     try:
-        changes = USER_DICT['current_user_' + str(session['username'])].chessboard.make_move(positions[0], positions[1])
+        changes = USER_DICT['current_user_' + str(session['username'])].chessboard.make_move(positions[0], positions[1], dest_square)
     except exceptions.InvalidMoveError as error:
         print(error)
         return jsonify({'success': False})

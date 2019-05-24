@@ -665,7 +665,7 @@ class Chessboard:
             self._pieces[obj.piece.color][obj.piece.name].append(final_pos)
         self._changes.append({'pos': final_pos, 'class': obj.html_class})
 
-    def make_move(self, initial_pos, final_pos):
+    def make_move(self, initial_pos, final_pos, dest_piece=None):
 
         if self.is_checkmate:
             raise Checkmate(self._moves%2)
@@ -681,7 +681,7 @@ class Chessboard:
 
         self._changes = []
         try:
-            self.make_move_private(initial_pos, final_pos)
+            self.make_move_private(initial_pos, final_pos, dest_piece)
             self._moves += 1
             if self._enpassant_flag_life >= 1:
                 self._enpassant_flag_life = 0
@@ -693,7 +693,7 @@ class Chessboard:
 
         return self._changes
 
-    def make_move_private(self, initial_pos, final_pos):
+    def make_move_private(self, initial_pos, final_pos, dest_piece):
         if initial_pos==final_pos:
             raise InvalidMoveError("Initial and Final Positions cannot be same", initial_pos, final_pos)
         if self.convert_to_index(initial_pos).piece.color=="none":
@@ -724,12 +724,13 @@ class Chessboard:
                     self._castling_rights_black["black_side_castled"] = True
                 else:
                     self.change_chessboard_state(initial_pos, final_pos)
-            # Check for special pawn moves - enpassant
+            # Check for special pawn moves
             elif self.convert_to_index(initial_pos).piece.label.split('-')[1]=="p":
                 self._half_moves = 0
                 ini_index = self.return_index_as_tuple(initial_pos)
                 fin_index = self.return_index_as_tuple(final_pos)
                 diagonal_flag = abs(ini_index[0]-fin_index[0]) & abs(ini_index[1]-fin_index[1])
+                # enpassant
                 if self._enpassant_target_square is not None and diagonal_flag:
                     # Black attacked pawn -> 6, white attacked pawn -> 3
                     if self._enpassant_target_square[1]=="6":
@@ -738,6 +739,17 @@ class Chessboard:
                         direction = 1
                     attacked_pawn = self._enpassant_target_square[0] + str(int(self._enpassant_target_square[1])+direction)
                     self.delete_piece(attacked_pawn)
+                # pawn promotion
+                elif final_pos[1]=="8" or final_pos=="1":
+                    if dest_piece is None:
+                        raise InvalidMoveError("Please specify promotion")
+                    color = "white" if self._moves%2==0 else "black"
+                    piece = config.CHESS_PIECE_CLASS[dest_piece][0]
+                    if dest_piece in "QRNB":
+                        self.delete_piece(initial_pos)
+                        self.convert_to_index(initial_pos).piece = self.create_piece(initial_pos, piece, color)
+                    else:
+                        raise InvalidMoveError("Invalid Promotion")
                 self.change_chessboard_state(initial_pos, final_pos)
             else:
                 self.change_chessboard_state(initial_pos, final_pos)
