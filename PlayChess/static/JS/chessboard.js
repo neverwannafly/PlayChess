@@ -1,6 +1,9 @@
 "use strict";
 
 (function(){
+
+    let check_square = null;
+
     $(document).ready(function(){
         $(".flipButton").on('click', function(){
             $.ajax({
@@ -58,6 +61,10 @@
                     console.log(data);
                     if (!data["gameFinished"] && data["success"]) {
                         console.log(data['changes'])
+                        if (check_square!==null) {
+                            $(check_square).removeClass("check");
+                            check_square = null;
+                        }
                         make_move(data['changes']);
                     } else if (data["gameFinished"]) {
                         console.log("Game Finished", data["result"]);
@@ -79,6 +86,10 @@
         for (var i=0; i<changes.length; i++) {
             const square_id = "#" + changes[i]['pos'];
             const square_class = changes[i]['class'];
+            console.log(square_id, square_class);
+            if (square_class.includes("check")) {
+                check_square = square_id;
+            }
             $(square_id).removeClass("white-K white-Q white-R white-B white-N white-p black-K black-Q black-R black-B black-N black-p none-_");
             $(square_id).addClass(square_class);
         }
