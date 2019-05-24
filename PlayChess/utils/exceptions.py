@@ -27,5 +27,8 @@ class GameNotFound(Exception):
     pass
 
 class InvalidDatabaseURL(Exception):
-    "is raised when database url cannot be located"
+    """Is raised when database url cannot be located"""
     pass
+
+class InvalidFenNotation(Exception):
+    """Is raised when an invalid fen notation is provided"""
