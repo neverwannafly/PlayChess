@@ -161,10 +161,7 @@ class Chessboard:
         self._configuration = 1
         
         self._chessboard = self.create_chessboard()
-        try:
-            self.load_position(fen_notation)
-        except:
-            self.load_position(config.START_POSITION_NOTATION)
+        self.load_position(config.START_POSITION_NOTATION)
 
     @property
     def can_white_castle(self):
@@ -179,24 +176,11 @@ class Chessboard:
     @property
     def is_checkmate(self):
         color = "white" if self._moves%2==0 else "black"
-        if self.is_square_under_attack(self._pieces[color]["King"][0]):
-            moves = []
-            for piece in self._pieces[color]:
-                for square in self._pieces[color][piece]:
-                    moves += self.generate_legal_moves(square)
-            # print(moves)
-            # print(self._pieces)
-            return True if len(moves)==0 else False
-        return False
-
-    def get_legal_moves(self):
-        color = "white" if self._moves%2==0 else "black"
-        if self.is_square_under_attack(self._pieces[color]["King"][0]):
-            moves = []
-            for piece in self._pieces[color]:
-                for square in self._pieces[color][piece]:
-                    moves += self.generate_legal_moves(square)
-        return moves
+        moves = []
+        for piece in self._pieces[color]:
+            for square in self._pieces[color][piece]:
+                moves += self.generate_legal_moves(square)
+        return True if len(moves)==0 else False
 
     @property
     def is_stalemate(self):
@@ -205,7 +189,6 @@ class Chessboard:
             moves = []
             for piece in self._pieces[color]:
                 moves += self.generate_legal_moves(self._pieces[color][piece])
-            print(moves)
             return True if len(moves)==0 else False
         return True
 
@@ -308,10 +291,6 @@ class Chessboard:
                         squares -= 1
                 else:
                     board_row.append(self.create_piece(get_position(file, rank), piece[0], piece[1]))
-                    if self._pieces[piece[1]].get(piece[0], None) is None:
-                        self._pieces[piece[1]][piece[0]] = [get_position(file, rank)]
-                    else:
-                        self._pieces[piece[1]][piece[0]].append(get_position(file, rank))
                     file += 1
 
         # Create the chessboard
@@ -338,7 +317,7 @@ class Chessboard:
             self._castling_rights_white['has_white_king_moved'] = True
 
         # Enpassant Setting
-        if enpassant_target_square is not None:
+        if enpassant_target_square != "-":
             self._enpassant_target_square = enpassant_target_square
             self._enpassant_flag_life = 1
 
@@ -442,10 +421,7 @@ class Chessboard:
     def reset_chessboard(self, fen_notation=config.START_POSITION_NOTATION):
         self._reset_config_vars()
         self._chessboard = self.create_chessboard()
-        try:
-            self.load_position(fen_notation)
-        except:
-            raise InvalidFenNotation("There's some issue with the fen notation provided")
+        self.load_position(fen_notation)
 
     def convert_to_index(self, notation):
         return self._chessboard[ord('8')-ord(notation[1])][ord(notation[0])-ord('a')]
@@ -673,7 +649,6 @@ class Chessboard:
     def make_move(self, initial_pos, final_pos):
 
         if self.is_checkmate:
-            print("Mate")
             raise Checkmate(self._moves%2)
 
         draw = self.is_draw()
@@ -683,7 +658,6 @@ class Chessboard:
 
         color = "white" if self._moves%2==0 else "black"
         if self.convert_to_index(initial_pos).piece.color!=color:
-            print("make_move")
             raise SideNotAuthorizedToMakeMove()
 
         self._changes = []
@@ -1043,14 +1017,13 @@ class Chessboard:
             return True
         return False
 
-    def make_temp_move(self, initial_pos, final_pos):
-    
+    def make_temp_move(self, initial_pos, final_pos):    
         color = "white" if self._moves%2==0 else "black"
 
         initial_piece = self.convert_to_index(initial_pos).piece
         final_piece = self.convert_to_index(final_pos).piece
 
-        self.convert_to_index(initial_pos).piece = final_piece
+        self.convert_to_index(initial_pos).piece = self.create_piece(initial_pos, "Blank")
         self.convert_to_index(final_pos).piece = initial_piece
 
         self._pieces[initial_piece.color][initial_piece.name].remove(initial_pos)
@@ -1077,10 +1050,8 @@ class Chessboard:
     def generate_legal_moves(self, initial_pos):
 
         color = "white" if self._moves%2==0 else "black"
-        print(color, self.convert_to_index(initial_pos).piece.color)
 
         if self.convert_to_index(initial_pos).piece.color!=color:
-            print("gen_legal")
             raise SideNotAuthorizedToMakeMove()
 
         piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
