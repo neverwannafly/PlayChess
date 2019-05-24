@@ -15,7 +15,7 @@
         $(".resetButton").on('click', function(){
             $.ajax({
                 type: "GET",
-                url: "board/reset/default"
+                url: "board/reset"
             })
             .done(function(data) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
