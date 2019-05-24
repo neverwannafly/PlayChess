@@ -6,6 +6,8 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/neverwannafly/PlayChess.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/neverwannafly/PlayChess/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/neverwannafly/PlayChess.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/neverwannafly/PlayChess/context:javascript)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/neverwannafly/PlayChess.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/neverwannafly/PlayChess/context:python)
+[![HitCount](http://hits.dwyl.io/neverwannafly/PlayChess.svg)](http://hits.dwyl.io/neverwannafly/PlayChess)
+
 
 
 ## Features
