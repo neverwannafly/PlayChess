@@ -16,7 +16,7 @@ from ..utils import decorators
 from ..utils import game
 
 # Import global variables and settings
-from ..config import PLAYERS_QUEUE, USER_DICT, FEN_NOTATION_REGEX ,USERNAME_REGEX, EMAIL_PATTERN_COMPILED, GAMES, TERMINAL_COLORS
+from ..config import PLAYERS_QUEUE, USER_DICT, FEN_NOTATION_REGEX ,USERNAME_REGEX, EMAIL_PATTERN_COMPILED, GAMES, TERMINAL_COLORS, START_POSITION_NOTATION
 
 # Database initialisation
 from .. import database
@@ -162,9 +162,12 @@ def flipBoard():
     flipped_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": flipped_board})
 
-@mod.route('/board/reset/<fen_notation>')
+@mod.route('/board/reset')
 @decorators.login_required
-def resetBoard(fen_notation):
+def resetBoard():
+    fen_notation = request.args.get('fen', None)
+    if not fen_notation:
+        fen_notation = START_POSITION_NOTATION
     valid_fen = bool(regex.match(FEN_NOTATION_REGEX, fen_notation))
     if not valid_fen:
         return jsonify({"error": "Invalid fen notation"})
@@ -204,7 +207,10 @@ def make_move(move):
         return jsonify({'success': False})
     except exceptions.SideNotAuthorizedToMakeMove as error:
         print(error)
-        return jsonify({'success': False})
+        return jsonify({
+            'success': False,
+            'auth': False,
+            })
     except exceptions.Draw as result:
         return jsonify({
             'gameFinished': True,
