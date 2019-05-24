@@ -723,6 +723,7 @@ class Chessboard:
                     self.change_chessboard_state(initial_pos, final_pos)
             # Check for special pawn moves - enpassant
             elif self.convert_to_index(initial_pos).piece.label.split('-')[1]=="p":
+                self._half_moves = 0
                 ini_index = self.return_index_as_tuple(initial_pos)
                 fin_index = self.return_index_as_tuple(final_pos)
                 diagonal_flag = abs(ini_index[0]-fin_index[0]) & abs(ini_index[1]-fin_index[1])
@@ -737,6 +738,11 @@ class Chessboard:
                 self.change_chessboard_state(initial_pos, final_pos)
             else:
                 self.change_chessboard_state(initial_pos, final_pos)
+                #Check if capture is performed
+                if self.convert_to_index(final_pos).piece.name!="Blank":
+                    self._half_moves = 0
+                else:
+                    self._half_moves += 1
         else:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
 
@@ -1065,40 +1071,24 @@ class Chessboard:
         if (self._moves % 2 == 0 and color == "black") or (self._moves % 2 != 0 and color == "white"):
             raise SideNotAuthorizedToMakeMove()
 
-        if self.is_square_under_attack(self._pieces[color]["King"][0]):
-            piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
-            moveList = []
-            if piece_label=="K":
-                moveList += self.make_orthogonal_moves(initial_pos, limit=1) + self.make_diagonal_moves(initial_pos, limit=1) + self.special_king_moves(initial_pos)
-            elif piece_label=="Q":
-                moveList += self.make_diagonal_moves(initial_pos) + self.make_orthogonal_moves(initial_pos)
-            elif piece_label=="R":
-                moveList += self.make_orthogonal_moves(initial_pos)
-            elif piece_label=="B":
-                moveList += self.make_diagonal_moves(initial_pos)
-            elif piece_label=="N":
-                moveList += self.generate_knight_moves(initial_pos)
-            elif piece_label=="p":
-                moveList += self.generate_pawn_moves(initial_pos)
-            else:
-                moveList += []
+        piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
+        moveList = []
+        if piece_label=="K":
+            moveList = self.make_orthogonal_moves(initial_pos, limit=1) + self.make_diagonal_moves(initial_pos, limit=1) + self.special_king_moves(initial_pos)
+        elif piece_label=="Q":
+            moveList = self.make_diagonal_moves(initial_pos) + self.make_orthogonal_moves(initial_pos)
+        elif piece_label=="R":
+            moveList = self.make_orthogonal_moves(initial_pos)
+        elif piece_label=="B":
+            moveList = self.make_diagonal_moves(initial_pos)
+        elif piece_label=="N":
+            moveList = self.generate_knight_moves(initial_pos)
+        elif piece_label=="p":
+            moveList = self.generate_pawn_moves(initial_pos)
+        else:
+            moveList += []
 
+        if self.is_square_under_attack(self._pieces[color]["King"][0]):
             moveList[:] = [move for move in moveList if not self.make_temp_move(initial_pos, move)]
 
-            return moveList
-
-        piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
-        if piece_label=="K":
-            return self.make_orthogonal_moves(initial_pos, limit=1) + self.make_diagonal_moves(initial_pos, limit=1) + self.special_king_moves(initial_pos)
-        elif piece_label=="Q":
-            return self.make_diagonal_moves(initial_pos) + self.make_orthogonal_moves(initial_pos)
-        elif piece_label=="R":
-            return self.make_orthogonal_moves(initial_pos)
-        elif piece_label=="B":
-            return self.make_diagonal_moves(initial_pos)
-        elif piece_label=="N":
-            return self.generate_knight_moves(initial_pos)
-        elif piece_label=="p":
-            return self.generate_pawn_moves(initial_pos)
-        else:
-            return []
+        return moveList
