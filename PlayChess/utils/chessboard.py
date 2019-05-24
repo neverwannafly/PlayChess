@@ -729,13 +729,17 @@ class Chessboard:
         else:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
 
-        # white_king = self._pieces["white"]["King"][0]
-        # if (self.is_square_under_attack(white_king)):
-        #     self._changes.append({'pos': white_king, 'class': self.convert_to_index(white_king).html_class + ' check'})
+        white_king = self._pieces["white"]["King"][0]
+        if (self.is_square_under_attack(white_king)):
+            self._changes.append({'pos': white_king, 'class': self.convert_to_index(white_king).html_class + ' check'})
 
-        # black_king = self._pieces["black"]["King"][0]
-        # if (self.is_square_under_attack(black_king)):
-        #     self._changes.append({'pos': black_king, 'class': self.convert_to_index(black_king).html_class + ' check'})
+        black_king = self._pieces["black"]["King"][0]
+        if (self.is_square_under_attack(black_king)):
+            self._changes.append({'pos': black_king, 'class': self.convert_to_index(black_king).html_class + ' check'})
+
+        if (self.is_checkmate):
+            color = 'white' if self._moves%2==0 else 'black'
+            self._changes.append({'mate': color})
 
     def move_top(self, initial_pos, limit=10):
         def cond(X, Y, limit):
