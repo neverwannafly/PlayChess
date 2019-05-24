@@ -15,7 +15,10 @@
         $(".resetButton").on('click', function(){
             $.ajax({
                 type: "GET",
-                url: "board/reset"
+                url: "board/reset",
+                data: {
+                    "fen": "default",
+                }
             })
             .done(function(data) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
