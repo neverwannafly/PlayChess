@@ -72,7 +72,7 @@ class King(Piece):
     def __init__(self, current_position, color):
         super().__init__()
         self.name = "King"
-        self.points = 100
+        self.points = 0
         self.current_position = current_position
         self.color = color
         self.label = color + "-" + "K"
@@ -179,20 +179,40 @@ class Chessboard:
         for piece in self._pieces[color]:
             for square in self._pieces[color][piece]:
                 moves += self.generate_legal_moves(square)
-        return True if len(moves)==0 else False
+        return len(moves)==0
 
+    # Drawing conditions
     @property
     def is_stalemate(self):
         color = "white" if self._moves%2==0 else "black"
-        if not self.is_square_under_attack(self._pieces[color]["King"]):
-            moves = []
-            for piece in self._pieces[color]:
-                moves += self.generate_legal_moves(self._pieces[color][piece])
-            return True if len(moves)==0 else False
-        return True
+        moves = []
+        for piece in self._pieces[color]:
+            for square in self._pieces[color][piece]:
+                moves += self.generate_legal_moves(square)
+        return len(moves)==0 and not self.is_square_under_attack(self._pieces[color]["King"])
+
+    # Fifty move rule
+    @property
+    def is_fifty_move(self):
+        return self._half_moves >= 50
+
+    # Insufficient Material
+    @property
+    def insufficent_material(self):
+        color = "white" if self._moves%2==0 else "black"
+        # Single Bishop or Single Knight
+        if len(self._pieces[color])==2:
+            return self._pieces[color].get('Knight', False) or self._pieces[color].get('Bishop', False):
+        return False
 
     def is_draw(self):
-        return [False, "stalemate"]
+        if self.is_fifty_move:
+            return [True, "fifty move"]
+        elif self.is_stalemate:
+            return [True, "stalemate"]
+        elif self.insufficent_material:
+            return [True, "insufficient material"]
+        return [False]
 
     @property
     def fen_notation(self):
