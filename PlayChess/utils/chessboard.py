@@ -6,7 +6,7 @@
 import sys
 import re as regex
 
-from .exceptions import (InvalidFenNotation, InvalidMoveError, SideNotAuthorizedToMakeMove, Checkmate, Draw)
+from .exceptions import (InvalidMoveError, SideNotAuthorizedToMakeMove, Checkmate, Draw)
 from .. import config
 
 class Piece:
@@ -120,10 +120,6 @@ class LightSquare(Square):
 class Chessboard:
     def __init__(self, fen_notation=config.START_POSITION_NOTATION):
 
-        valid_fen = bool(regex.match(config.FEN_NOTATION_REGEX, fen_notation))
-        if not valid_fen:
-            fen_notation = config.START_POSITION_NOTATION
-
         # An array holding recent changes in board position
         self._changes = []
 
@@ -160,7 +156,11 @@ class Chessboard:
         self._configuration = 1
         
         self._chessboard = self.create_chessboard()
-        self.load_position(config.START_POSITION_NOTATION)
+
+        valid_fen = bool(regex.match(config.FEN_NOTATION_REGEX, fen_notation))
+        if not valid_fen:
+            fen_notation = config.START_POSITION_NOTATION
+        self.load_position(fen_notation)
 
     @property
     def can_white_castle(self):

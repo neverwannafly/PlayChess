@@ -16,7 +16,7 @@ from ..utils import decorators
 from ..utils import game
 
 # Import global variables and settings
-from ..config import PLAYERS_QUEUE, USER_DICT, FEN_NOTATION_REGEX ,USERNAME_REGEX, EMAIL_PATTERN_COMPILED, GAMES, TERMINAL_COLORS, START_POSITION_NOTATION
+from ..config import PLAYERS_QUEUE, USER_DICT, FEN_NOTATION_REGEX ,USERNAME_REGEX, EMAIL_PATTERN_COMPILED, GAMES, TERMINAL_COLORS
 
 # Database initialisation
 from .. import database

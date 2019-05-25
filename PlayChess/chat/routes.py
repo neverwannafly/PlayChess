@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint
 from flask_socketio import emit
 
 mod = Blueprint('chat', __name__, template_folder='templates')
