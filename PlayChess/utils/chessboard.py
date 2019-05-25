@@ -680,16 +680,13 @@ class Chessboard:
             raise SideNotAuthorizedToMakeMove()
 
         self._changes = []
-        try:
-            self.make_move_private(initial_pos, final_pos, dest_piece)
-            self._moves += 1
-            if self._enpassant_flag_life >= 1:
-                self._enpassant_flag_life = 0
-                self._enpassant_target_square = None
-            elif self._enpassant_target_square:
-                self._enpassant_flag_life += 1
-        except InvalidMoveError:
-            raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
+        self.make_move_private(initial_pos, final_pos, dest_piece)
+        self._moves += 1
+        if self._enpassant_flag_life >= 1:
+            self._enpassant_flag_life = 0
+            self._enpassant_target_square = None
+        elif self._enpassant_target_square:
+            self._enpassant_flag_life += 1
 
         return self._changes
 
