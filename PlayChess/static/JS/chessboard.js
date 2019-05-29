@@ -53,7 +53,12 @@
             }
             else {
                 final_pos = $(target).attr('id');
-                const url = "board/makemove/" + initial_pos + "-" + final_pos;
+                // check for pawn promotion
+                let promotion = "";
+                if (checkPromotionValidity(initial_pos)) {
+                    promotion = "-" + prompt("Type Q/N/B/R");
+                }
+                const url = "board/makemove/" + initial_pos + "-" + final_pos + promotion;
                 $.ajax({
                     url: url,
                 })
@@ -80,13 +85,16 @@
 
         $("td").hover(mouseIn, mouseOut);
 
+        $(document).on('click', '.promo-square', (event) => {
+
+        })
+
     });
 
     function make_move(changes) {
         for (var i=0; i<changes.length; i++) {
             const square_id = "#" + changes[i]['pos'];
             const square_class = changes[i]['class'];
-            console.log(square_id, square_class);
             if (square_class.includes("check")) {
                 check_square = square_id;
             }
@@ -118,6 +126,32 @@
 
     function mouseOut() {
         $(this).find('.square').removeClass("hover-cell");
+    }
+
+    function checkPromotionValidity(initial_pos) {
+        let white_pawn = $("#"+initial_pos).hasClass("white-p") && initial_pos[1]==='7';
+        let black_pawn = $("#"+initial_pos).hasClass("black-p") && initial_pos[1]==='2';
+        return white_pawn || black_pawn;
+    }
+
+    function promotePawn(final_pos) {
+        // let promotion = "-";
+        // const file = final_pos[0];
+        // // white color promotion
+        // let squares = [];
+        // if (final_pos[1]==="8") {
+        //     squares = [file+"8", file+"7", file+"6", file+"5"];
+        // }
+        // // black color promotion
+        // else {
+        //     squares = [file+"1", file+"2", file+"3", file+"4"];
+        // }
+        // for (let i=0; i<squares.length; i++) {
+        //     $("#"+squares).removeClass("square");
+        //     $("#"+squares).addClass("promo-square");
+        // }
+        // // returns a string indicating the promoted piece
+        // return promotion;        
     }
 
     var incrementClick = (function(){
