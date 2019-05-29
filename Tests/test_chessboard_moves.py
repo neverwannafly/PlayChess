@@ -72,3 +72,11 @@ def test_fen_sanity(client):
     assertions = [b'"success":true' in move.data for move in moves]
     for clause in assertions:
         assert clause
+
+def test_pawn_promotion(client):
+    login(client)
+    client.get('/board/reset?fen=r1bqkbnr/pP3ppp/2n1p3/8/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 5')
+    client.get('/board/makemove/b7-a8-Q')
+    client.get('/board/makemove/h7-h5')
+    new_queen_move = client.get('/board/makemove/a8-c8')
+    assert b'"success":true' in new_queen_move.data
