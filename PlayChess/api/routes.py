@@ -11,11 +11,11 @@ mod = Blueprint('api', __name__)
 
 ## Api's
 @mod.route('/gettoken/', methods=['GET'])
-def gettoken():
+def getToken():
     return "token: hello"
 
 @mod.route('/stockfish/', methods=['GET'])
-def index():
+def getEngineEval():
     if token.validate_token(request.args.get('token', None)):
         __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
         if os.environ.get("Production", None):
@@ -41,3 +41,8 @@ def index():
     return jsonify({
         "access_token_error": "There seems to be a problem with your access token",
     })
+
+# Send start date and end date as the string "None" if you want to fetch all events
+@mod.route('/events/<startDate>/<endDate>', methods=['GET'])
+def getAicfEvents(startDate, endDate):
+    pass
