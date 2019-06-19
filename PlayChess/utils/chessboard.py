@@ -1014,7 +1014,7 @@ class Chessboard:
         piece_label = self.convert_to_index(initial_pos).piece.label.split('-')[1]
         moveList = []
         if piece_label=="K":
-            moveList = self.make_orthogonal_moves(initial_pos, limit=1) + self.make_diagonal_moves(initial_pos, limit=1) + self.special_king_moves(initial_pos)
+            moveList = self.make_orthogonal_moves(initial_pos, limit=1) + self.make_diagonal_moves(initial_pos, limit=1)
         elif piece_label=="Q":
             moveList = self.make_diagonal_moves(initial_pos) + self.make_orthogonal_moves(initial_pos)
         elif piece_label=="R":
@@ -1030,5 +1030,8 @@ class Chessboard:
 
         if self.is_square_under_attack(self._pieces[color]["King"][0]):
             moveList[:] = [move for move in moveList if not self.make_temp_move(initial_pos, move)]
+        else:
+            if piece_label=="K":
+                moveList += self.special_king_moves(initial_pos)
 
         return moveList
