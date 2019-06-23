@@ -32,3 +32,6 @@ class InvalidDatabaseURL(Exception):
 
 class InvalidFenNotation(Exception):
     """Is raised when an invalid fen notation is provided"""
+
+class DefenderColorNotSpecified(Exception):
+    """Is raised when you check for attack on a square without specifying defender color"""
