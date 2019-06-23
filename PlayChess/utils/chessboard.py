@@ -207,12 +207,20 @@ class Chessboard:
 
     def is_draw(self):
         if self.is_fifty_move:
-            return [True, "fifty move"]
+            return [True, "fifty move", "0.5"]
         elif self.is_stalemate:
-            return [True, "stalemate"]
+            return [True, "stalemate", "0.5"]
         elif self.insufficent_material:
-            return [True, "insufficient material"]
+            return [True, "insufficient material", "0.5"]
         return [False]
+
+    def fetch_game_status(self):
+        status = [self.is_checkmate]
+        if not status[0]:
+            status = self.is_draw()
+        else:
+            status += ["checkmate", "0" if self._moves%2==0 else "1"]
+        return status
 
     @property
     def fen_notation(self):
