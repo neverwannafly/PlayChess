@@ -1031,9 +1031,9 @@ class Chessboard:
         else:
             moveList += []
 
-        moveList[:] = [move for move in moveList if not self.make_temp_move(initial_pos, move)]
-
         if not self.is_square_under_attack(self._pieces[color]["King"][0]) and piece_label=="K":
             moveList += self.special_king_moves(initial_pos)
+
+        moveList[:] = [move for move in moveList if not self.make_temp_move(initial_pos, move)]
 
         return moveList
