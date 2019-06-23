@@ -79,6 +79,17 @@
                     }
                     removeHighlight(squares);
                     $("#"+initial_pos).removeClass("active-cell");
+
+                    // check for game status here
+                    const url = "board/getGameStatus";
+                    $.ajax({
+                        url: url,
+                    })
+                    .done( (data) => {
+                        if (data["status"]==="finished") {
+                            alert(`Game ended! Result: ${data["result"]}-${1-data["result"]}, Cause: ${data["cause"]}`);
+                        }
+                    })
                 });
             }
         });
