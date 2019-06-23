@@ -1,4 +1,8 @@
+"use strict";
+
 (function(){
+
+    let check_square = null;
 
     $(document).ready(function(){
 
@@ -30,24 +34,40 @@
             const target = $(event.target);
             if(incrementClick()%2!=0) {
                 initial_pos = $(target).attr('id');
+
+                if ($("#"+initial_pos).hasClass("none-_")) {
+                    incrementClick();
+                } 
+                else {
                     $("#"+initial_pos).addClass("active-cell");
-                const move_url = `${game_url}/generateLegalMoves/${initial_pos}`;
-                $.ajax({
-                    url: move_url,
-                })
-                .done( (data)=> {
-                    squares = data['moves'];
-                    highlightSquares(squares);
-                });
+                    const url = `${game_url}/generateLegalMoves/${initial_pos}`;
+                    $.ajax({
+                        url: url,
+                    })
+                    .done( (data)=> {
+                        squares = data['moves'];
+                        highlightSquares(squares);
+                    });
+                }
             }
             else {
                 final_pos = $(target).attr('id');
-                const move_url = `${game_url}/makemove/${initial_pos}-${final_pos}`;
+
+                let promotion = "";
+                if (checkPromotionValidity(initial_pos)) {
+                    promotion = "-" + prompt("Type Q/N/B/R");
+                }
+                const move_url = `${game_url}/makemove/${initial_pos}-${final_pos}${promotion}`;
+
                 $.ajax({
                     url: move_url,
                 })
                 .done( (data) => {
                     if (data["success"]) {
+                        if (check_square!==null) {
+                            $(check_square).removeClass("check");
+                            check_square = null;
+                        }
                         make_move(data['changes']);
                     }
                     else {
@@ -60,13 +80,24 @@
                     });
                     removeHighlight(squares);
                     $("#"+initial_pos).removeClass("active-cell");
+
+                    // check for game status here
+                    const url = `${game_url}/getGameStatus`;
+                    $.ajax({
+                        url: url,
+                    })
+                    .done( (data) => {
+                        if (data["status"]==="finished") {
+                            alert(`Game ended! Result: ${data["result"]}-${1-data["result"]}, Cause: ${data["cause"]}`);
+                        }
+                    })
                 });
             }
         });
 
         $("td").hover(mouseIn, mouseOut);
 
-        // This Disables the accidental use of backbutton. 
+        // This Disables the accidental use of backbutton.
         (function (global) { 
             if(typeof (global) === "undefined") {
                 throw new Error("window is undefined");
@@ -107,6 +138,9 @@
         for (var i=0; i<changes.length; i++) {
             const square_id = "#" + changes[i]['pos'];
             const square_class = changes[i]['class'];
+            if (square_class.includes("check")) {
+                check_square = square_id;
+            }
             $(square_id).removeClass("white-K white-Q white-R white-B white-N white-p black-K black-Q black-R black-B black-N black-p none-_");
             $(square_id).addClass(square_class);
         }
@@ -135,6 +169,12 @@
 
     function mouseOut() {
         $(this).find('.square').removeClass("hover-cell");
+    }
+
+    function checkPromotionValidity(initial_pos) {
+        let white_pawn = $("#"+initial_pos).hasClass("white-p") && initial_pos[1]==='7';
+        let black_pawn = $("#"+initial_pos).hasClass("black-p") && initial_pos[1]==='2';
+        return white_pawn || black_pawn;
     }
 
     var incrementClick = ( () => {
