@@ -227,6 +227,20 @@ def make_move(move):
         'changes': changes,
     })
 
+@mod.route('/board/getGameStatus')
+@decorators.login_required
+def get_game_status():
+    status = USER_DICT['current_user_' + str(session['username'])].chessboard.fetch_game_status()
+    if len(status) == 1:
+        return jsonify({
+            'status': 'ongoing'
+        })
+    return jsonify({
+        'status': 'finished',
+        'result': status[2],
+        'cause': status[1],
+    })
+
 # Handle game loading here
 @mod.route('/find_game')
 @decorators.login_required
