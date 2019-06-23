@@ -6,7 +6,7 @@
 import sys
 import re as regex
 
-from .exceptions import (InvalidMoveError, SideNotAuthorizedToMakeMove, Checkmate, Draw)
+from .exceptions import (InvalidMoveError, SideNotAuthorizedToMakeMove, DefenderColorNotSpecified ,Checkmate, Draw)
 from .. import config
 
 class Piece:
@@ -454,6 +454,9 @@ class Chessboard:
 
         if piece_color is None:
             piece_color = self.convert_to_index(square).piece.color
+
+        if piece_color is "none":
+            raise DefenderColorNotSpecified("Please Specify defending piece color")
 
         def are_colors_opposite(destination_square):
             return destination_square.piece.color != piece_color and destination_square.piece.color != "none"
@@ -910,20 +913,20 @@ class Chessboard:
             if self.can_white_castle and self.convert_to_index(initial_pos).piece.color=="white":
                 # King side castle
                 if initial_pos=="e1" and self._castling_rights_white["has_h1_rook_moved"] is not True:
-                    if self._chessboard[X][Y+1].piece.color=="none" and self._chessboard[X][Y+2].piece.color=="none":
+                    if self._chessboard[X][Y+1].piece.color=="none" and self._chessboard[X][Y+2].piece.color=="none" and not self.is_square_under_attack("f1", "white"):
                         move_list.append("g1")
                 # Queen side castle
                 if initial_pos=="e1" and self._castling_rights_white["has_a1_rook_moved"] is not True:
-                    if self._chessboard[X][Y-1].piece.color=="none" and self._chessboard[X][Y-2].piece.color=="none":
+                    if self._chessboard[X][Y-1].piece.color=="none" and self._chessboard[X][Y-2].piece.color=="none" and not self.is_square_under_attack("d1", "white"):
                         move_list.append("c1")
             if self.can_black_castle and self.convert_to_index(initial_pos).piece.color=="black":
                 # King side castle
                 if initial_pos=="e8" and self._castling_rights_black["has_h8_rook_moved"] is not True:
-                    if self._chessboard[X][Y+1].piece.color=="none" and self._chessboard[X][Y+2].piece.color=="none":
+                    if self._chessboard[X][Y+1].piece.color=="none" and self._chessboard[X][Y+2].piece.color=="none" and not self.is_square_under_attack("f8", "black"):
                         move_list.append("g8")
                 # Queen side castle
                 if initial_pos=="e8" and self._castling_rights_black["has_a8_rook_moved"] is not True:
-                    if self._chessboard[X][Y-1].piece.color=="none" and self._chessboard[X][Y-2].piece.color=="none":
+                    if self._chessboard[X][Y-1].piece.color=="none" and self._chessboard[X][Y-2].piece.color=="none" and not self.is_square_under_attack("d8", "black"):
                         move_list.append("c8")
         return move_list
 
@@ -1028,10 +1031,9 @@ class Chessboard:
         else:
             moveList += []
 
-        if self.is_square_under_attack(self._pieces[color]["King"][0]):
-            moveList[:] = [move for move in moveList if not self.make_temp_move(initial_pos, move)]
-        else:
-            if piece_label=="K":
-                moveList += self.special_king_moves(initial_pos)
+        moveList[:] = [move for move in moveList if not self.make_temp_move(initial_pos, move)]
+
+        if not self.is_square_under_attack(self._pieces[color]["King"][0]) and piece_label=="K":
+            moveList += self.special_king_moves(initial_pos)
 
         return moveList
