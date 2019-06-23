@@ -17,17 +17,14 @@ def game(game_url):
         game = GAMES[game_url]
         player1 = game.player1
         player2 = game.player2
-        print(session.get('username'))
-        print(player1, player2)
-        print(player1 == session.get('username'))
         if player1 == session.get('username'):
             board = game.chessboard.draw_chessboard()
             game_title = "{0} vs {1}".format(game.player1, game.player2)
             return render_template('game.html', game_title=game_title, board=board, player1=player1, player2=player2)
         else:
             board = game.chessboard.draw_chessboard_for_black()
-            game_title = "{0} vs {1}".format(game.player2, game.player1)
-            return render_template('game.html', game_title=game_title, board=board, player1=player1, player2=player2)
+            game_title = "{0} vs {1}".format(game.player1, game.player2)
+            return render_template('game.html', game_title=game_title, board=board, player1=player2, player2=player1)
     abort(404)
 
 @mod.route('/<game_url>/generateLegalMoves/<init_pos>')
@@ -44,6 +41,22 @@ def make_move(game_url, move):
         init_pos, final_pos = move.split('-')[0], move.split('-')[1]
         move = GAMES[game_url].make_move(init_pos, final_pos, session.get('username'))
         return jsonify(move)
+    abort(404)
+
+@mod.route('/<game_url>/getGameStatus')
+@decorators.login_required
+def fetch_game_status(game_url):
+    if GAMES.get(game_url):
+        status = GAMES[game_url].fetch_game_status()
+        if len(status) == 1:
+            return jsonify({
+                'status': 'ongoing'
+            })
+        return jsonify({
+            'status': 'finished',
+            'result': status[2],
+            'cause': status[1],
+        })
     abort(404)
 
 ## Add a cryptographic id so that only server can dissolve games
