@@ -56,6 +56,9 @@ class Game:
         self.prev_move = move
         return move
 
+    def fetch_game_status(self):
+        return self.chessboard.fetch_game_status()
+
     def verify_move_origin(self, init_pos, sender):
         self.verify_sender(sender)
         self.verify_piece_color(init_pos, sender)
