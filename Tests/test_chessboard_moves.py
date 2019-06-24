@@ -110,3 +110,9 @@ def test_fen_sanity(client):
     assertions = [b'"success":true' in move.data for move in moves]
     for clause in assertions:
         assert clause
+
+def test_checkmate(client):
+    login(client)
+    client.get("/board/reset?fen=r1bqk1nr/pppp1Qpp/2n5/2b1p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 1 4")
+    black_move = client.get("/board/makemove/e8-f7")
+    assert b'"gameFinished":true' in black_move.data
