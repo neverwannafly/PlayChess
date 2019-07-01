@@ -18,7 +18,7 @@ def game(game_url):
         player1 = game.player1
         player2 = game.player2
         if player1 == session.get('username'):
-            board = game.chessboard.draw_chessboard()
+            board = game.chessboard.draw_chessboard_for_white()
             game_title = "{0} vs {1}".format(game.player1, game.player2)
             return render_template('game.html', game_title=game_title, board=board, player1=player1, player2=player2)
         else:

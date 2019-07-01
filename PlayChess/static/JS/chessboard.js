@@ -3,12 +3,14 @@
 (function(){
 
     let check_square = null;
+    let configuration = true;
 
     $(document).ready(function(){
         $(".flipButton").on('click', function(){
+            configuration = !configuration;
             $.ajax({
                 type: "GET",
-                url: "board/flip"
+                url: `board/flip/${int(configuration)}`
             })
             .done(function(data){
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");

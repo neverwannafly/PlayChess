@@ -150,10 +150,6 @@ class Chessboard:
             'white': {},
             'black': {},
         }
-
-        # config of 2 means chessboard is drawn for black player at bottom
-        # config of 1 means chessboard is drawn for white player at bottom
-        self._configuration = 1
         
         self._chessboard = self.create_chessboard()
 
@@ -378,7 +374,6 @@ class Chessboard:
             for j in range(8):
                 board_html_view += self._chessboard[i][j].css
             board_html_view = board_html_view + "</tr>"
-        self._configuration = 1
         return board_html_view
 
     def draw_chessboard_for_black(self):
@@ -387,21 +382,14 @@ class Chessboard:
             for j in range(7, -1, -1):
                 board_html_view += self._chessboard[i][j].css
             board_html_view = board_html_view + "</tr>"
-        self._configuration = 2
         return board_html_view
 
 
-    def draw_chessboard(self):
-        if self._configuration==1:
+    def draw_chessboard(self, configuration='1'):
+        if configuration=='1':
             return self.draw_chessboard_for_white()
         else:
             return self.draw_chessboard_for_black()
-
-    def swap_board(self):
-        if self._configuration == 1:
-            self._configuration = 2
-        else:
-            self._configuration = 1
 
     # Need to be used for pawn promotion, en-passant and board editor
     def delete_piece(self, piece_position):

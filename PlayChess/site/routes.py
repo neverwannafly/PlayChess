@@ -155,11 +155,11 @@ def index():
     current_user = USER_DICT['current_user_' + str(session['username'])]
     return render_template('index.html', user=current_user, board=new_chess_board)
 
-@mod.route('/board/flip')
+@mod.route('/board/flip/<configuration>')
 @decorators.login_required
-def flipBoard():
-    USER_DICT['current_user_' + str(session['username'])].chessboard.swap_board()
-    flipped_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
+def flipBoard(configuration):
+    print(configuration)
+    flipped_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard(configuration)
     return jsonify({"board": flipped_board})
 
 @mod.route('/board/reset')
