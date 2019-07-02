@@ -19,7 +19,7 @@
 
         game_socket.on('make_move', move => {
             if (move["success"]) {
-                make_move(move['changes']);
+                make_move(move['changes'], game_url);
             }
             else {
                 console.log("Invalid Move!");
@@ -64,11 +64,7 @@
                 })
                 .done( (data) => {
                     if (data["success"]) {
-                        if (check_square!==null) {
-                            $(check_square).removeClass("check");
-                            check_square = null;
-                        }
-                        make_move(data['changes']);
+                        make_move(data['changes'], game_url);
                     }
                     else {
                         console.log("Invalid Move!");
@@ -81,16 +77,6 @@
                     removeHighlight(squares);
                     $("#"+initial_pos).removeClass("active-cell");
 
-                    // check for game status here
-                    const url = `${game_url}/getGameStatus`;
-                    $.ajax({
-                        url: url,
-                    })
-                    .done( (data) => {
-                        if (data["status"]==="finished") {
-                            alert(`Game ended! Result: ${data["result"]}-${1-data["result"]}, Cause: ${data["cause"]}`);
-                        }
-                    })
                 });
             }
         });
@@ -134,7 +120,11 @@
     
     });
 
-    function make_move(changes) {
+    function make_move(changes, game_url) {
+        if (check_square!==null) {
+            $(check_square).removeClass("check");
+            check_square = null;
+        }
         for (var i=0; i<changes.length; i++) {
             const square_id = "#" + changes[i]['pos'];
             const square_class = changes[i]['class'];
@@ -144,6 +134,19 @@
             $(square_id).removeClass("white-K white-Q white-R white-B white-N white-p black-K black-Q black-R black-B black-N black-p none-_");
             $(square_id).addClass(square_class);
         }
+        isGameOver(game_url);
+    }
+
+    function isGameOver(game_url) {
+        const url = `${game_url}/getGameStatus`;
+        $.ajax({
+            url: url,
+        })
+        .done( (data) => {
+            if (data["status"]==="finished") {
+                alert(`Game ended! Result: ${data["result"]}-${1-data["result"]}, Cause: ${data["cause"]}`);
+            }
+        })
     }
 
     function highlightSquares(squares) {
