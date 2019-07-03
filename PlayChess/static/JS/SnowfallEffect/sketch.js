@@ -32,7 +32,7 @@ function setup() {
 }
 
 function draw() {
-    background(0);
+    background(29, 29, 29);
 
     let prob = Math.floor(Math.random()*10);
     if (snow.length < maxSnowFlakes && prob < 5) {
@@ -56,3 +56,5 @@ function draw() {
     }
 
 }
+
+stop();
