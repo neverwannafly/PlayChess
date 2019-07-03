@@ -49,7 +49,7 @@ a:active {
 body {
     padding: 0;
     margin: 0;
-    background: -webkit-canvas(squares);
+    background: rgb(29, 29, 29);
 }
 
 canvas {
