@@ -37,28 +37,11 @@ a:active {
 }
 
 .game-finder {
-
+    
 }
 
-.logo {
-    margin-top: 20%;
-}
-
-.user {
-    float: left;
-    margin-left: 5%;
-    margin-top: 14%;
-    margin-right: 5%;
-    min-width: 20%;
-    width: 30%;
-}
 #find-game {
-    margin-top: 1%;
-}
-
-#logo-image {
-    height: 100px;
-    width: 100px;
+    margin-top: 3%;
 }
 
 body {
@@ -74,10 +57,16 @@ canvas {
     z-index: -1;
 } 
 
+.loading-image {
+    width: 400px;
+    height: 300px;
+}
+
+.container {
+    margin-top: 10%;
+}
+
 @media only screen and (max-width: 815px) {
-    .user {
-        display: none;
-    }  
     .chessboard {
         margin: auto;
         width: 50%;

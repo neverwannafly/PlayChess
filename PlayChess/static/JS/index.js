@@ -8,6 +8,7 @@
 
         $("#find-game").click(function(){
             $(".main").hide();
+            $("body").css("background-color", "black");
             $(".game-loader").show();
             $.ajax({
                 url: '/find_game',
@@ -25,6 +26,7 @@
                         text: 'No other player found! Please try again later.',
                         footer: '<a id="issue-url" href="#">Why do I have this issue?</a>'
                     }).then(function() {
+                        $("body").css("background-color", "rgb(29, 29, 29)");
                         $(".main").show();
                     });
                 }
