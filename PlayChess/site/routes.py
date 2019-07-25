@@ -153,7 +153,12 @@ def retry(username):
 def index():
     new_chess_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     current_user = USER_DICT['current_user_' + str(session['username'])]
-    return render_template('index.html', user=current_user, board=new_chess_board)
+    today = { # This variable contains special things related to today
+        "first": "Games Won = 0",
+        "second": "Winning Streak = 0",
+        "third": "Best Win = 1200",
+    }
+    return render_template('index.html', user=current_user, board=new_chess_board, today=today)
 
 @mod.route('/board/flip/<configuration>')
 @decorators.login_required

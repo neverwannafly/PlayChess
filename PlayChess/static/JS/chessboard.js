@@ -7,10 +7,10 @@
 
     $(document).ready(function(){
         $(".flipButton").on('click', function(){
-            configuration = !configuration;
+            configuration = (!configuration) | 0; // Method to typecast boolean into int
             $.ajax({
                 type: "GET",
-                url: `board/flip/${int(configuration)}`
+                url: `board/flip/${configuration}`
             })
             .done(function(data){
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");

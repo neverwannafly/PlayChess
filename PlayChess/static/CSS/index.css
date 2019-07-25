@@ -1,3 +1,8 @@
+.main {
+    display: flex;
+    flex-direction: row;
+}
+
 a:link {
     text-decoration: none;
 }
@@ -10,19 +15,29 @@ a:hover {
 a:active {
     text-decoration: none;
 }
-.make-move-button-div {
-    width: 40%;
-    height: 29.6px;
-    float: right;
+.sidebar {
+    width: 30%;
 }
-.make-move-input-div {
-    float: left;
+
+.board{
+    /* float: right; */
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    margin-right: 10%;
+    margin-top: 4%;
 }
 
 .chessboard {
-    float: right;
-    margin-right: 10%;
-    margin-top: 4%;
+
+}
+
+.interactice-buttons {
+
+}
+
+.game-finder {
+
 }
 
 .logo {
