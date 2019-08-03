@@ -49,8 +49,21 @@ function makeSideBarToggable() {
             }
         )
     }
+    $(".page-wrapper").addClass("pinned");
 }
 
 function makeSideBarStatic() {
     $(".page-wrapper").removeClass("pinned");
 }
+
+// Manage sidebar in accordance with screen size
+let sideBarManager = function() {
+    if (window.innerWidth > 531 && window.innerWidth <= 787) {
+        makeSideBarToggable();
+    } else {
+        makeSideBarStatic();
+    }
+}
+
+window.addEventListener("resize", sideBarManager);
+window.addEventListener("onload", sideBarManager);
