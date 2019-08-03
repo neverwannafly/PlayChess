@@ -31,7 +31,9 @@ jQuery(function ($) {
         $('.page-wrapper').toggleClass("boder-radius-on");
     });
 
-    //Pin sidebar
+});
+
+function makeSideBarToggable() {
     if ($(".page-wrapper").hasClass("pinned")) {
         // unpin sidebar when hovered
         $(".page-wrapper").removeClass("pinned");
@@ -47,4 +49,8 @@ jQuery(function ($) {
             }
         )
     }
-});
+}
+
+function makeSideBarStatic() {
+    $(".page-wrapper").removeClass("pinned");
+}
