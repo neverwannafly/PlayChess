@@ -67,3 +67,4 @@ let sideBarManager = function() {
 
 window.addEventListener("resize", sideBarManager);
 window.addEventListener("onload", sideBarManager);
+window.addEventListener("onreload", sideBarManager);

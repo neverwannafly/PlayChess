@@ -72,6 +72,15 @@ canvas {
     margin-top: 10%;
 }
 
+.topbar {
+    display: none;
+}
+
+.navbar-brand {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 @media only screen and (max-width: 787px) {
     .chessboard {
         min-width: 400px;
@@ -87,5 +96,15 @@ canvas {
     }
     .sidebar {
         width: 0px !important;
+        height: 0px !important;
+    }
+    .topbar {
+        display: block;
+    }
+    .main {
+        flex-direction: column;
+    }
+    .board {
+        margin-top: 3%;
     }
 }

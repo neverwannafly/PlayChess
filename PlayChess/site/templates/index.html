@@ -21,6 +21,22 @@
 {% endblock %}
 {% block body %}
     <div class="main">
+        <div class="topbar">
+            <nav class="navbar navbar-dark bg-dark">
+                <a class="navbar-brand" href="#">PLAYCHESS</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                    <a class="nav-item nav-link active" href="#">Profile <span class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" href="#">Stats</a>
+                    <a class="nav-item nav-link" href="#">Games</a>
+                    <a class="nav-item nav-link disabled" href="{{ url_for('site.logout') }}">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
         <div class="sidebar">
             <div class="page-wrapper toggled sidebar-bg default-theme bg2">
             <nav id="sidebar" class="sidebar-wrapper">
