@@ -174,3 +174,27 @@ body {
         width: 50px !important;
     }    
 }
+
+@media only screen and (max-width: 450px) {
+    table {
+        width: 320px;
+        height: 320px;
+    }
+    .square {
+        display: block;
+        height: 40px !important;
+        width: 40px !important;
+    } 
+}
+
+@media only screen and (max-width: 340px) {
+    table {
+        width: 280px;
+        height: 280px;
+    }
+    .square {
+        display: block;
+        height: 35px !important;
+        width: 35px !important;
+    } 
+}

@@ -1,6 +1,7 @@
 .main {
     display: flex;
     flex-direction: row;
+    margin: auto;
 }
 
 a:link {
@@ -21,6 +22,7 @@ a:active {
 
 .board{
     display: flex;
+    align-items: center;
     justify-content: center;
     flex-direction: column;
     align-self: center;
@@ -31,6 +33,7 @@ a:active {
 .chessboard {
     align-self: center;
     width: 100%;
+    align-items: center;
 }
 
 .interactive-buttons {
@@ -41,7 +44,7 @@ a:active {
 }
 
 .game-finder {
-    margin-top: 3%;
+    margin-top: 10vh;
     align-self: center;
     width: 100%;
 }
@@ -82,9 +85,6 @@ canvas {
 }
 
 @media only screen and (max-width: 787px) {
-    .chessboard {
-        min-width: 400px;
-    }
     .sidebar {
         width: 80px !important;
     }
@@ -105,6 +105,6 @@ canvas {
         flex-direction: column;
     }
     .board {
-        margin-top: 3%;
+        margin-top: 12vh;
     }
 }
