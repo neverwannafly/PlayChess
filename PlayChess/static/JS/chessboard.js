@@ -6,7 +6,7 @@
     let configuration = true;
 
     $(document).ready(function(){
-        $(".flipButton").on('click', function(){
+        $(".board-flip").on('click', function(){
             configuration = (!configuration) | 0; // Method to typecast boolean into int
             $.ajax({
                 type: "GET",
@@ -17,7 +17,7 @@
             });
         });
 
-        $(".resetButton").on('click', function(){
+        $(".board-reset").on('click', function(){
             $.ajax({
                 type: "GET",
                 url: "board/reset",
