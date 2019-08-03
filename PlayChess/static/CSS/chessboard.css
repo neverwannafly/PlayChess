@@ -160,7 +160,7 @@ body {
     background-position: center;
 }
 
-@media only screen and (max-width: 1146px) {
+@media only screen and (max-width: 1082px) {
     table {
         border-collapse: collapse;
         padding: 0px;

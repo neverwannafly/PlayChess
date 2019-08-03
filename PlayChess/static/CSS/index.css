@@ -16,7 +16,7 @@ a:active {
     text-decoration: none;
 }
 .sidebar {
-    width: 30%;
+    width: 280px;
 }
 
 .board{
@@ -24,7 +24,8 @@ a:active {
     justify-content: center;
     flex-direction: column;
     align-self: center;
-    margin-top: 4%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .chessboard {
@@ -71,11 +72,20 @@ canvas {
     margin-top: 10%;
 }
 
-@media only screen and (max-width: 815px) {
+@media only screen and (max-width: 787px) {
     .chessboard {
-        margin: auto;
-        width: 50%;
-        float: none;
         min-width: 400px;
+    }
+    .sidebar {
+        width: 80px !important;
+    }
+}
+
+@media only screen and (max-width: 531px) {
+    #sidebar {
+        display: none;
+    }
+    .sidebar {
+        width: 0px !important;
     }
 }
