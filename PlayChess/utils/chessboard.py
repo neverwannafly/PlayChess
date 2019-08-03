@@ -175,7 +175,7 @@ class Chessboard:
         for piece in self._pieces[color]:
             for square in self._pieces[color][piece]:
                 moves += self.generate_legal_moves(square)
-        return len(moves)==0
+        return len(moves)==0  and self.is_square_under_attack(self._pieces[color]["King"][0])
 
     # Drawing conditions
     @property
@@ -185,7 +185,7 @@ class Chessboard:
         for piece in self._pieces[color]:
             for square in self._pieces[color][piece]:
                 moves += self.generate_legal_moves(square)
-        return len(moves)==0 and not self.is_square_under_attack(self._pieces[color]["King"])
+        return len(moves)==0
 
     # Fifty move rule
     @property
@@ -670,7 +670,6 @@ class Chessboard:
             raise Checkmate(self._moves%2)
 
         draw = self.is_draw()
-
         if draw[0]:
             raise Draw(draw[1])
 
