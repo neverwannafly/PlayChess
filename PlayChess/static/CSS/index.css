@@ -20,24 +20,29 @@ a:active {
 }
 
 .board{
-    /* float: right; */
     display: flex;
+    justify-content: center;
     flex-direction: column;
     align-self: center;
-    margin-right: 10%;
     margin-top: 4%;
 }
 
 .chessboard {
-
+    align-self: center;
+    width: 100%;
 }
 
-.interactice-buttons {
-
+.interactive-buttons {
+    margin-top: 3%;
+    align-self: center;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .game-finder {
-    
+    margin-top: 3%;
+    align-self: center;
+    width: 100%;
 }
 
 #find-game {

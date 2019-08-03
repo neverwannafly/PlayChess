@@ -278,11 +278,15 @@
                 </table>
             </div>
             <div class="interactive-buttons">
-                <button type="button" class="btn-primary btn btn-block flipButton">Flip</button>
-                <button type="button" class="btn-danger btn btn-block resetButton">Reset</button>
+                <button  data-toggle="tooltip" title="Back" class="board-left btn btn-dark"><i class="fas fa-arrow-left"></i></button>
+                <button class="board-right btn btn-dark"><i class="fas fa-arrow-right" data-toggle="tooltip" title="Next"></i></button>
+                <button class="board-flip btn btn-dark" data-toggle="tooltip" title="Flip"><i class="fas fa-random"></i></button>
+                <button class="board-save btn btn-dark" data-toggle="tooltip" title="Save"><i class="fas fa-archive"></i></button>
+                <button class="board-fen btn btn-dark" data-toggle="tooltip" title="Fen"><i class="fas fa-chess-board" ></i></button>
+                <button class="board-reset btn btn-dark" data-toggle="tooltip" title="Reset"><i class="fas fa-redo-alt"></i></button>
             </div>
             <div class="game-finder">
-                <button id="find-game" class="btn btn-success btn-block">Find Game</button>
+                <button id="find-game" class="btn btn-primary btn-block">Find Game</button>
             </div>
         </div>
     </div>
