@@ -199,11 +199,7 @@ $ python manage.py dev
 
 <ul>
 <li> This project is only compatible with python3</li>
-<li> Windows users will have trouble running manage.py script now, instead they can use-></li>
-
-```shell
-$ gunicorn --reload --threads 12 -w 1 run:app
-```
+<li> Currently this project doesnt work on a windows environment. Please stay connected for further updates </li>
 <li>Documentation regarding certain aspects like chessboard class, stockfish api will be made available later</li>
 </ul>
 
