@@ -272,7 +272,7 @@ class Chessboard:
             fen_notation += " - "
 
         # Half Move 
-        fen_notation += str((self._half_moves // 2) + 1) + " "
+        fen_notation += str(self._half_moves) + " "
 
         # Full Move params
         fen_notation += str((self._moves // 2) + 1)
@@ -345,7 +345,7 @@ class Chessboard:
             self._enpassant_flag_life = 1
 
         # Half move
-        self._half_moves = (half_move-1)*2 + move
+        self._half_moves = half_move
 
         # Full move
         self._moves = (full_move-1)*2 + move
@@ -695,6 +695,12 @@ class Chessboard:
             raise InvalidMoveError("Cannot Move from empty Square", initial_pos, final_pos)
 
         if self.is_move_legal(initial_pos, final_pos):
+
+            if self.convert_to_index(final_pos).piece.name!="Blank":
+                self._half_moves = 0
+            else:
+                self._half_moves += 1
+
             # Check for special king moves!
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="K":
                 # King side castle
@@ -748,11 +754,6 @@ class Chessboard:
                 self.change_chessboard_state(initial_pos, final_pos)
             else:
                 self.change_chessboard_state(initial_pos, final_pos)
-                #Check if capture is performed
-                if self.convert_to_index(final_pos).piece.name!="Blank":
-                    self._half_moves = 0
-                else:
-                    self._half_moves += 1
         else:
             raise InvalidMoveError("Invalid Move played", initial_pos, final_pos)
 
@@ -961,9 +962,9 @@ class Chessboard:
             # Check if piece moved is rook
             if self.convert_to_index(initial_pos).piece.label.split('-')[1]=="R":
                 if initial_pos=="a8":
-                    self._castling_rights_white["has_a8_rook_moved"] = True
+                    self._castling_rights_black["has_a8_rook_moved"] = True
                 elif initial_pos=="h8":
-                    self._castling_rights_white["has_h8_rook_moved"] = True
+                    self._castling_rights_black["has_h8_rook_moved"] = True
             
     def is_move_legal(self, initial_pos, final_pos):
         # Will make use of generate legal move only.
