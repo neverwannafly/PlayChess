@@ -333,7 +333,7 @@ class Chessboard:
 
         return fen_notation
 
-    def load_position(self, fen_notation):
+    def load_position(self, fen_notation, hard=True):
         # Extract required parameters for the Chessboard class from fen_notation
         fen_components = fen_notation.split(' ')
         game_component = fen_components[0] + "/"
@@ -403,7 +403,8 @@ class Chessboard:
 
         # Full move
         self._moves = (full_move-1)*2 + move
-        self._states.flush_states(fen_notation)
+        if hard:
+            self._states.flush_states(fen_notation)
 
     def create_chessboard(self):
         chessboard = []
@@ -494,7 +495,7 @@ class Chessboard:
 
         self._reset_config_vars()
         self._chessboard = self.create_chessboard()
-        self.load_position(fen_notation)
+        self.load_position(fen_notation, hard=hard)
 
     def convert_to_index(self, notation):
         return self._chessboard[ord('8')-ord(notation[1])][ord(notation[0])-ord('a')]
@@ -722,13 +723,15 @@ class Chessboard:
             self._pieces[obj.piece.color][obj.piece.name].append(final_pos)
         self._changes.append({'pos': final_pos, 'class': obj.html_class})
 
-    def get_next_state(self, branch_id=0):
+    def get_next_state(self, branch_id):
         state = self._states.get_next_state(branch_id)
-        self.reset_chessboard(state)
+        self._states.print_state()
+        self.reset_chessboard(fen_notation=state)
 
-    def get_prev_state(self, branch_id=0):
+    def get_prev_state(self, branch_id):
         state = self._states.get_prev_state(branch_id)
-        self.reset_chessboard(state)
+        self._states.print_state()
+        self.reset_chessboard(fen_notation=state)
 
     def make_move(self, initial_pos, final_pos, dest_piece=None):
 
