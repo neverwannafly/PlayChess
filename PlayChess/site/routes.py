@@ -246,17 +246,17 @@ def get_game_status():
         'cause': status[1],
     })
 
-@mod.route('/board/getNextState/branchId')
+@mod.route('/board/getNextState/<branchId>')
 @decorators.login_required
-def get_next_state(branch_id=0):
-    USER_DICT['current_user_' + str(session['username'])].chessboard.get_next_state(int(branch_id))
+def get_next_state(branchId):
+    USER_DICT['current_user_' + str(session['username'])].chessboard.get_next_state(int(branchId))
     new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": new_board})
 
-@mod.route('/board/getPrevState/branchId')
+@mod.route('/board/getPrevState/<branchId>')
 @decorators.login_required
-def get_prev_state(branch_id=0):
-    USER_DICT['current_user_' + str(session['username'])].chessboard.get_prev_state(int(branch_id))
+def get_prev_state(branchId):
+    USER_DICT['current_user_' + str(session['username'])].chessboard.get_prev_state(int(branchId))
     new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": new_board})
 

@@ -21,7 +21,7 @@
             const default_branch = 0;
             $.ajax({
                 type: "GET",
-                url: "board/getPrevState/" + str(default_branch),
+                url: "board/getPrevState/" + String(default_branch),
             })
             .done(function(data) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
@@ -32,7 +32,7 @@
             const default_branch = 0;
             $.ajax({
                 type: "GET",
-                url: "board/getNextState/" + str(default_branch),
+                url: "board/getNextState/" + String(default_branch),
             })
             .done(function(data) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
