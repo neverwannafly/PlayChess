@@ -440,6 +440,7 @@ class Chessboard:
     def reset_chessboard(self, fen_notation=config.START_POSITION_NOTATION, hard=False):
         if hard:
             del self._states[:]
+            self._states.append(config.START_POSITION_NOTATION)
             self._current_state = 0
 
         self._reset_config_vars()
