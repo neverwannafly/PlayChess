@@ -160,10 +160,11 @@ class StateManager:
         print(self._current_state)
         print(self._states)
 
-    def flush_states(self):
+    def flush_states(self, state=config.START_POSITION_NOTATION):
         del self._states[:]
+        self._current_state = 0
         self._states.append({
-            0: Branch(0, "main", config.START_POSITION_NOTATION)
+            0: Branch(0, "main", state)
         })
 
 # Defines the final layout of the chessboard!
@@ -402,6 +403,7 @@ class Chessboard:
 
         # Full move
         self._moves = (full_move-1)*2 + move
+        self._states.flush_states(fen_notation)
 
     def create_chessboard(self):
         chessboard = []
