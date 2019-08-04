@@ -19,9 +19,10 @@
 
         $(".board-left").on('click', function(){
             const default_branch = 0;
+            configuration = configuration | 0;
             $.ajax({
                 type: "GET",
-                url: "board/getPrevState/" + String(default_branch),
+                url: `board/getPrevState/${default_branch}/${configuration}`,
             })
             .done(function(data) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
@@ -30,9 +31,10 @@
 
         $(".board-right").on('click', function(){
             const default_branch = 0;
+            configuration = configuration | 0;
             $.ajax({
                 type: "GET",
-                url: "board/getNextState/" + String(default_branch),
+                url: `board/getNextState/${default_branch}/${configuration}`,
             })
             .done(function(data) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
