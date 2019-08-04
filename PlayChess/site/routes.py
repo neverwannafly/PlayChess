@@ -246,23 +246,19 @@ def get_game_status():
         'cause': status[1],
     })
 
-@mod.route('/board/getNextState')
+@mod.route('/board/getNextState/branchId')
 @decorators.login_required
-def get_next_state():
-    success = USER_DICT['current_user_' + str(session['username'])].chessboard.get_next_state()
-    if success:
-        new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
-        return jsonify({"success": True, "board": new_board})
-    return jsonify({"success": False, "board":None})
+def get_next_state(branch_id=0):
+    USER_DICT['current_user_' + str(session['username'])].chessboard.get_next_state(int(branch_id))
+    new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
+    return jsonify({"board": new_board})
 
-@mod.route('/board/getPrevState')
+@mod.route('/board/getPrevState/branchId')
 @decorators.login_required
-def get_prev_state():
-    success = USER_DICT['current_user_' + str(session['username'])].chessboard.get_prev_state()
-    if success:
-        new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
-        return jsonify({"success": True, "board": new_board})
-    return jsonify({"success": False, "board":None})
+def get_prev_state(branch_id=0):
+    USER_DICT['current_user_' + str(session['username'])].chessboard.get_prev_state(int(branch_id))
+    new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
+    return jsonify({"board": new_board})
 
 # Handle game loading here
 @mod.route('/find_game')

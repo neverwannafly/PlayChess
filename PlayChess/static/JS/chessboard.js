@@ -18,28 +18,24 @@
         });
 
         $(".board-left").on('click', function(){
+            const default_branch = 0;
             $.ajax({
                 type: "GET",
-                url: "board/getPrevState",
+                url: "board/getPrevState/" + str(default_branch),
             })
             .done(function(data) {
-                console.log(data);
-                if (data.success) {
-                    $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-                }
+                $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
             });
         });
 
         $(".board-right").on('click', function(){
+            const default_branch = 0;
             $.ajax({
                 type: "GET",
-                url: "board/getNextState",
+                url: "board/getNextState/" + str(default_branch),
             })
             .done(function(data) {
-                console.log(data);
-                if (data.success) {
-                    $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-                }
+                $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
             });
         });
 

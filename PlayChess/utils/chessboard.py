@@ -116,6 +116,56 @@ class LightSquare(Square):
     def set_html_id(self, html_id):
         self.html_id = html_id 
 
+# States of a chessboard are managed via branch objects
+class Branch:
+    def __init__(self, branch_id, branch_name, fen):
+        self._id = branch_id
+        self._branch_name = branch_name
+        self._fen = fen
+
+    def get_fen(self):
+        return self._fen
+
+# This class manages states of Chessboard class
+class StateManager:
+    def __init__(self):
+        self._states = [{
+            0: Branch(0, "main", config.START_POSITION_NOTATION)
+        }]
+        self._current_state = 0
+    
+    def create_state(self, fen, branch_id=None):
+        self._current_state += 1
+        if (self._current_state == len(self._states)):
+            self._states.append({
+                # Default branch
+                0: Branch(0, "main", fen),
+            })
+        else:
+            branch_id = len(self._states[self._current_state]) if branch_id is None else branch_id
+            branch_name = "Branch" + str(branch_id)
+            self._states[self._current_state][branch_id] = Branch(branch_id, branch_name, fen)
+
+    def get_next_state(self, branch_id=0):
+        if (self._current_state < len(self._states)-1):
+            self._current_state += 1
+        return self._states[self._current_state][branch_id].get_fen()
+
+    def get_prev_state(self, branch_id=0):
+        if (self._current_state > 0):
+            self._current_state -= 1
+        return self._states[self._current_state][branch_id].get_fen()
+
+    def print_state(self):
+        print(self._current_state)
+        print(self._states)
+
+    def flush_states(self):
+        del self._states[:]
+        self._states.append({
+            0: Branch(0, "main", config.START_POSITION_NOTATION)
+        })
+
 # Defines the final layout of the chessboard!
 class Chessboard:
     def __init__(self, fen_notation=config.START_POSITION_NOTATION):
@@ -124,8 +174,7 @@ class Chessboard:
         self._changes = []
 
         # Objects holding current and all states of the chessboard
-        self._states = [config.START_POSITION_NOTATION]
-        self._current_state = 0
+        self._states = StateManager()
 
         # Castling Parameters
         self._castling_rights_white = {
@@ -439,9 +488,7 @@ class Chessboard:
 
     def reset_chessboard(self, fen_notation=config.START_POSITION_NOTATION, hard=False):
         if hard:
-            del self._states[:]
-            self._states.append(config.START_POSITION_NOTATION)
-            self._current_state = 0
+            self._states.flush_states()
 
         self._reset_config_vars()
         self._chessboard = self.create_chessboard()
@@ -673,19 +720,13 @@ class Chessboard:
             self._pieces[obj.piece.color][obj.piece.name].append(final_pos)
         self._changes.append({'pos': final_pos, 'class': obj.html_class})
 
-    def get_next_state(self):
-        if (self._current_state < len(self._states)-1):
-            self._current_state += 1
-            self.reset_chessboard(self._states[self._current_state])
-            return True
-        return False
+    def get_next_state(self, branch_id=0):
+        state = self._states.get_next_state(branch_id)
+        self.reset_chessboard(state)
 
-    def get_prev_state(self):
-        if (self._current_state > 0):
-            self._current_state -= 1
-            self.reset_chessboard(self._states[self._current_state])
-            return True
-        return False
+    def get_prev_state(self, branch_id=0):
+        state = self._states.get_prev_state(branch_id)
+        self.reset_chessboard(state)
 
     def make_move(self, initial_pos, final_pos, dest_piece=None):
 
@@ -709,9 +750,8 @@ class Chessboard:
         elif self._enpassant_target_square:
             self._enpassant_flag_life += 1
 
-        self._states.append(self.fen_notation)
-        self._current_state += 1
-        print(self._states)
+        self._states.create_state(self.fen_notation)
+        self._states.print_state()
 
         return self._changes
 
