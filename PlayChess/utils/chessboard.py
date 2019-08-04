@@ -123,6 +123,10 @@ class Chessboard:
         # An array holding recent changes in board position
         self._changes = []
 
+        # Objects holding current and all states of the chessboard
+        self._states = [config.START_POSITION_NOTATION]
+        self._current_state = 0
+
         # Castling Parameters
         self._castling_rights_white = {
             "white_side_castled": False,
@@ -415,7 +419,7 @@ class Chessboard:
         return getattr(sys.modules[__name__], piece_name)(piece_position, piece_color)
 
     def _reset_config_vars(self):
-        self._changes = []
+        del self._changes[:]
         self._pieces = {
             "white": {},
             "black": {},
@@ -433,7 +437,11 @@ class Chessboard:
             "has_h8_rook_moved": False,
         }
 
-    def reset_chessboard(self, fen_notation=config.START_POSITION_NOTATION):
+    def reset_chessboard(self, fen_notation=config.START_POSITION_NOTATION, hard=False):
+        if hard:
+            del self._states[:]
+            self._current_state = 0
+
         self._reset_config_vars()
         self._chessboard = self.create_chessboard()
         self.load_position(fen_notation)
@@ -664,6 +672,20 @@ class Chessboard:
             self._pieces[obj.piece.color][obj.piece.name].append(final_pos)
         self._changes.append({'pos': final_pos, 'class': obj.html_class})
 
+    def get_next_state(self):
+        if (self._current_state < len(self._states)-1):
+            self._current_state += 1
+            self.reset_chessboard(self._states[self._current_state])
+            return True
+        return False
+
+    def get_prev_state(self):
+        if (self._current_state > 0):
+            self._current_state -= 1
+            self.reset_chessboard(self._states[self._current_state])
+            return True
+        return False
+
     def make_move(self, initial_pos, final_pos, dest_piece=None):
 
         if self.is_checkmate:
@@ -677,7 +699,7 @@ class Chessboard:
         if self.convert_to_index(initial_pos).piece.color!=color:
             raise SideNotAuthorizedToMakeMove()
 
-        self._changes = []
+        del self._changes[:]
         self.make_move_private(initial_pos, final_pos, dest_piece)
         self._moves += 1
         if self._enpassant_flag_life >= 1:
@@ -685,6 +707,10 @@ class Chessboard:
             self._enpassant_target_square = None
         elif self._enpassant_target_square:
             self._enpassant_flag_life += 1
+
+        self._states.append(self.fen_notation)
+        self._current_state += 1
+        print(self._states)
 
         return self._changes
 

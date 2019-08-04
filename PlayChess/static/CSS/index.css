@@ -44,7 +44,7 @@ a:active {
 }
 
 .game-finder {
-    margin-top: 10vh;
+    margin-top: 5vh;
     align-self: center;
     width: 100%;
 }
@@ -67,7 +67,7 @@ canvas {
 } 
 
 .loading-image {
-    width: 400px;
+    width: 100%;
     height: 300px;
 }
 

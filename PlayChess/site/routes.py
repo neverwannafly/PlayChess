@@ -172,16 +172,16 @@ def flipBoard(configuration):
 def resetBoard():
     fen_notation = request.args.get('fen', None)
     if fen_notation == 'default':
-        USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard()
+        USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard(hard=True)
     else:
         valid_fen = bool(regex.match(FEN_NOTATION_REGEX, fen_notation))
         if not valid_fen:
-            USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard()
+            USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard(hard=True)
         else:
             try:
-                USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard(fen_notation)
+                USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard(fen_notation=fen_notation, hard=True)
             except exceptions.InvalidFenNotation:
-                USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard()
+                USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard(hard=True)
     reset_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
     return jsonify({"board": reset_board})
 
@@ -245,6 +245,24 @@ def get_game_status():
         'result': status[2],
         'cause': status[1],
     })
+
+@mod.route('/board/getNextState')
+@decorators.login_required
+def get_next_state():
+    success = USER_DICT['current_user_' + str(session['username'])].chessboard.get_next_state()
+    if success:
+        new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
+        return jsonify({"success": True, "board": new_board})
+    return jsonify({"success": False, "board":None})
+
+@mod.route('/board/getPrevState')
+@decorators.login_required
+def get_prev_state():
+    success = USER_DICT['current_user_' + str(session['username'])].chessboard.get_prev_state()
+    if success:
+        new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
+        return jsonify({"success": True, "board": new_board})
+    return jsonify({"success": False, "board":None})
 
 # Handle game loading here
 @mod.route('/find_game')

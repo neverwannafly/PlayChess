@@ -17,6 +17,32 @@
             });
         });
 
+        $(".board-left").on('click', function(){
+            $.ajax({
+                type: "GET",
+                url: "board/getPrevState",
+            })
+            .done(function(data) {
+                console.log(data);
+                if (data.success) {
+                    $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+                }
+            });
+        });
+
+        $(".board-right").on('click', function(){
+            $.ajax({
+                type: "GET",
+                url: "board/getNextState",
+            })
+            .done(function(data) {
+                console.log(data);
+                if (data.success) {
+                    $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+                }
+            });
+        });
+
         $(".board-reset").on('click', function(){
             $.ajax({
                 type: "GET",
