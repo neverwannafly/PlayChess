@@ -194,7 +194,7 @@ class Chessboard:
     # Fifty move rule
     @property
     def is_fifty_move(self):
-        return self._half_moves >= 50
+        return self._half_moves >= 100
 
     # Insufficient Material
     @property
