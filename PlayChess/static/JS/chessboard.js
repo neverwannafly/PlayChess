@@ -4,6 +4,8 @@
 
     let check_square = null;
     let configuration = true;
+    let engineEval = false;
+    let strength = 1;
 
     $(document).ready(function(){
         $(".board-flip").on('click', function(){
@@ -26,6 +28,9 @@
             })
             .done(function(data) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+                if (engineEval) {
+                    setEngineEvaluation();
+                }
             });
         });
 
@@ -38,6 +43,9 @@
             })
             .done(function(data) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+                if (engineEval) {
+                    setEngineEvaluation();
+                }
             });
         });
 
@@ -51,27 +59,23 @@
             })
             .done(function(data) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+                if (engineEval) {
+                    setEngineEvaluation();
+                }
             });
         });
 
         $(".board-eval").on('click', function(){
-            $.ajax({
-                type: "GET",
-                url: "board/generateFenNotation",
-            })
-            .done(function(data){
-                $.ajax({
-                    type: "GET",
-                    url: "api/stockfish",
-                    data: {
-                        token: "hello",
-                        fen_notation: data.notation,
-                    }
-                })
-                .done(function(data){
-                    console.log(data);
-                });
-            })
+            engineEval = !engineEval;
+            if (engineEval) {
+                setEngineEvaluation();
+                $(".board-eval").addClass('btn-danger');
+                $(".board-eval").removeClass('btn-dark');
+            } else {
+                cleanEngineEval();
+                $(".board-eval").addClass('btn-dark');
+                $(".board-eval").removeClass('btn-danger');
+            }
         });
 
         var initial_pos, final_pos;
@@ -117,6 +121,9 @@
                             check_square = null;
                         }
                         make_move(data['changes']);
+                        if (engineEval) {
+                            setEngineEvaluation();
+                        }
                     } else if (data["gameFinished"]) {
                         console.log("Game Finished", data["result"]);
                     }
@@ -141,10 +148,6 @@
         });
 
         $("td").hover(mouseIn, mouseOut);
-
-        $(document).on('click', '.promo-square', (event) => {
-
-        })
 
     });
 
@@ -191,24 +194,80 @@
         return white_pawn || black_pawn;
     }
 
-    function promotePawn(final_pos) {
-        // let promotion = "-";
-        // const file = final_pos[0];
-        // // white color promotion
-        // let squares = [];
-        // if (final_pos[1]==="8") {
-        //     squares = [file+"8", file+"7", file+"6", file+"5"];
-        // }
-        // // black color promotion
-        // else {
-        //     squares = [file+"1", file+"2", file+"3", file+"4"];
-        // }
-        // for (let i=0; i<squares.length; i++) {
-        //     $("#"+squares).removeClass("square");
-        //     $("#"+squares).addClass("promo-square");
-        // }
-        // // returns a string indicating the promoted piece
-        // return promotion;        
+    function parseEval(evaluation) {
+        const sign = evaluation[0];
+        if (sign=='+') {
+            return Number(evaluation.substring(1));
+        } else if (sign=='#') {
+            const mag = evaluation[1];
+            return mag=='+' ? 800 : -800;
+        }
+        return -1 * Number(evaluation.substring(1));
+    }
+
+    function addDecimal(evaluation) {
+        const sign = evaluation[0];
+        if (sign=='#') {
+            return `#${evaluation.substring(2)}`;
+        }
+        evaluation = Number(evaluation.substring(1));
+        evaluation /= 100;
+        return `${sign}${evaluation}`;
+    }
+
+    function cleanEngineEval() {
+        $("#black-eval").text(``);
+        $("#white-eval").text(``);
+        $("#white-eval").css("width", `50.5%`);
+        $("#black-eval").css("width", `50.5%`);
+    }
+
+    function setEngineEvaluation() {
+        $.ajax({
+            type: "GET",
+            url: "board/generateFenNotation",
+        })
+        .done(function(data){
+            $.ajax({
+                type: "GET",
+                url: "api/stockfish",
+                data: {
+                    token: "hello",
+                    fen_notation: data.notation,
+                    strength: strength,
+                }
+            })
+            .done(function(data){
+                // Flush old eval
+                cleanEngineEval();
+
+                // Get new eval
+                const maxThreshold = 800;
+                let evaluation = parseEval(data.evaluation);
+                console.log(data);
+                let sign = evaluation > 0 ? 1: -1;
+                evaluation = Math.min(Math.abs(evaluation), maxThreshold);
+                const relativeEval = (evaluation/maxThreshold);
+                let width = 50 * (1 + relativeEval);
+                width = Math.ceil(width);
+                if (evaluation===0) {
+                    $("#white-eval").css("width", `50.5%`);
+                    $("#black-eval").css("width", `50.5%`);
+                    $("#white-eval").text(`0`);
+                    $("#black-eval").text(`0`);
+                } else if (sign > 0) {
+                    // increase width by relativeEval in favor of white
+                    $("#white-eval").css("width", `${width+1}%`);
+                    $("#black-eval").css("width", `${101-width}%`);
+                    $("#white-eval").text(`${addDecimal(data.evaluation)}`);
+                } else {
+                    // increase width by relativeEval in favor of black
+                    $("#white-eval").css("width", `${101-width}%`);
+                    $("#black-eval").css("width", `${width+1}%`);
+                    $("#black-eval").text(`${addDecimal(data.evaluation)}`);
+                }
+            });
+        });
     }
 
     var incrementClick = (function(){

@@ -30,7 +30,18 @@ a:active {
     margin-right: auto;
 }
 
+.eval {
+    width: 100%;
+    align-self: center;
+    align-items: center;
+}
+
+#white-eval {
+    color: black;
+}
+
 .chessboard {
+    margin-top: 1vh;
     align-self: center;
     width: 100%;
     align-items: center;
