@@ -50,8 +50,10 @@ app.register_blueprint(chat.routes.mod, url_prefix='/chat')
 app.register_blueprint(game.routes.mod, url_prefix='/game')
 app.register_blueprint(api.routes.mod, url_prefix='/api')
 
-# Makes chess board easily accessible thorugh terminal
+# Makes chess board and state classes easily accessible thorugh terminal
 from PlayChess.utils.chessboard import Chessboard
+from PlayChess.utils.chessboard import Branch
+from PlayChess.utils.chessboard import StateManager
 
 # Make database accessible for unit testing
 from PlayChess.database import db
