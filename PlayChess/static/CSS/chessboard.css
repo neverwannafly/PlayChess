@@ -57,10 +57,10 @@ body {
     width: 65px !important;
 }
 .light {
-    background-color: #fffedf;
+    background-color: rgb(169, 169, 169);
 }
 .dark {
-    background-color: #86a569;
+    background-color: rgb(122, 122, 122);
 }
 .flipButton {
     margin-top: 4%;
@@ -77,11 +77,11 @@ body {
 
 .highlighted-cell {
     cursor: pointer!important;
-    filter: brightness(50%)!important;
+    filter: brightness(45%)!important;
 }
 
 .active-cell {
-    background-color: #9e8454;
+    background-color: #446942;
 }
 
 /** CSS for chess pieces **/
