@@ -30,13 +30,15 @@ def getEngineEval():
             return jsonify({
                 "fen_notation_error": "Please supply a valid fen notation",
             })
-        res = engine.play(board, chess.engine.Limit(time=1, depth=20))
-        info = engine.analyse(board, chess.engine.Limit(time=1, depth=20))
+        strength = request.args.get('strength', 1)
+        time = min(1, 0.01 * 10 ** int(strength))
+        res = engine.play(board, chess.engine.Limit(time=time, depth=20))
+        info = engine.analyse(board, chess.engine.Limit(time=time, depth=20))
 
         return jsonify({
             "best_move": str(res.move), 
             "ponder": str(res.ponder),
-            "evaluation": str(info["score"]),
+            "evaluation": str(info["score"].white()),
         })
     return jsonify({
         "access_token_error": "There seems to be a problem with your access token",
