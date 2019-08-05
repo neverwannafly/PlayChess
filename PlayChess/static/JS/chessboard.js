@@ -51,6 +51,26 @@
             })
             .done(function(data) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+            });
+        });
+
+        $(".board-eval").on('click', function(){
+            $.ajax({
+                type: "GET",
+                url: "board/generateFenNotation",
+            })
+            .done(function(data){
+                $.ajax({
+                    type: "GET",
+                    url: "api/stockfish",
+                    data: {
+                        token: "hello",
+                        fen_notation: data.notation,
+                    }
+                })
+                .done(function(data){
+                    console.log(data);
+                });
             })
         });
 
