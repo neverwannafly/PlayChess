@@ -20,33 +20,31 @@
         });
 
         $(".board-left").on('click', function(){
-            const default_branch = 0;
-            configuration = configuration | 0;
-            $.ajax({
-                type: "GET",
-                url: `board/getPrevState/${default_branch}/${configuration}`,
-            })
-            .done(function(data) {
-                $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-                if (engineEval) {
-                    setEngineEvaluation();
+            getPrevState();
+        });
+
+        jQuery(window).on("swipeleft keydown", function(event) {
+            if (event.type=="keydown") {
+                if (event.key=="ArrowLeft") {
+                    getPrevState();
                 }
-            });
+            } else {
+                getPrevState();
+            }
         });
 
         $(".board-right").on('click', function(){
-            const default_branch = 0;
-            configuration = configuration | 0;
-            $.ajax({
-                type: "GET",
-                url: `board/getNextState/${default_branch}/${configuration}`,
-            })
-            .done(function(data) {
-                $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-                if (engineEval) {
-                    setEngineEvaluation();
+            getNextState();
+        });
+
+        jQuery(window).on("swiperight keydown", function(event) {
+            if (event.type=="keydown") {
+                if (event.key=="ArrowRight") {
+                    getNextState();
                 }
-            });
+            } else {
+                getNextState();
+            }
         });
 
         $(".board-reset").on('click', function(){
@@ -192,6 +190,36 @@
         let white_pawn = $("#"+initial_pos).hasClass("white-p") && initial_pos[1]==='7';
         let black_pawn = $("#"+initial_pos).hasClass("black-p") && initial_pos[1]==='2';
         return white_pawn || black_pawn;
+    }
+
+    function getNextState() {
+        const default_branch = 0;
+        configuration = configuration | 0;
+        $.ajax({
+            type: "GET",
+            url: `board/getNextState/${default_branch}/${configuration}`,
+        })
+        .done(function(data) {
+            $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+            if (engineEval) {
+                setEngineEvaluation();
+            }
+        });
+    }
+
+    function getPrevState() {
+        const default_branch = 0;
+        configuration = configuration | 0;
+        $.ajax({
+            type: "GET",
+            url: `board/getPrevState/${default_branch}/${configuration}`,
+        })
+        .done(function(data) {
+            $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+            if (engineEval) {
+                setEngineEvaluation();
+            }
+        });
     }
 
     function parseEval(evaluation) {
