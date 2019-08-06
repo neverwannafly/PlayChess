@@ -118,53 +118,128 @@ class LightSquare(Square):
 
 # States of a chessboard are managed via branch objects
 class Branch:
-    def __init__(self, branch_id, branch_name, fen):
+    def __init__(self, branch_id, branch_name, fen, state, annotation="", parent=0):
         self._id = branch_id
         self._branch_name = branch_name
         self._fen = fen
+        self._state = state
+        self._annotation = annotation
+        self._parent = parent
+        # 0 indicates main branch. If _id == _parent, continue down the same branch
 
     def get_fen(self):
         return self._fen
+
+    def get_id(self):
+        return self._id
+
+    def set_parent(self, parent):
+        self._parent = parent
+
+    def get_parent(self):
+        return self._parent
+
+    def set_state(self, state):
+        self._state = state
+
+    def __str__(self):
+        return str({
+            "id": self._id, 
+            "name": self._branch_name,
+            "parent": self._parent,
+            "state": self._state,
+        })
 
 # This class manages states of Chessboard class
 class StateManager:
     def __init__(self):
         self._states = [{
-            0: Branch(0, "main", config.START_POSITION_NOTATION)
+            0: Branch(0, "main", config.START_POSITION_NOTATION, 0)
         }]
         self._current_state = 0
+        self._branch_count = 1
+        self._active_branch = 0
     
-    def create_state(self, fen, branch_id=None):
+    def search_states(self, fen):
+        branch_id = -1
+        for key in self._states[self._current_state]:
+            state = self._states[self._current_state][key]
+            if state.get_fen() == fen:
+                branch_id = state.get_id()
+                break
+        return branch_id
+
+    # Smaller states are parent of Larger states
+    def get_smallest_branch(self):
+        min_value = min(self._states[self._current_state])
+        return min_value
+
+    def create_branch(self, fen):
+        current_state = self.get_active_branch()
         self._current_state += 1
-        if (self._current_state == len(self._states)):
-            self._states.append({
-                # Default branch
-                0: Branch(0, "main", fen),
-            })
-        else:
-            branch_id = len(self._states[self._current_state]) if branch_id is None else branch_id
+
+        # Just create a new Node in the active branch
+        if self._current_state == len(self._states):
+            self._states.append({self._active_branch: Branch(
+                self._active_branch,
+                current_state._branch_name,
+                fen,
+                self._current_state,
+                parent=current_state.get_id(),
+            )})
+        # Make sure the branch isnt already present
+        elif self.search_states(fen) == -1:
+            branch_id = self._branch_count
             branch_name = "Branch" + str(branch_id)
-            self._states[self._current_state][branch_id] = Branch(branch_id, branch_name, fen)
+            self._branch_count += 1
+            self._active_branch = branch_id
+            self._states[self._current_state][branch_id] = Branch(
+                branch_id,
+                branch_name,
+                fen,
+                self._current_state,
+                parent=current_state.get_id(),
+            )
+        # Switch active branch to found branch
+        else:
+            self._active_branch = self.search_states(fen)
+
+    def get_active_branch(self):
+        return self._states[self._current_state][self._active_branch]
+
+    def set_branch(self, branch_id, state):
+        self._active_branch = branch_id
+        self._current_state = state
 
     def get_next_state(self, branch_id=0):
         if (self._current_state < len(self._states)-1):
             self._current_state += 1
-        return self._states[self._current_state][branch_id].get_fen()
+        current_state = self.get_active_branch()
+        if branch_id is not current_state.get_id():
+            self._active_branch = self.get_smallest_branch()
+        return self.get_active_branch().get_fen()
 
-    def get_prev_state(self, branch_id=0):
+    def get_prev_state(self):
+        state = self.get_active_branch()
+        prev_id = state.get_parent()
         if (self._current_state > 0):
             self._current_state -= 1
-        return self._states[self._current_state][branch_id].get_fen()
+        self._active_branch = prev_id
+        return self.get_active_branch().get_fen()
 
     def print_state(self):
         print(self._current_state)
-        print(self._states)
+        for branch in self._states:
+            for key in branch:
+                print(branch[key])
 
     def flush_states(self, state=config.START_POSITION_NOTATION):
         del self._states[:]
         self._current_state = 0
+        self._active_branch = 0
+        self._branch_count = 1
         self._states.append({
-            0: Branch(0, "main", state)
+            0: Branch(0, "main", state, 0)
         })
 
 # Defines the final layout of the chessboard!
@@ -723,13 +798,13 @@ class Chessboard:
             self._pieces[obj.piece.color][obj.piece.name].append(final_pos)
         self._changes.append({'pos': final_pos, 'class': obj.html_class})
 
-    def get_next_state(self, branch_id):
+    def get_next_state(self, branch_id=0):
         state = self._states.get_next_state(branch_id)
         self._states.print_state()
         self.reset_chessboard(fen_notation=state)
 
-    def get_prev_state(self, branch_id):
-        state = self._states.get_prev_state(branch_id)
+    def get_prev_state(self):
+        state = self._states.get_prev_state()
         self._states.print_state()
         self.reset_chessboard(fen_notation=state)
 
@@ -755,7 +830,7 @@ class Chessboard:
         elif self._enpassant_target_square:
             self._enpassant_flag_life += 1
 
-        self._states.create_state(self.fen_notation)
+        self._states.create_branch(self.fen_notation)
         self._states.print_state()
 
         return self._changes

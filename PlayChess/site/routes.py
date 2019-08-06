@@ -253,10 +253,10 @@ def get_next_state(branchId, configuration):
     new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard(configuration)
     return jsonify({"board": new_board})
 
-@mod.route('/board/getPrevState/<branchId>/<configuration>')
+@mod.route('/board/getPrevState/<configuration>')
 @decorators.login_required
-def get_prev_state(branchId, configuration):
-    USER_DICT['current_user_' + str(session['username'])].chessboard.get_prev_state(int(branchId))
+def get_prev_state(configuration):
+    USER_DICT['current_user_' + str(session['username'])].chessboard.get_prev_state()
     new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard(configuration)
     return jsonify({"board": new_board})
 
