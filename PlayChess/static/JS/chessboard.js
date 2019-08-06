@@ -47,6 +47,16 @@
             }
         });
 
+        $(".board-fen").on('click', function(){
+            $.ajax({
+                type: "GET",
+                url: "board/generateFenNotation",
+            })
+            .done(function(data){
+                console.log(data.notation);
+            });
+        })
+
         $(".board-reset").on('click', function(){
             $.ajax({
                 type: "GET",
@@ -208,11 +218,11 @@
     }
 
     function getPrevState() {
-        const default_branch = 0;
+        // const default_branch = 0;
         configuration = configuration | 0;
         $.ajax({
             type: "GET",
-            url: `board/getPrevState/${default_branch}/${configuration}`,
+            url: `board/getPrevState/${configuration}`,
         })
         .done(function(data) {
             $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
