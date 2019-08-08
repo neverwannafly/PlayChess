@@ -308,17 +308,21 @@ class Chessboard:
 
     # Drawing conditions
     @property
-    def is_stalemate(self):
+    def stalemate(self):
         color = "white" if self._moves%2==0 else "black"
+        print(color, self._moves)
         moves = []
         for piece in self._pieces[color]:
+            print(piece)
             for square in self._pieces[color][piece]:
+                print(square)
                 moves += self.generate_legal_moves(square)
+        print(moves)
         return len(moves)==0
 
     # Fifty move rule
     @property
-    def is_fifty_move(self):
+    def fifty_move(self):
         return self._half_moves >= 100
 
     # Insufficient Material
@@ -331,9 +335,9 @@ class Chessboard:
         return False
 
     def is_draw(self):
-        if self.is_fifty_move:
+        if self.fifty_move:
             return [True, "fifty move", "0.5"]
-        elif self.is_stalemate:
+        elif self.stalemate:
             return [True, "stalemate", "0.5"]
         elif self.insufficent_material:
             return [True, "insufficient material", "0.5"]
@@ -1129,6 +1133,8 @@ class Chessboard:
         self.convert_to_index(initial_pos).piece = self.create_piece(initial_pos, "Blank")
         self.convert_to_index(final_pos).piece = initial_piece
 
+        initial_index = self._pieces[initial_piece.color][initial_piece.name].index(initial_pos)
+
         self._pieces[initial_piece.color][initial_piece.name].remove(initial_pos)
         self._pieces[initial_piece.color][initial_piece.name].append(final_pos)
         if final_piece.name != "Blank":
@@ -1138,7 +1144,7 @@ class Chessboard:
             self.convert_to_index(initial_pos).piece = initial_piece
             self.convert_to_index(final_pos).piece = final_piece
             self._pieces[initial_piece.color][initial_piece.name].remove(final_pos)
-            self._pieces[initial_piece.color][initial_piece.name].append(initial_pos)
+            self._pieces[initial_piece.color][initial_piece.name].insert(initial_index, initial_pos)
             if final_piece.name != "Blank":
                 self._pieces[final_piece.color][final_piece.name].append(final_pos)
 
