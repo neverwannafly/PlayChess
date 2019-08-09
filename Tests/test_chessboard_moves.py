@@ -116,6 +116,12 @@ def test_checkmate(client):
     client.get("/board/reset?fen=r1bqk1nr/pppp1Qpp/2n5/2b1p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 1 4")
     black_move = client.get("/board/makemove/e8-f7")
     assert b'"gameFinished":true,"result":1' in black_move.data
+    client.get("/board/reset?fen=r1b2bkr/ppp3pp/2n5/3Qp3/8/8/PPPP1PPP/RNB1K2R b KQ - 0 9")
+    black_move = client.get("/board/makemove/c8-e6")
+    assert b'"success":true' in black_move.data
+    client.get("/board/makemove/d5-e6")
+    res = client.get("/board/getGameStatus")
+    assert b'"result":1' in res.data
 
 def test_stalemate(client):
     login(client)
@@ -228,3 +234,19 @@ def test_full_game(client):
 
     status = client.get("/board/getGameStatus")
     assert b'"status":"finished","result":"1"' in status.data
+
+def test_states(client):
+    login(client)
+    # 0: Main Variation
+    client.get('/board/makemove/e2-e4')
+    client.get('/board/makemove/e7-e5')
+    client.get('/board/makemove/g1-f3')
+    client.get('/board/makemove/b8-c6')
+    client.get('/board/makemove/f1-c4')
+    client.get('/board/makemove/f8-c5')
+    client.get('/board/makemove/e1-g1')
+    client.get('/board/makemove/g8-f6')
+    # Go two moves back and create a subvariation, instead of 0-0, play Nc3
+    client.get('/board/getPrevState')
+    state = client.get('/board/getPrevState')
+    # from PlayChess import Chessboard; b = Chessboard(); b.make_move('e2', 'e4'); b.make_move('e7', 'e5'); b.make_move('g1', 'f3'); b.make_move('b8', 'c6'); b.make_move('f1', 'c4'); b.make_move('f8', 'c5'); b.make_move('e1', 'g1'); b.make_move('g8', 'f6')
