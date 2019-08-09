@@ -120,6 +120,7 @@ canvas {
     box-shadow: 1px;
     width: 100%;
     height: 82%;
+    overflow: scroll;
 }
 
 #move-number {

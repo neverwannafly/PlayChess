@@ -875,7 +875,8 @@ class Chessboard:
     def get_state(self):
         state = self._states.get_active_branch()
         return { 
-            "id": state.get_id(),
+            "branch": state.get_id(),
+            "state": state._state,
             "move": state.get_move(),
         }
 

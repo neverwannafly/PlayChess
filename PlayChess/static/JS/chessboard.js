@@ -6,7 +6,6 @@
     let configuration = true;
     let engineEval = false;
     let storyMode = false;
-    let moves = 0;
     let strength = 1;
     let isFirstMove = true;
 
@@ -73,6 +72,9 @@
                 if (engineEval) {
                     setEngineEvaluation();
                 }
+                document.getElementById("move-number").innerHTML = "";
+                document.getElementById("white-moves").innerHTML = "";
+                document.getElementById("black-moves").innerHTML = "";
             });
         });
 
@@ -143,14 +145,8 @@
                             check_square = null;
                         }
                         make_move(data['changes']);
-                        moves += 1;
-                        let url = "board/getCurrentState";
-                        $.ajax({
-                            url: url,
-                        })
-                        .done( (data) => {
-                            addMoveToStoryBoard(data.move, data.id);
-                        });
+                        addMoveToStoryBoard();
+                        
                         if (engineEval) {
                             setEngineEvaluation();
                         }
@@ -235,7 +231,6 @@
         .done(function(data) {
             if (data.success) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-                moves += 1;
                 if (engineEval) {
                     setEngineEvaluation();
                 }
@@ -253,7 +248,6 @@
         .done(function(data) {
             if (data.success) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-                moves -= 1;
                 if (engineEval) {
                     setEngineEvaluation();
                 }
@@ -365,6 +359,17 @@
         $("#storyboard").hide();
     }
 
+    function makeId(branch, state) {
+        return 1000*state + branch;
+    }
+
+    function extractFromId(id) {
+        return {
+            branch: id/1000,
+            state: id%1000,
+        }
+    }
+
     function highlighMoveCell(id) {
         $(`#${id}`).addClass('highligh-move-cell');
     }
@@ -373,24 +378,36 @@
         $(`${id}`).removeClass('highlight-move-cell');
     }
 
-    function addMoveToStoryBoard(move, id) {
-        if (moves%2!=0) {
-            isFirstMove = false;
-            // insert move number
-            let move_number_div = `<div class="move-number-cell">${(moves+1)/2}</div>`
-            document.getElementById("move-number").innerHTML += move_number_div;
+    function addMoveToStoryBoard() {
 
-            let move_div = `<div id="${id}" class="move-cell">${move}</div>`;
-            document.getElementById("white-moves").innerHTML += move_div;
-        } else {
-            if (isFirstMove) {
-                let blank_div = `<div id="-1" class="move-cell">...</div>`;
-                document.getElementById("black-moves").innerHTML += blank_div;
+        let url = "board/getCurrentState";
+        $.ajax({
+            url: url,
+        })
+        .done( (data) => {
+            
+            let state = data.state;
+            let branch = data.branch;
+            let notation = data.move;
+
+            if (state%2!=0) {
+                isFirstMove = false;
+                // insert move number
+                let move_number_div = `<div class="move-number-cell">${(state+1)/2}</div>`
+                document.getElementById("move-number").innerHTML += move_number_div;
+    
+                let move_div = `<div id="${makeId(branch, state)}" class="move-cell">${notation}</div>`;
+                document.getElementById("white-moves").innerHTML += move_div;
+            } else {
+                if (isFirstMove) {
+                    let blank_div = `<div id="-1" class="move-cell">...</div>`;
+                    document.getElementById("white-moves").innerHTML += blank_div;
+                }
+                isFirstMove = false;
+                let move_div = `<div id="${makeId(branch, state)}" class="move-cell">${notation}</div>`;
+                document.getElementById("black-moves").innerHTML += move_div;
             }
-            isFirstMove = false;
-            let move_div = `<div id="${id}" class="move-cell">${move}</div>`;
-            document.getElementById("black-moves").innerHTML += move_div;
-        }
+        });
     }
 
     var incrementClick = (function(){
