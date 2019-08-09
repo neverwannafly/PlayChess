@@ -15,16 +15,14 @@
 <div class="container">
     <div class="header">
     </div>
-    <center>
-        <div class="chessboard">
-            <span class="player">{{ player2 }}</span>
-            <table class="no-spacing" cellspacing="0">
-                <tbody>
-                    {{board|safe}}
-                </tbody>
-            </table>
-            <span class="player">{{ player1 }}</span>
-        </div>
-    </center>
+    <div class="chessboard">
+        <span class="player">{{ player2 }}</span>
+        <table class="no-spacing" cellspacing="0">
+            <tbody>
+                {{board|safe}}
+            </tbody>
+        </table>
+        <span class="player">{{ player1 }}</span>
+    </div>
 </div>
 {% endblock %}

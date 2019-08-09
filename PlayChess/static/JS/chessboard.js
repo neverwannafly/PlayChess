@@ -5,7 +5,10 @@
     let check_square = null;
     let configuration = true;
     let engineEval = false;
+    let storyMode = false;
+    let moves = 0;
     let strength = 1;
+    let isFirstMove = true;
 
     $(document).ready(function(){
         $(".board-flip").on('click', function(){
@@ -73,6 +76,17 @@
             });
         });
 
+        $(".board-story").on('click resize', function(event) {
+            if (event.type=="click") {
+                storyMode = !storyMode;
+            }
+            if (storyMode) {
+                engageStoryMode();
+            } else {
+                dismissStoryMode();
+            }
+        });
+
         $(".board-eval").on('click', function(){
             engineEval = !engineEval;
             if (engineEval) {
@@ -129,6 +143,14 @@
                             check_square = null;
                         }
                         make_move(data['changes']);
+                        moves += 1;
+                        let url = "board/getCurrentState";
+                        $.ajax({
+                            url: url,
+                        })
+                        .done( (data) => {
+                            addMoveToStoryBoard(data.move, data.id);
+                        });
                         if (engineEval) {
                             setEngineEvaluation();
                         }
@@ -142,7 +164,7 @@
                     $("#"+initial_pos).removeClass("active-cell");
 
                     // check for game status here
-                    const url = "board/getGameStatus";
+                    let url = "board/getGameStatus";
                     $.ajax({
                         url: url,
                     })
@@ -150,7 +172,8 @@
                         if (data["status"]==="finished") {
                             alert(`Game ended! Result: ${data["result"]}-${1-data["result"]}, Cause: ${data["cause"]}`);
                         }
-                    })
+                    });
+                    
                 });
             }
         });
@@ -210,9 +233,12 @@
             url: `board/getNextState/${default_branch}/${configuration}`,
         })
         .done(function(data) {
-            $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-            if (engineEval) {
-                setEngineEvaluation();
+            if (data.success) {
+                $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+                moves += 1;
+                if (engineEval) {
+                    setEngineEvaluation();
+                }
             }
         });
     }
@@ -225,9 +251,12 @@
             url: `board/getPrevState/${configuration}`,
         })
         .done(function(data) {
-            $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-            if (engineEval) {
-                setEngineEvaluation();
+            if (data.success) {
+                $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+                moves -= 1;
+                if (engineEval) {
+                    setEngineEvaluation();
+                }
             }
         });
     }
@@ -306,6 +335,62 @@
                 }
             });
         });
+    }
+
+    function engageStoryMode() {
+        let width = window.innerWidth;
+        if (width <= 531) {
+            $(".topbar").hide();
+        } else {
+            $(".sidebar").hide();
+        }
+        $("#find-game").hide();
+        $(".board-story").addClass("btn-success");
+        $(".board-story").removeClass("btn-dark");
+
+        $("#storyboard").css("display", "flex");
+    }
+
+    function dismissStoryMode() {
+        let width = window.innerWidth;
+        if (width <= 531) {
+            $(".topbar").show();
+        } else {
+            $(".sidebar").show();
+        }
+        $("#find-game").show();
+        $(".board-story").addClass("btn-dark");
+        $(".board-story").removeClass("btn-success");
+
+        $("#storyboard").hide();
+    }
+
+    function highlighMoveCell(id) {
+        $(`#${id}`).addClass('highligh-move-cell');
+    }
+
+    function removeMoveCellHighlight(id) {
+        $(`${id}`).removeClass('highlight-move-cell');
+    }
+
+    function addMoveToStoryBoard(move, id) {
+        if (moves%2!=0) {
+            isFirstMove = false;
+            // insert move number
+            let move_number_div = `<div class="move-number-cell">${(moves+1)/2}</div>`
+            document.getElementById("move-number").innerHTML += move_number_div;
+
+            let move_div = `<div id="${id}" class="move-cell">${move}</div>`;
+            document.getElementById("white-moves").innerHTML += move_div;
+        } else {
+            if (isFirstMove) {
+                let blank_div = `<div id="-1" class="move-cell">...</div>`;
+                document.getElementById("black-moves").innerHTML += blank_div;
+            }
+            isFirstMove = false;
+            let move_div = `<div id="${id}" class="move-cell">${move}</div>`;
+            document.getElementById("black-moves").innerHTML += move_div;
+        }
     }
 
     var incrementClick = (function(){

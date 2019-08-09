@@ -220,20 +220,24 @@ class StateManager:
         self._current_state = state
 
     def get_next_state(self, branch_id=0):
+        success = False
         if (self._current_state < len(self._states)-1):
             self._current_state += 1
+            success = True
         current_state = self.get_active_branch()
         if branch_id is not current_state.get_id():
             self._active_branch = self.get_smallest_branch()
-        return self.get_active_branch().get_fen()
+        return (self.get_active_branch().get_fen(), success)
 
     def get_prev_state(self):
+        success = False
         state = self.get_active_branch()
         prev_id = state.get_parent()
         if (self._current_state > 0):
             self._current_state -= 1
+            success = True
         self._active_branch = prev_id
-        return self.get_active_branch().get_fen()
+        return (self.get_active_branch().get_fen(), success)
 
     def parse_state_data(self, states_json):
         self._current_state = states_json.get("current_state", 0),
@@ -275,7 +279,7 @@ class StateManager:
                     "branch_name": state[key]._branch_name,
                     "fen": state[key].get_fen(),
                     "state": state[key]._state,
-                    "move": state[key].get_move()
+                    "move": state[key].get_move(),
                     "annotation": state[key]._annotation,
                     "parent": state[key].get_parent(),
                 }
@@ -881,12 +885,16 @@ class Chessboard:
     def get_next_state(self, branch_id=0):
         state = self._states.get_next_state(branch_id)
         self._states.print_state()
-        self.reset_chessboard(fen_notation=state)
+        if state[1]:
+            self.reset_chessboard(fen_notation=state[0])
+        return state[1]
 
     def get_prev_state(self):
         state = self._states.get_prev_state()
         self._states.print_state()
-        self.reset_chessboard(fen_notation=state)
+        if state[1]:
+            self.reset_chessboard(fen_notation=state[0])
+        return state[1]
 
     def make_move(self, initial_pos, final_pos, dest_piece=None):
 
@@ -896,6 +904,9 @@ class Chessboard:
         draw = self.is_draw()
         if draw[0]:
             raise Draw(draw[1])
+
+        piece_name = self.convert_to_index(initial_pos).piece.name
+        dest_piece = self.convert_to_index(final_pos).piece.name
 
         color = "white" if self._moves%2==0 else "black"
         if self.convert_to_index(initial_pos).piece.color!=color:
@@ -911,12 +922,10 @@ class Chessboard:
             self._enpassant_flag_life += 1
 
         # Parse move data and store it
-        piece_name = self.convert_to_index(initial_pos).piece.name
-        dest_square = self.convert_to_index(final_pos).piece
         move = ''
         if piece_name[0] != 'P':
-            move += piece_name
-        if dest_piece != None:
+            move += 'N' if piece_name=="Knight" else piece_name[0]
+        if dest_piece != "Blank":
             move += 'x'
         move += final_pos
         
