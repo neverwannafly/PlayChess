@@ -159,6 +159,7 @@ class StateManager:
         self._current_state = 0
         self._branch_count = 1
         self._active_branch = 0
+        self._title = ""
     
     def search_states(self, fen):
         branch_id = -1
@@ -226,6 +227,56 @@ class StateManager:
             self._current_state -= 1
         self._active_branch = prev_id
         return self.get_active_branch().get_fen()
+
+    def parse_state_data(self, states_json):
+        self._current_state = states_json.get("current_state", 0),
+        self._active_branch = states_json.get("active_branch", 0)
+        self._branch_count = states_json.get("branch_count", 1)
+        self._title = states_json.get("title", "")
+        states = states_json.get("states", [{
+            0: {
+                "id": 0,
+                "branch_name": "main",
+                "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                "state": 0,
+                "annotation": "",
+                "parent": 0,
+            }
+        }])
+        for state in states:
+            branches = {}
+            for key in state:
+                branches[key] = Branch(
+                    state[key].get_id(),
+                    state[key]._branch_name,
+                    state[key].get_fen(),
+                    state[key]._fen,
+                    state[key].annotation,
+                )
+            self._states.append(branches)
+
+    def get_states_as_json(self):
+        states = []
+        for state in self._states:
+            branches = {}
+            for key in state:
+                branches[key] = {
+                    "id": state[key].get_id(),
+                    "branch_name": state[key]._branch_name,
+                    "fen": state[key].get_fen(),
+                    "state": state[key]._state,
+                    "annotation": state[key]._annotation,
+                    "parent": state[key].get_parent(),
+                }
+            states.append(branches)
+
+        return {
+            "current_state": self._current_state,
+            "active_branch": self._active_branch,
+            "branch_count": self._branch_count,
+            "title": self._title,
+            "states": states,
+        }
 
     def print_state(self):
         print(self._current_state)
@@ -310,14 +361,10 @@ class Chessboard:
     @property
     def stalemate(self):
         color = "white" if self._moves%2==0 else "black"
-        print(color, self._moves)
         moves = []
         for piece in self._pieces[color]:
-            print(piece)
             for square in self._pieces[color][piece]:
-                print(square)
                 moves += self.generate_legal_moves(square)
-        print(moves)
         return len(moves)==0
 
     # Fifty move rule
