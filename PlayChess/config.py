@@ -15,8 +15,6 @@ USER_DICT = {}
 GAMES = {}
 ADMIN_DICT = {}
 
-IS_LOCAL = False
-
 # Keeps track of players finding matches.
 PLAYERS_QUEUE = game_queue.GameQueue()
 

@@ -79,24 +79,6 @@ if len(sys.argv) == 2:
                 TERMINAL_COLORS['CEND']
             )
             sys.exit(1)
-    elif sys.argv[1] == "local":
-        config.IS_LOCAL = True
-        try:
-            print(
-                TERMINAL_COLORS['CBOLD'] + 
-                TERMINAL_COLORS['CBLUE'] + 
-                "Running Local Instance" +
-                TERMINAL_COLORS['CEND'] + 
-                TERMINAL_COLORS['CEND']
-            )
-            subprocess.call(['./app.sh', 'dev'])
-        except KeyboardInterrupt:
-            print(
-                TERMINAL_COLORS['CRED'] + 
-                "Exiting Server..." + 
-                TERMINAL_COLORS['CEND']
-            )
-            sys.exit(1)
     elif sys.argv[1] == "commitall":
         try:
             print(
