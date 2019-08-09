@@ -532,6 +532,14 @@ class Chessboard:
         if hard:
             self._states.flush_states(fen_notation)
 
+    def load_states(self, state_json):
+        self._states.parse_state_data(state_json)
+        current_state = self._states.get_active_branch()
+        self.load_position(current_state.get_fen())
+
+    def get_states_as_json(self):
+        return self._states.get_states_as_json()
+
     def create_chessboard(self):
         chessboard = []
         for i in range(8):
