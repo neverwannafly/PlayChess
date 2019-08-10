@@ -897,6 +897,24 @@ class Chessboard:
             self.reset_chessboard(fen_notation=state[0])
         return state[1]
 
+    def get_move_english_notation(self, piece_name, dest_piece):
+        move = ''
+        if piece_name[0] != 'P':
+            move += 'N' if piece_name=="Knight" else piece_name[0]
+        if dest_piece != "Blank":
+            if piece_name[0] == 'P':
+                move += initial_pos[0]
+            move += 'x'
+        move += final_pos
+
+        if piece_name[0]=="K" and (initial_pos=="e1" or initial_pos=="e8") and (final_pos=="g1" or final_pos=="g8"):
+            move = "0-0"
+        
+        if piece_name[0]=="K" and (initial_pos=="e1" or initial_pos=="e8") and (final_pos=="c1" or final_pos=="c8"):
+            move = "0-0-0"
+
+        return move
+
     def make_move(self, initial_pos, final_pos, dest_piece=None):
 
         if self.is_checkmate:
@@ -923,12 +941,7 @@ class Chessboard:
             self._enpassant_flag_life += 1
 
         # Parse move data and store it
-        move = ''
-        if piece_name[0] != 'P':
-            move += 'N' if piece_name=="Knight" else piece_name[0]
-        if dest_piece != "Blank":
-            move += 'x'
-        move += final_pos
+        move = self.get_move_english_notation(piece_name, dest_piece)
         
         self._states.create_branch(self.fen_notation, move)
         self._states.print_state()

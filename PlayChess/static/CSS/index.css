@@ -141,6 +141,7 @@ canvas {
 
 .move-cell {
     padding: 4% 8% 4% 8%;
+    background-color: beige;
 }
 
 .move-number-cell {
@@ -186,7 +187,7 @@ canvas {
         width: 90%!important;
         margin-right: auto;
         margin-left: auto;
-        margin-top: 0%;
+        margin-top: -4%;
     }
     #save-story {
         margin-top: 2%;

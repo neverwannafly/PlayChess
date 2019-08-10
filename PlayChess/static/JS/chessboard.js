@@ -393,19 +393,31 @@
             if (state%2!=0) {
                 isFirstMove = false;
                 // insert move number
-                let move_number_div = `<div class="move-number-cell">${(state+1)/2}</div>`
+                let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
                 document.getElementById("move-number").innerHTML += move_number_div;
     
                 let move_div = `<div id="${makeId(branch, state)}" class="move-cell">${notation}</div>`;
                 document.getElementById("white-moves").innerHTML += move_div;
+
+                let black_div = `<div id="temp-div" class="move-cell">...</div>`;
+                document.getElementById("black-moves").innerHTML += black_div;
+
+                $(".story").scrollTop($(".story")[0].scrollHeight);
             } else {
                 if (isFirstMove) {
+                    let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
+                    document.getElementById("move-number").innerHTML += move_number_div;
+
                     let blank_div = `<div id="-1" class="move-cell">...</div>`;
                     document.getElementById("white-moves").innerHTML += blank_div;
+
+                    let move_div = `<div id="${makeId(branch, state)}" class="move-cell">${notation}</div>`;
+                    document.getElementById("black-moves").innerHTML += move_div;
+                } else {
+                    isFirstMove = false;
+                    $("#temp-div").prop('id', `${makeId(branch, state)}`);
+                    $(`#${makeId(branch, state)}`).text(`${notation}`)
                 }
-                isFirstMove = false;
-                let move_div = `<div id="${makeId(branch, state)}" class="move-cell">${notation}</div>`;
-                document.getElementById("black-moves").innerHTML += move_div;
             }
         });
     }
