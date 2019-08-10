@@ -36,6 +36,10 @@ def test_legal_pawn_moves(client):
     new_queen_move = client.get('/board/makemove/a8-c8')
     assert b'"success":true' in new_queen_move.data
 
+    client.get('/board/reset?fen=r5k1/Rb4pp/1p6/2pqr3/3p2Q1/1P3P2/1PPp2PP/2R3K1 b - - 0 23')
+    new_queen_move = client.get('/board/makemove/d2-c1-Q')
+    assert b'"success":true' in new_queen_move.data
+
 def test_castling(client):
     login(client)
     # Check short castle
@@ -121,7 +125,7 @@ def test_checkmate(client):
     assert b'"success":true' in black_move.data
     client.get("/board/makemove/d5-e6")
     res = client.get("/board/getGameStatus")
-    assert b'"result":1' in res.data
+    assert b'"result":"1"' in res.data
 
 def test_stalemate(client):
     login(client)

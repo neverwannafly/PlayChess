@@ -897,7 +897,7 @@ class Chessboard:
             self.reset_chessboard(fen_notation=state[0])
         return state[1]
 
-    def get_move_english_notation(self, piece_name, dest_piece):
+    def get_move_english_notation(self, piece_name, dest_piece, initial_pos, final_pos):
         move = ''
         if piece_name[0] != 'P':
             move += 'N' if piece_name=="Knight" else piece_name[0]
@@ -925,7 +925,7 @@ class Chessboard:
             raise Draw(draw[1])
 
         piece_name = self.convert_to_index(initial_pos).piece.name
-        dest_piece = self.convert_to_index(final_pos).piece.name
+        cap_piece = self.convert_to_index(final_pos).piece.name
 
         color = "white" if self._moves%2==0 else "black"
         if self.convert_to_index(initial_pos).piece.color!=color:
@@ -941,7 +941,7 @@ class Chessboard:
             self._enpassant_flag_life += 1
 
         # Parse move data and store it
-        move = self.get_move_english_notation(piece_name, dest_piece)
+        move = self.get_move_english_notation(piece_name, cap_piece, initial_pos, final_pos)
         
         self._states.create_branch(self.fen_notation, move)
         self._states.print_state()
@@ -949,6 +949,7 @@ class Chessboard:
         return self._changes
 
     def make_move_private(self, initial_pos, final_pos, dest_piece):
+        print(dest_piece)
         if initial_pos==final_pos:
             raise InvalidMoveError("Initial and Final Positions cannot be same", initial_pos, final_pos)
         if self.convert_to_index(initial_pos).piece.color=="none":
@@ -987,12 +988,14 @@ class Chessboard:
                     self.change_chessboard_state(initial_pos, final_pos)
             # Check for special pawn moves
             elif self.convert_to_index(initial_pos).piece.label.split('-')[1]=="p":
+                print("in")
                 self._half_moves = 0
                 ini_index = self.return_index_as_tuple(initial_pos)
                 fin_index = self.return_index_as_tuple(final_pos)
                 diagonal_flag = abs(ini_index[0]-fin_index[0]) & abs(ini_index[1]-fin_index[1])
                 # enpassant
                 if self._enpassant_target_square is not None and diagonal_flag:
+                    print("innnnnnnn")
                     # Black attacked pawn -> 6, white attacked pawn -> 3
                     if self._enpassant_target_square[1]=="6":
                         direction = -1
@@ -1001,11 +1004,12 @@ class Chessboard:
                     attacked_pawn = self._enpassant_target_square[0] + str(int(self._enpassant_target_square[1])+direction)
                     self.delete_piece(attacked_pawn)
                 # pawn promotion
-                elif final_pos[1]=="8" or final_pos=="1":
+                elif final_pos[1]=="8" or final_pos[1]=="1":
+                    print("winnnnnnnn")
                     if dest_piece is None:
                         raise InvalidMoveError("Please specify promotion")
                     color = "white" if self._moves%2==0 else "black"
-                    piece = config.CHESS_PIECE_CLASS[dest_piece][0]
+                    piece = config.CHESS_PIECE_CLASS.get(dest_piece, None)[0]
                     if dest_piece in "QRNB":
                         self.delete_piece(initial_pos)
                         self.convert_to_index(initial_pos).piece = self.create_piece(initial_pos, piece, color)
@@ -1115,12 +1119,12 @@ class Chessboard:
                 move_list.append(self._chessboard[tempX][tempY].html_id)
                 limit -= 1
             # check for captures at top-right and top-left
-            if X-1<=7 and Y+1<=7:
+            if X-1>=0 and Y+1<=7:
                 if self._enpassant_target_square==self._chessboard[X-1][Y+1].html_id:
                     move_list.append(self._enpassant_target_square)
                 elif self._chessboard[X-1][Y+1].piece.color == "black":
                     move_list.append(self._chessboard[X-1][Y+1].html_id)
-            if X-1<=7 and Y-1>=0:
+            if X-1>=0 and Y-1>=0:
                 if self._enpassant_target_square==self._chessboard[X-1][Y-1].html_id:
                     move_list.append(self._enpassant_target_square)
                 elif self._chessboard[X-1][Y-1].piece.color == "black":
@@ -1137,12 +1141,12 @@ class Chessboard:
                 move_list.append(self._chessboard[tempX][tempY].html_id)
                 limit -= 1
             # check for captures at bottom-right and bottom-left
-            if X+1>=0 and Y-1>=0:
+            if X+1<=7 and Y-1>=0:
                 if self._enpassant_target_square==self._chessboard[X+1][Y-1].html_id:
                     move_list.append(self._enpassant_target_square)
                 elif self._chessboard[X+1][Y-1].piece.color == "white":
                     move_list.append(self._chessboard[X+1][Y-1].html_id)
-            if X+1>=0 and Y+1<=7:
+            if X+1<=7 and Y+1<=7:
                 if self._enpassant_target_square==self._chessboard[X+1][Y+1].html_id:
                     move_list.append(self._enpassant_target_square)
                 elif self._chessboard[X+1][Y+1].piece.color == "white":
