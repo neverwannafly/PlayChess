@@ -13,6 +13,7 @@
     $(document).ready(function(){
 
         $(window).on('reload load onload', function(){
+            $(".main").hide();
             $(".main-page-loader").show();
             $("body").css("background-color", "black");
             loadSessionVars();
@@ -20,7 +21,7 @@
                 $(".main-page-loader").hide();
                 $(".main").css("display", "flex");
                 $("body").css("background-color", "rgb(29, 29, 29)");
-            }, 4000);
+            }, 5500);
         });
 
         $(".board-flip").on('click', function(){
