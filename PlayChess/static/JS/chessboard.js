@@ -8,6 +8,7 @@
     let storyMode = false;
     let strength = 1;
     let isFirstMove = true;
+    let prev_state = null;
 
     $(document).ready(function(){
         $(".board-flip").on('click', function(){
@@ -72,6 +73,7 @@
                 if (engineEval) {
                     setEngineEvaluation();
                 }
+                prev_state = null;
                 document.getElementById("move-number").innerHTML = "";
                 document.getElementById("white-moves").innerHTML = "";
                 document.getElementById("black-moves").innerHTML = "";
@@ -364,31 +366,36 @@
     }
 
     function extractFromId(id) {
+        let BRANCHING_LIMIT = 1000;
         return {
-            branch: id/1000,
-            state: id%1000,
+            branch: id/BRANCHING_LIMIT,
+            state: id%BRANCHING_LIMIT,
         }
     }
 
-    function highlighMoveCell(id) {
-        $(`#${id}`).addClass('highligh-move-cell');
+    function highlightMoveCell(id) {
+        $(`#${id}`).addClass('highlight-move-cell');
     }
 
     function removeMoveCellHighlight(id) {
-        $(`${id}`).removeClass('highlight-move-cell');
+        $(`#${id}`).removeClass('highlight-move-cell');
     }
 
     function addMoveToStoryBoard() {
-
         let url = "board/getCurrentState";
         $.ajax({
             url: url,
         })
         .done( (data) => {
-            
             let state = data.state;
             let branch = data.branch;
             let notation = data.move;
+
+            if (prev_state!==null) {
+                removeMoveCellHighlight(prev_state);
+            }
+
+            const id = makeId(branch, state);
 
             if (state%2!=0) {
                 isFirstMove = false;
@@ -396,8 +403,10 @@
                 let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
                 document.getElementById("move-number").innerHTML += move_number_div;
     
-                let move_div = `<div id="${makeId(branch, state)}" class="move-cell">${notation}</div>`;
+                let move_div = `<div id="${id}" class="move-cell">${notation}</div>`;
                 document.getElementById("white-moves").innerHTML += move_div;
+
+                highlightMoveCell(id);
 
                 let black_div = `<div id="temp-div" class="move-cell">...</div>`;
                 document.getElementById("black-moves").innerHTML += black_div;
@@ -411,14 +420,16 @@
                     let blank_div = `<div id="-1" class="move-cell">...</div>`;
                     document.getElementById("white-moves").innerHTML += blank_div;
 
-                    let move_div = `<div id="${makeId(branch, state)}" class="move-cell">${notation}</div>`;
+                    let move_div = `<div id="${id}" class="move-cell">${notation}</div>`;
                     document.getElementById("black-moves").innerHTML += move_div;
                 } else {
                     isFirstMove = false;
-                    $("#temp-div").prop('id', `${makeId(branch, state)}`);
-                    $(`#${makeId(branch, state)}`).text(`${notation}`)
+                    $("#temp-div").prop('id', `${id}`);
+                    $(`#${id}`).text(`${notation}`);
                 }
+                highlightMoveCell(id);
             }
+            prev_state = id;
         });
     }
 

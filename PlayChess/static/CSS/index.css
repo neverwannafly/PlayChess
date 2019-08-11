@@ -148,6 +148,10 @@ canvas {
     padding: 11% 10% 10% 26%;
 }
 
+.highlight-move-cell {
+    filter: brightness(71%);
+}
+
 .story-save {
     width: 100%;
 }
