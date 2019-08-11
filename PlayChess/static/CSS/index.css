@@ -142,6 +142,7 @@ canvas {
 .move-cell {
     padding: 4% 8% 4% 8%;
     background-color: beige;
+    cursor: grab;
 }
 
 .move-number-cell {
