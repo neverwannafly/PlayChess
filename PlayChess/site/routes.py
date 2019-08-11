@@ -270,6 +270,12 @@ def get_current_state():
     state = USER_DICT['current_user_' + str(session['username'])].chessboard.get_state()
     return jsonify(state)
 
+@mod.route('/board/getBranchState')
+@decorators.login_required
+def get_branch_state():
+    branch_state = USER_DICT['current_user_' + str(session['username'])].chessboard.get_branch_state()
+    return jsonify(branch_state)
+
 # Handle game loading here
 @mod.route('/find_game')
 @decorators.login_required
