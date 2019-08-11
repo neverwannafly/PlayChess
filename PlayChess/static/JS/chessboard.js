@@ -12,8 +12,9 @@
 
     $(document).ready(function(){
 
+        $(".main").hide();
+
         $(window).on('reload load onload', function(){
-            $(".main").hide();
             $(".main-page-loader").show();
             $("body").css("background-color", "black");
             loadSessionVars();
@@ -22,7 +23,7 @@
                 $(".main").show();
                 $("body").css("background-color", "rgb(29, 29, 29)");
             }, 4000);
-        })
+        });
 
         $(".board-flip").on('click', function(){
             configuration = (!configuration) | 0; // Method to typecast boolean into int
