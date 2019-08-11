@@ -166,6 +166,17 @@ class StateManager:
         self._active_branch = 0
         self._title = ""
     
+    def is_state_present(self, state):
+        return state>=0 and state<len(self._states)
+
+    def search_for_branch(self, branch_id):
+        index = -1
+        for i, val in enumerate(self._states):
+            if val.get(branch_id, False):
+                index = i
+                break
+        return index
+
     def search_states(self, fen):
         branch_id = -1
         for key in self._states[self._current_state]:
@@ -293,11 +304,38 @@ class StateManager:
             "states": states,
         }
 
+    def get_branch_state(self):
+        is_first = True
+        branch_state = []
+        for branch in self._states:
+            for key in branch:
+                if not is_first:
+                    branch_state.append((branch[key]._id, branch[key]._state, branch[key]._move))
+                is_first = False
+        return branch_state
+
     def print_state(self):
         print(self._current_state)
         for branch in self._states:
             for key in branch:
                 print(branch[key])
+
+    def delete_branch(self, branch_id):
+        branch_start_index = self.search_for_branch(branch_id)
+        if branch_start_index is not -1:
+            for i in range(branch_start_index, len(self._states)):
+                if self._states[i].get(branch_id, None) is not None:
+                    del self._states[i][branch_id]
+                else:
+                    break
+
+    def delete_state(self, branch_id, state_id):
+        if self.is_state_present(state_id):
+            for i in range(state_id, len(self._states)):
+                if self._states[i].get(branch_id, None) is not None:
+                    del self._states[i][branch_id]
+                else:
+                    break
 
     def flush_states(self, state=config.START_POSITION_NOTATION):
         del self._states[:]
@@ -554,6 +592,9 @@ class Chessboard:
 
     def get_states_as_json(self):
         return self._states.get_states_as_json()
+
+    def get_branch_state(self):
+        return self._states.get_branch_state()
 
     def create_chessboard(self):
         chessboard = []
