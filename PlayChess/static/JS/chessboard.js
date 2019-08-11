@@ -12,15 +12,13 @@
 
     $(document).ready(function(){
 
-        $(".main").hide();
-
         $(window).on('reload load onload', function(){
             $(".main-page-loader").show();
             $("body").css("background-color", "black");
             loadSessionVars();
             setTimeout(function(){
                 $(".main-page-loader").hide();
-                $(".main").show();
+                $(".main").css("display", "flex");
                 $("body").css("background-color", "rgb(29, 29, 29)");
             }, 4000);
         });
