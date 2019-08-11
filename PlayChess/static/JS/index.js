@@ -5,6 +5,7 @@
     $(document).ready(function() {
 
         $(".game-loader").hide();
+        $(".main-page-loader").hide();
 
         $("#find-game").click(function(){
             $(".main").hide();

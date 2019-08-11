@@ -13,7 +13,15 @@
     $(document).ready(function(){
 
         $(window).on('reload load onload', function(){
+            $(".main").hide();
+            $(".main-page-loader").show();
+            $("body").css("background-color", "black");
             loadSessionVars();
+            setTimeout(function(){
+                $(".main-page-loader").hide();
+                $(".main").show();
+                $("body").css("background-color", "rgb(29, 29, 29)");
+            }, 4000);
         })
 
         $(".board-flip").on('click', function(){
