@@ -2,24 +2,24 @@
 
 (function(){
 
-    let check_square = null;
+    let checkSquare = null;
     let configuration = true;
     let engineEval = false;
     let storyMode = false;
     let strength = 1;
     let isFirstMove = true;
-    let prev_state = null;
+    let states = [];
 
     $(document).ready(function(){
+
+        $(window).on('reload load onload', function(){
+            loadSessionVars();
+        })
+
         $(".board-flip").on('click', function(){
             configuration = (!configuration) | 0; // Method to typecast boolean into int
-            $.ajax({
-                type: "GET",
-                url: `board/flip/${configuration}`
-            })
-            .done(function(data){
-                $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-            });
+            saveConfiguration();
+            flipBoard();
         });
 
         $(".board-left").on('click', function(){
@@ -73,16 +73,14 @@
                 if (engineEval) {
                     setEngineEvaluation();
                 }
-                prev_state = null;
-                document.getElementById("move-number").innerHTML = "";
-                document.getElementById("white-moves").innerHTML = "";
-                document.getElementById("black-moves").innerHTML = "";
+                resetStates();
             });
         });
 
         $(".board-story").on('click resize', function(event) {
             if (event.type=="click") {
                 storyMode = !storyMode;
+                saveStoryMode();
             }
             if (storyMode) {
                 engageStoryMode();
@@ -93,6 +91,7 @@
 
         $(".board-eval").on('click', function(){
             engineEval = !engineEval;
+            saveEngineEval();
             if (engineEval) {
                 setEngineEvaluation();
                 $(".board-eval").addClass('btn-danger');
@@ -103,6 +102,12 @@
                 $(".board-eval").removeClass('btn-danger');
             }
         });
+
+        // Will complete later
+        $(".engine-str").on('click', function(){
+            strength += 1;
+            saveStrength();
+        })
 
         var initial_pos, final_pos;
         var squares = null;
@@ -142,9 +147,9 @@
                     console.log(data);
                     if (!data["gameFinished"] && data["success"]) {
                         console.log(data['changes'])
-                        if (check_square!==null) {
-                            $(check_square).removeClass("check");
-                            check_square = null;
+                        if (checkSquare!==null) {
+                            $(checkSquare).removeClass("check");
+                            checkSquare = null;
                         }
                         make_move(data['changes']);
                         addMoveToStoryBoard();
@@ -180,12 +185,23 @@
 
     });
 
+    function flipBoard() {
+        $.ajax({
+            type: "GET",
+            url: `board/flip/${configuration}`
+        })
+        .done(function(data){
+            $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+        });
+    }
+
     function make_move(changes) {
         for (var i=0; i<changes.length; i++) {
             const square_id = "#" + changes[i]['pos'];
             const square_class = changes[i]['class'];
             if (square_class.includes("check")) {
-                check_square = square_id;
+                checkSquare = square_id;
+                saveCheckSquare();
             }
             $(square_id).removeClass("white-K white-Q white-R white-B white-N white-p black-K black-Q black-R black-B black-N black-p none-_");
             $(square_id).addClass(square_class);
@@ -362,14 +378,14 @@
     }
 
     function makeId(branch, state) {
-        return 1000*state + branch;
+        return 1000*branch + state;
     }
 
     function extractFromId(id) {
         let BRANCHING_LIMIT = 1000;
         return {
-            branch: id/BRANCHING_LIMIT,
-            state: id%BRANCHING_LIMIT,
+            branch: id%BRANCHING_LIMIT,
+            state: id/BRANCHING_LIMIT,
         }
     }
 
@@ -379,6 +395,78 @@
 
     function removeMoveCellHighlight(id) {
         $(`#${id}`).removeClass('highlight-move-cell');
+    }
+
+    function saveStates() {
+        localStorage.states = JSON.stringify(states);
+    }
+
+    function loadStates() {
+        states = JSON.parse(localStorage.states || '[]');
+        if (states.length===0) {
+            $.ajax({
+                url: "board/getBranchState",
+            })
+            .done( (data) => {
+                states = data;
+                saveStates();
+                for (let i=0; i<states.length; i++) {
+                    createMoveDivs(states[i][0], states[i][1], states[i][2]);
+                }
+            });
+        } else {
+            for (let i=0; i<states.length; i++) {
+                createMoveDivs(states[i][0], states[i][1], states[i][2]);
+            }
+        }
+        console.log(states, states.length);
+    }
+
+    function resetStates() {
+        states = [];
+        saveStates();
+        document.getElementById("move-number").innerHTML = "";
+        document.getElementById("white-moves").innerHTML = "";
+        document.getElementById("black-moves").innerHTML = "";
+    }
+
+    function createMoveDivs(branch, state, notation) {
+        const id = makeId(branch, state);
+
+        removeMoveCellHighlight(id-1);
+
+        if (state%2!=0) {
+            isFirstMove = false;
+            // insert move number
+            let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
+            document.getElementById("move-number").innerHTML += move_number_div;
+
+            let move_div = `<div id="${id}" class="move-cell">${notation}</div>`;
+            document.getElementById("white-moves").innerHTML += move_div;
+
+            highlightMoveCell(id);
+
+            let black_div = `<div id="temp-div" class="move-cell">...</div>`;
+            document.getElementById("black-moves").innerHTML += black_div;
+
+            $(".story").scrollTop($(".story")[0].scrollHeight);
+        } else {
+            if (isFirstMove) {
+                let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
+                document.getElementById("move-number").innerHTML += move_number_div;
+
+                let blank_div = `<div id="-1" class="move-cell">...</div>`;
+                document.getElementById("white-moves").innerHTML += blank_div;
+
+                let move_div = `<div id="${id}" class="move-cell">${notation}</div>`;
+                document.getElementById("black-moves").innerHTML += move_div;
+            } else {
+                isFirstMove = false;
+                $("#temp-div").prop('id', `${id}`);
+                $(`#${id}`).text(`${notation}`);
+            }
+            highlightMoveCell(id);
+        }
     }
 
     function addMoveToStoryBoard() {
@@ -391,46 +479,71 @@
             let branch = data.branch;
             let notation = data.move;
 
-            if (prev_state!==null) {
-                removeMoveCellHighlight(prev_state);
-            }
-
-            const id = makeId(branch, state);
-
-            if (state%2!=0) {
-                isFirstMove = false;
-                // insert move number
-                let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
-                document.getElementById("move-number").innerHTML += move_number_div;
-    
-                let move_div = `<div id="${id}" class="move-cell">${notation}</div>`;
-                document.getElementById("white-moves").innerHTML += move_div;
-
-                highlightMoveCell(id);
-
-                let black_div = `<div id="temp-div" class="move-cell">...</div>`;
-                document.getElementById("black-moves").innerHTML += black_div;
-
-                $(".story").scrollTop($(".story")[0].scrollHeight);
-            } else {
-                if (isFirstMove) {
-                    let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
-                    document.getElementById("move-number").innerHTML += move_number_div;
-
-                    let blank_div = `<div id="-1" class="move-cell">...</div>`;
-                    document.getElementById("white-moves").innerHTML += blank_div;
-
-                    let move_div = `<div id="${id}" class="move-cell">${notation}</div>`;
-                    document.getElementById("black-moves").innerHTML += move_div;
-                } else {
-                    isFirstMove = false;
-                    $("#temp-div").prop('id', `${id}`);
-                    $(`#${id}`).text(`${notation}`);
-                }
-                highlightMoveCell(id);
-            }
-            prev_state = id;
+            createMoveDivs(branch, state, notation);
+            // Need to Fix this when adding sub vars
+            states.push([branch, state, notation]);
+            saveStates();
         });
+    }
+
+    function saveCheckSquare() {
+        localStorage.checkSquare = JSON.stringify(checkSquare);
+    }
+
+    function loadCheckSquare() {
+        checkSquare = JSON.parse(localStorage.checkSquare || null);
+    }
+
+    function saveConfiguration() {
+        localStorage.configuration = JSON.stringify(configuration);
+    }
+
+    function loadConfiguration() {
+        configuration = JSON.parse(localStorage.configuration || true);
+        if (!configuration) {
+            flipBoard();
+        }
+    }
+
+    function saveEngineEval() {
+        localStorage.engineEval = JSON.stringify(engineEval);
+    }
+
+    function loadEngineEval() {
+        engineEval = JSON.parse(localStorage.engineEval || false);
+        if (engineEval) {
+            setEngineEvaluation();
+            $(".board-eval").addClass('btn-danger');
+            $(".board-eval").removeClass('btn-dark');
+        }
+    }
+
+    function saveStoryMode() {
+        localStorage.storyMode = JSON.stringify(storyMode);
+    }
+
+    function loadStoryMode() {
+        storyMode = JSON.parse(localStorage.storyMode || false);
+        if (storyMode) {
+            engageStoryMode();
+        }
+    }
+
+    function saveStrength() {
+        localStorage.strength = JSON.stringify(strength);
+    }
+
+    function loadStrength() {
+        strength = JSON.parse(localStorage.strength || 1);
+    }
+
+    function loadSessionVars() {
+        loadCheckSquare();
+        loadConfiguration();
+        loadEngineEval();
+        loadStoryMode();
+        loadStrength();
+        loadStates();
     }
 
     var incrementClick = (function(){
