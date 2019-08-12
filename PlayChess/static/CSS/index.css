@@ -113,8 +113,9 @@ canvas {
 }
 
 .raised { 
-    border: 1px solid ;
-	box-shadow:  -1px 1px var(--border-shadow), -2px 2px var(--border-shadow), -3px 3px var(--border-shadow), -4px 4px var(--border-shadow), -5px 5px var(--border-shadow);
+    -webkit-box-shadow: 3px 3px 5px 6px rgba(0, 0, 0, 0.4);  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+    -moz-box-shadow:    3px 3px 5px 6px rgba(0, 0, 0, 0.4);  /* Firefox 3.5 - 3.6 */
+    box-shadow:         3px 3px 5px 6px rgba(0, 0, 0, 0.4);
 }
 
 .story {
