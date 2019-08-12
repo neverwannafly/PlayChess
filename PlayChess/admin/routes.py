@@ -10,7 +10,7 @@ from datetime import timedelta
 
 mod = Blueprint('admin', __name__, template_folder='admin_templates')
 
-from .admins import loadAdmin
+from ..utils import admin
 from .decorators import login_required, logout_required
 # Import global vars
 from ..config import ADMIN_DICT, EMAIL_PATTERN_COMPILED, USERNAME_REGEX, TERMINAL_COLORS
@@ -23,7 +23,7 @@ def make_session_permanent():
     session.permanent = True
     mod.permanent_session_lifetime = timedelta(days=5)
     if session.get('admin_username'):
-        ADMIN_DICT['current_admin_'+str(session['admin_username'])] = loadAdmin(db, session['admin_username'])
+        ADMIN_DICT['current_admin_'+str(session['admin_username'])] = admin.loadAdmin(db, session['admin_username'])
 
 @mod.before_request
 def init():
@@ -42,7 +42,7 @@ def init():
 @logout_required
 def login():
     if request.method=='POST':
-        current_admin = loadAdmin(db, request.form['admin_username'])
+        current_admin = admin.loadAdmin(db, request.form['admin_username'])
         if current_admin:
             if hash_pass.hashpw(request.form['admin_password'].encode('utf-8'), current_admin.admin_password)==current_admin.admin_password:
                 session['admin_username'] = current_admin.admin_username

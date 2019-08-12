@@ -1,6 +1,6 @@
 # Contains the classes for modeling of various user models.
 
-from ..utils import chessboard
+from .chessboard import Chessboard
 
 class User:
     # Initialises a user class with a database object!
@@ -27,7 +27,7 @@ class User:
             'url': None,
         }
         self.sessionid = None
-        self.chessboard = chessboard.Chessboard()
+        self.chessboard = Chessboard()
 
     ## Future update operations would be carried here if required!
     def updateUserRating(self, rating):

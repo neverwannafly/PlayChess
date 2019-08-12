@@ -10,7 +10,7 @@ import re as regex
 mod = Blueprint('site', __name__, template_folder='templates')
 
 # Relative imports
-from .users import addNewUserToDatabase, loadUser
+from ..utils import db_tools
 from ..utils import exceptions
 from ..utils import decorators
 from ..utils import game
@@ -32,7 +32,7 @@ def make_session_permanent():
 @mod.before_app_first_request
 def load_user_from_session():
     if session.get('username'):
-        USER_DICT['current_user_'+str(session['username'])] = loadUser(users, session['username'])[0]
+        USER_DICT['current_user_'+str(session['username'])] = db_tools.loadUser(users, session['username'])[0]
 
 @mod.before_request
 def init():
@@ -55,7 +55,7 @@ def init():
 @decorators.logout_required
 def login():
     if request.method=='POST':
-        user = loadUser(users, request.form['username'])
+        user = db_tools.loadUser(users, request.form['username'])
         if user[0] and user[1]==1:
             if hash_pass.hashpw(request.form['password'].encode('utf-8'), user[0].password)==user[0].password:
                 session['username'] = request.form['username']
@@ -101,7 +101,7 @@ def register():
                 random_image = "/static/Images/profile_pics/" + str(random.randint(1, 17)) + ".png"
                 hash_password = hash_pass.hashpw(request.form['password'].encode('utf-8'), hash_pass.gensalt())
                 # This method adds an user to database and sends a verification mail!
-                addNewUserToDatabase(
+                db_tools.addNewUserToDatabase(
                     request.form['username'], 
                     hash_password, 
                     request.form['email'], 
@@ -110,7 +110,7 @@ def register():
                     request.form['last_name'], 
                     users,
                 )
-                current_user = loadUser(users, request.form['username'])[0]
+                current_user = db_tools.loadUser(users, request.form['username'])[0]
                 #Send email verification
                 response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
                 if not response:
@@ -128,7 +128,7 @@ def register():
 @mod.route('/verify/<username>', methods=['GET', 'POST'])
 @decorators.logout_required
 def verify(username):
-    current_user = loadUser(users, username)[0]
+    current_user = db_tools.loadUser(users, username)[0]
     if request.method=='POST':
         if request.form['activation_link'].strip(' ')==current_user._id:
             session['username'] = current_user.username
@@ -142,7 +142,7 @@ def verify(username):
 @mod.route('/verify/<username>/retry', methods=["POST"])
 @decorators.logout_required
 def retry(username):
-    current_user = loadUser(users, username)[0]
+    current_user = db_tools.loadUser(users, username)[0]
     response = mailing.sendMail(current_user._id, current_user.email, current_user.username)
     return jsonify({'response': response})
 
