@@ -182,7 +182,8 @@ def resetBoard():
                 USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard(fen_notation=fen_notation, hard=True)
             except exceptions.InvalidFenNotation:
                 USER_DICT['current_user_' + str(session['username'])].chessboard.reset_chessboard(hard=True)
-    reset_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard()
+    configuration = request.args.get('configuration', 1)
+    reset_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard(configuration)
     return jsonify({"board": reset_board})
 
 @mod.route('/board/generateLegalMoves/<init_pos>')

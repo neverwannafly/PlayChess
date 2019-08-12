@@ -71,9 +71,10 @@
         $(".board-reset").on('click', function(){
             $.ajax({
                 type: "GET",
-                url: "board/reset",
+                url: `board/reset`,
                 data: {
                     "fen": "default",
+                    "configuration": configuration,
                 }
             })
             .done(function(data) {
@@ -196,10 +197,17 @@
     function flipBoard() {
         $.ajax({
             type: "GET",
-            url: `board/flip/${configuration}`
+            url: `board/flip/${configuration}`,
         })
         .done(function(data){
             $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+            if (!configuration) {
+                $(".board-flip").removeClass("btn-dark");
+                $(".board-flip").addClass("btn-info");
+            } else {
+                $(".board-flip").removeClass("btn-info");
+                $(".board-flip").addClass("btn-dark");
+            }
         });
     }
 
