@@ -7,6 +7,11 @@
         $(".game-loader").hide();
         $(".main-page-loader").hide();
 
+        // Enable all tooltips
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+
         $("#find-game").click(function(){
             $(".main").hide();
             $("body").css("background-color", "black");

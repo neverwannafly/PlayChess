@@ -418,24 +418,16 @@
     }
 
     function loadStates() {
-        states = JSON.parse(localStorage.states || '[]');
-        if (states.length===0) {
-            $.ajax({
-                url: "board/getBranchState",
-            })
-            .done( (data) => {
-                states = data;
-                saveStates();
-                for (let i=0; i<states.length; i++) {
-                    createMoveDivs(states[i][0], states[i][1], states[i][2]);
-                }
-            });
-        } else {
+        $.ajax({
+            url: "board/getBranchState",
+        })
+        .done( (data) => {
+            states = data;
+            saveStates();
             for (let i=0; i<states.length; i++) {
                 createMoveDivs(states[i][0], states[i][1], states[i][2]);
             }
-        }
-        console.log(states, states.length);
+        });
     }
 
     function resetStates() {

@@ -20,6 +20,16 @@
     <script src="{{ url_for('static', filename='JS/sidebar.js')}}"></script>
 {% endblock %}
 {% block body %}
+    <div class="main-page-loader">
+        <center>
+            <div class="container">
+                <img class="loading-image raised" src="{{ url_for('static', filename='Images/loading_gifs/main-page-loader.gif') }}" alt="loading-page">
+            </div>
+            <div class="heading">
+                <h1><a href="#">LOADING PLAYCHESS</a></h1>
+            </div>
+        </center>
+    </div>
     <div class="main">
         <div class="topbar">
             <nav class="navbar navbar-dark bg-dark">
@@ -300,13 +310,13 @@
                 </table>
             </div>
             <div class="interactive-buttons">
-                <button  data-toggle="tooltip" title="Back" class="raised board-left btn btn-dark"><i class="fas fa-arrow-left"></i></button>
-                <button class="raised board-right btn btn-dark"><i class="fas fa-arrow-right" data-toggle="tooltip" title="Next"></i></button>
-                <button class="raised board-flip btn btn-dark" data-toggle="tooltip" title="Flip"><i class="fas fa-random"></i></button>
-                <button class="raised board-fen btn btn-dark" data-toggle="tooltip" title="Fen"><i class="fas fa-chess-board" ></i></button>
-                <button class="raised board-reset btn btn-dark" data-toggle="tooltip" title="Reset"><i class="fas fa-redo-alt"></i></button>
-                <button class="raised board-story btn btn-dark" data-toggle="tooltip" title="Story"><i class="fas fa-book"></i></button>
-                <button class="raised board-eval btn btn-dark" data-toggle="tooltip" title="Engine"><i class="fab fa-superpowers"></i></button>
+                <button  data-toggle="tooltip" title="Back" class="raised board-left btn btn-dark" data-placement="bottom"><i class="fas fa-arrow-left"></i></button>
+                <button data-toggle="tooltip" title="Next" class="raised board-right btn btn-dark" data-placement="bottom"><i class="fas fa-arrow-right" ></i></button>
+                <button class="raised board-flip btn btn-dark" data-toggle="tooltip" title="Flip" data-placement="bottom"><i class="fas fa-random"></i></button>
+                <button class="raised board-fen btn btn-dark" data-toggle="tooltip" title="Fen" data-placement="bottom"><i class="fas fa-chess-board" ></i></button>
+                <button class="raised board-reset btn btn-dark" data-toggle="tooltip" title="Reset" data-placement="bottom"><i class="fas fa-redo-alt"></i></button>
+                <button class="raised board-story btn btn-dark" data-toggle="tooltip" title="Story Mode" data-placement="bottom"><i class="fas fa-book"></i></button>
+                <button class="raised board-eval btn btn-dark" data-toggle="tooltip" title="Engine" data-placement="bottom"><i class="fab fa-superpowers"></i></button>
             </div>
             <div class="game-finder">
                 <button id="find-game" class="raised btn btn-primary btn-block">Find Game</button>
@@ -330,16 +340,6 @@
             </div>
             <div class="heading">
                 <h1><a href="#">FINDING GAME</a></h1>
-            </div>
-        </center>
-    </div>
-    <div class="main-page-loader">
-        <center>
-            <div class="container">
-                <img class="loading-image raised" src="{{ url_for('static', filename='Images/loading_gifs/main-page-loader.gif') }}" alt="loading-page">
-            </div>
-            <div class="heading">
-                <h1><a href="#">LOADING PLAYCHESS</a></h1>
             </div>
         </center>
     </div>
