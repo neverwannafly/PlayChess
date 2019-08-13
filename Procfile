@@ -1,1 +1,1 @@
-web: web: newrelic-admin run-program gunicorn --threads 12 -w 1 run:app
+web: newrelic-admin run-program gunicorn --threads 12 -w 1 run:app
