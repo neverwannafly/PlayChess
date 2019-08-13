@@ -269,14 +269,14 @@ class StateManager:
         for state in states:
             branches = {}
             for key in state:
-                branches[key] = Branch(
-                    state[key].get_id(),
-                    state[key]._branch_name,
-                    state[key].get_fen(),
-                    state[key]._state,
-                    state[key].move,
-                    parent=state[key].parent,
-                    annotation=state[key].annotation,
+                branches[int(key)] = Branch(
+                    state[int(key)].get_id(),
+                    state[int(key)]._branch_name,
+                    state[int(key)].get_fen(),
+                    state[int(key)]._state,
+                    state[int(key)].move,
+                    parent=state[int(key)].parent,
+                    annotation=state[int(key)].annotation,
                 )
             self._states.append(branches)
 
@@ -285,7 +285,7 @@ class StateManager:
         for state in self._states:
             branches = {}
             for key in state:
-                branches[key] = {
+                branches[str(key)] = {
                     "id": state[key].get_id(),
                     "branch_name": state[key]._branch_name,
                     "fen": state[key].get_fen(),
@@ -926,14 +926,14 @@ class Chessboard:
 
     def get_next_state(self, branch_id=0):
         state = self._states.get_next_state(branch_id)
-        self._states.print_state()
+        # self._states.print_state()
         if state[1]:
             self.reset_chessboard(fen_notation=state[0])
         return state[1]
 
     def get_prev_state(self):
         state = self._states.get_prev_state()
-        self._states.print_state()
+        # self._states.print_state()
         if state[1]:
             self.reset_chessboard(fen_notation=state[0])
         return state[1]
@@ -985,12 +985,11 @@ class Chessboard:
         move = self.get_move_english_notation(piece_name, cap_piece, initial_pos, final_pos)
         
         self._states.create_branch(self.fen_notation, move)
-        self._states.print_state()
+        # self._states.print_state()
 
         return self._changes
 
     def make_move_private(self, initial_pos, final_pos, dest_piece):
-        print(dest_piece)
         if initial_pos==final_pos:
             raise InvalidMoveError("Initial and Final Positions cannot be same", initial_pos, final_pos)
         if self.convert_to_index(initial_pos).piece.color=="none":
@@ -1029,14 +1028,12 @@ class Chessboard:
                     self.change_chessboard_state(initial_pos, final_pos)
             # Check for special pawn moves
             elif self.convert_to_index(initial_pos).piece.label.split('-')[1]=="p":
-                print("in")
                 self._half_moves = 0
                 ini_index = self.return_index_as_tuple(initial_pos)
                 fin_index = self.return_index_as_tuple(final_pos)
                 diagonal_flag = abs(ini_index[0]-fin_index[0]) & abs(ini_index[1]-fin_index[1])
                 # enpassant
                 if self._enpassant_target_square is not None and diagonal_flag:
-                    print("innnnnnnn")
                     # Black attacked pawn -> 6, white attacked pawn -> 3
                     if self._enpassant_target_square[1]=="6":
                         direction = -1
@@ -1046,7 +1043,6 @@ class Chessboard:
                     self.delete_piece(attacked_pawn)
                 # pawn promotion
                 elif final_pos[1]=="8" or final_pos[1]=="1":
-                    print("winnnnnnnn")
                     if dest_piece is None:
                         raise InvalidMoveError("Please specify promotion")
                     color = "white" if self._moves%2==0 else "black"
