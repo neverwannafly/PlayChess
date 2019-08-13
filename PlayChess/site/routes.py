@@ -11,6 +11,7 @@ mod = Blueprint('site', __name__, template_folder='templates')
 
 # Relative imports
 from ..utils import site_user
+from ..utils import story
 from ..utils import exceptions
 from ..utils import decorators
 from ..utils import game
@@ -35,19 +36,8 @@ def load_user_from_session():
         USER_DICT['current_user_'+str(session['username'])] = site_user.loadUser(users, session['username'])[0]
 
 @mod.before_request
-def init():
-    print(
-        TERMINAL_COLORS['CYELLOW'] + 
-        TERMINAL_COLORS['CBOLD'], end=""
-    )
-    print("Current Users : ", end="")
-    print(USER_DICT)
-    print("Current Games : ", end="")
-    print(GAMES)
-    print(
-        TERMINAL_COLORS['CEND'] + 
-        TERMINAL_COLORS['CEND'], end=""
-    )
+def show_stats():
+    pass
 
 ### View functions start ###
 
@@ -163,7 +153,6 @@ def index():
 @mod.route('/board/flip/<configuration>')
 @decorators.login_required
 def flipBoard(configuration):
-    print(configuration)
     flipped_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard(configuration)
     return jsonify({"board": flipped_board})
 
@@ -276,6 +265,20 @@ def get_current_state():
 def get_branch_state():
     branch_state = USER_DICT['current_user_' + str(session['username'])].chessboard.get_branch_state()
     return jsonify(branch_state)
+
+@mod.route('/board/save')
+@decorators.login_required
+def save_story():
+    story.addStory(db, session['username'], USER_DICT['current_user_' + str(session['username'])].chessboard)
+    return jsonify({'success': True})
+
+@mod.route('/board/load')
+@decorators.login_required
+def load_story():
+    story_id = users.find_one({'username': session['username']})['story'][0]
+    stry = story.loadStory(db, story_id)
+    print(stry)
+    return jsonify({'success': True})
 
 # Handle game loading here
 @mod.route('/find_game')
