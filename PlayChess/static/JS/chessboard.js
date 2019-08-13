@@ -221,12 +221,50 @@
         });
     }
 
-    function copyToClipboard(text) {
-        let temp = $("<input>");
-        $("body").append(temp);
-        temp.val(`${text}`).select();
-        document.execCommand("copy");
-        temp.remove();
+    function copyToClipboard(string) {
+
+        // https://stackoverflow.com/questions/34045777/copy-to-clipboard-using-javascript-in-ios
+
+        let textarea;
+        let result;
+
+        try {
+            textarea = document.createElement('textarea');
+            textarea.setAttribute('readonly', true);
+            textarea.setAttribute('contenteditable', true);
+            textarea.style.position = 'fixed'; // prevent scroll from jumping to the bottom when focus is set.
+            textarea.value = string;
+            document.body.appendChild(textarea);
+
+            textarea.focus();
+            textarea.select();
+
+            const range = document.createRange();
+            range.selectNodeContents(textarea);
+
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+
+            textarea.setSelectionRange(0, textarea.value.length);
+            result = document.execCommand('copy');
+        } catch (err) {
+            console.error(err);
+            result = null;
+        } finally {
+            document.body.removeChild(textarea);
+        }
+
+        // manual copy fallback using prompt
+        if (!result) {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const copyHotkey = isMac ? '⌘C' : 'CTRL+C';
+            result = prompt(`Press ${copyHotkey}`, string); // eslint-disable-line no-alert
+            if (!result) {
+                return false;
+            }
+        }
+        return true;
     }
 
     function createAlert(text, type=0) {
@@ -342,7 +380,6 @@
     }
 
     function setEngineEvaluation() {
-        createAlert("Engine is unavailable!", 4);
         $.ajax({
             type: "GET",
             url: "board/generateFenNotation",
