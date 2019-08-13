@@ -65,6 +65,8 @@
             })
             .done(function(data){
                 console.log(data.notation);
+                copyToClipboard(data.notation);
+                createAlert("FEN Notation copied to clipboard", 1);
             });
         })
 
@@ -219,6 +221,20 @@
         });
     }
 
+    function copyToClipboard(text) {
+        let temp = $("<input>");
+        $("body").append(temp);
+        temp.val(`${text}`).select();
+        document.execCommand("copy");
+        temp.remove();
+    }
+
+    function createAlert(text, type=0) {
+        let types = {0: 'danger', 1: 'success', 2: 'primary', 3: 'warning', 4: 'info'};
+        $("#alerts").html(`<div class="alert alert-${types[type]} alert-dismissible fade show">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>${text}</div>`);
+    }
+
     function make_move(changes) {
         for (var i=0; i<changes.length; i++) {
             const square_id = "#" + changes[i]['pos'];
@@ -326,6 +342,7 @@
     }
 
     function setEngineEvaluation() {
+        createAlert("Engine is unavailable!", 4);
         $.ajax({
             type: "GET",
             url: "board/generateFenNotation",

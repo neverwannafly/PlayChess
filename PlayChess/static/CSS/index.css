@@ -37,6 +37,13 @@ a:active {
     align-items: center;
 }
 
+#alerts {
+    width: 100%;
+    align-items: center;
+    align-items: center;
+    display: block;
+}
+
 #white-eval {
     color: black;
 }
