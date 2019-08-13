@@ -21,7 +21,7 @@
                 $(".main-page-loader").hide();
                 $(".main").css("display", "flex");
                 $("body").css("background-color", "rgb(29, 29, 29)");
-            }, 5500);
+            }, 1500);
         });
 
         $(".board-flip").on('click', function(){
@@ -110,6 +110,14 @@
                 $(".board-eval").addClass('btn-dark');
                 $(".board-eval").removeClass('btn-danger');
             }
+        });
+
+        $("#save-story").on('click', function(){
+            // saveStory();
+        });
+
+        $("#load-story").on('click', function(){
+            // loadStory();
         });
 
         // Will complete later
@@ -491,6 +499,24 @@
             // Need to Fix this when adding sub vars
             states.push([branch, state, notation]);
             saveStates();
+        });
+    }
+
+    function saveStory() {
+        $.ajax({
+            url: "board/save",
+        })
+        .done(function(data) {
+            console.log("saved!");
+        });
+    }
+
+    function loadStory() {
+        $.ajax({
+            url: "board/load",
+        })
+        .done(function(data) {
+            console.log("loading story");
         });
     }
 
