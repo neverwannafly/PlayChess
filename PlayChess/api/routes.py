@@ -19,7 +19,7 @@ def getEngineEval():
 
     # Temporarily stop Engine Eval
     return jsonify({
-        "evaluation": 0,
+        "evaluation": "=0",
     })
 
     # if token.validate_token(request.args.get('token', None)):
