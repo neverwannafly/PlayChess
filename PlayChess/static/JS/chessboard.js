@@ -8,7 +8,7 @@
     let storyMode = false;
     let strength = 1;
     let isFirstMove = true;
-    let states = [];
+    let activeMoveCell = null;
 
     $(document).ready(function(){
 
@@ -456,27 +456,30 @@
     }
 
     function makeId(branch, state) {
-        return 1000*branch + state;
+        return branch + 1000*state;
     }
 
     function extractFromId(id) {
         let BRANCHING_LIMIT = 1000;
         return {
-            branch: id%BRANCHING_LIMIT,
-            state: id/BRANCHING_LIMIT,
+            branch: id/BRANCHING_LIMIT,
+            state: id%BRANCHING_LIMIT,
         }
+    }
+
+    function getParent(branch, state) {
+        return branch + 1000 * (state-1);
     }
 
     function highlightMoveCell(id) {
         $(`#${id}`).addClass('highlight-move-cell');
+        activeMoveCell = id;
     }
 
-    function removeMoveCellHighlight(id) {
-        $(`#${id}`).removeClass('highlight-move-cell');
-    }
-
-    function saveStates() {
-        localStorage.states = JSON.stringify(states);
+    function removeMoveCellHighlight() {
+        if (activeMoveCell != null) {
+            $(`#${activeMoveCell}`).removeClass('highlight-move-cell');
+        }
     }
 
     function loadStates() {
@@ -484,8 +487,7 @@
             url: "board/getBranchState",
         })
         .done( (data) => {
-            states = data;
-            saveStates();
+            let states = data;
             for (let i=0; i<states.length; i++) {
                 createMoveDivs(states[i][0], states[i][1], states[i][2]);
             }
@@ -493,8 +495,6 @@
     }
 
     function resetStates() {
-        states = [];
-        saveStates();
         document.getElementById("move-number").innerHTML = "";
         document.getElementById("white-moves").innerHTML = "";
         document.getElementById("black-moves").innerHTML = "";
@@ -503,7 +503,7 @@
     function createMoveDivs(branch, state, notation) {
         const id = makeId(branch, state);
 
-        removeMoveCellHighlight(id-1);
+        removeMoveCellHighlight();
 
         if (state%2!=0) {
             isFirstMove = false;
@@ -539,20 +539,21 @@
         }
     }
 
+    function resolveBranchConflict(branch, state) {
+        
+    }
+
     function addMoveToStoryBoard() {
         let url = "board/getCurrentState";
         $.ajax({
             url: url,
         })
         .done( (data) => {
-            let state = data.state;
-            let branch = data.branch;
-            let notation = data.move;
+            const { state, branch, notation } = data;
 
             createMoveDivs(branch, state, notation);
-            // Need to Fix this when adding sub vars
-            states.push([branch, state, notation]);
-            saveStates();
+            resolveBranchConflict(branch, state);
+            
         });
     }
 
