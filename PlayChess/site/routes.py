@@ -236,6 +236,18 @@ def get_game_status():
         'cause': status[1],
     })
 
+@mod.route('/board/doesStateExist/<branchId>/<state>')
+@decorators.login_required
+def does_state_exist(branchId, state):
+    success = USER_DICT['current_user_' + str(session['username'])].chessboard.does_state_exist(branch, state)
+    return jsonify({"success": success})
+
+@mod.route('/board/checkParent')
+@decorators.login_required
+def check_parent():
+    success = USER_DICT['current_user_' + str(session['username'])].chessboard.check_parent()
+    return jsonify({"success": success})
+
 @mod.route('/board/getNextState/<branchId>/<configuration>')
 @decorators.login_required
 def get_next_state(branchId, configuration):

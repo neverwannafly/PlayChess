@@ -605,6 +605,13 @@ class Chessboard:
     def get_branch_state(self):
         return self._states.get_branch_state()
 
+    def does_state_exist(self, branch, state):
+        return self._states.is_state_present(state) and self._states.search_for_branch(branch)
+
+    def check_parent(self):
+        curr_state = self._states.get_active_branch()
+        return (curr_state._id == curr_state._parent)
+
     def create_chessboard(self):
         chessboard = []
         for i in range(8):

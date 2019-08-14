@@ -329,7 +329,7 @@
         .done(function(data) {
             if (data.success) {
                 removeMoveCellHighlight();
-                highlightMoveCell(data.state.branch, data.state.state);
+                highlightMoveCell(makeId(data.state.branch, data.state.state));
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
                 if (engineEval) {
                     setEngineEvaluation();
@@ -348,7 +348,7 @@
         .done(function(data) {
             if (data.success) {
                 removeMoveCellHighlight();
-                highlightMoveCell(data.state.branch, data.state.state);
+                highlightMoveCell(makeId(data.state.branch, data.state.state));
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
                 if (engineEval) {
                     setEngineEvaluation();
@@ -468,13 +468,23 @@
     function extractFromId(id) {
         let BRANCHING_LIMIT = 1000;
         return {
-            branch: id/BRANCHING_LIMIT,
-            state: id%BRANCHING_LIMIT,
+            branch: id % BRANCHING_LIMIT,
+            state: id / BRANCHING_LIMIT,
         }
     }
 
-    function getParent(branch, state) {
-        return branch + 1000 * (state-1);
+    function getIndex(id) {
+        const state = extractFromId(id).state;
+        if (id===null) {
+            return 0;
+        }
+        let index;
+        if (state % 2 != 0) {
+            index = $("#white-moves").children().index($(`#${id}`));
+        } else {
+            index = $("#black-moves").children().index($(`#${id}`))
+        }
+        return Math.max(0, index);
     }
 
     function highlightMoveCell(id) {
@@ -495,7 +505,7 @@
         .done( (data) => {
             let states = data;
             for (let i=0; i<states.length; i++) {
-                createMoveDivs(states[i][0], states[i][1], states[i][2]);
+                resolveBranchConflict(states[i][0], states[i][1], states[i][2], createMoveDivs);
             }
         });
     }
@@ -506,48 +516,63 @@
         document.getElementById("black-moves").innerHTML = "";
     }
 
+    function insertAtIndex(el, itm, i) {
+        if(i === 0) {
+            $(`#${el}`).append(`${itm}`);        
+            return;
+        }
+        $(`#${el} > div`).eq(i).after(`${itm}`);
+    }
+
     function createMoveDivs(branch, state, notation) {
         const id = makeId(branch, state);
-
-        removeMoveCellHighlight();
+        const index = getIndex(activeMoveCell);
 
         if (state%2!=0) {
             isFirstMove = false;
             // insert move number
             let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
-            document.getElementById("move-number").innerHTML += move_number_div;
+            insertAtIndex(`move-number`, move_number_div, index);
 
             let move_div = `<div id="${id}" class="move-cell">${notation}</div>`;
-            document.getElementById("white-moves").innerHTML += move_div;
-
-            highlightMoveCell(id);
+            insertAtIndex(`white-moves`, move_div, index);
 
             let black_div = `<div id="temp-div" class="move-cell">...</div>`;
-            document.getElementById("black-moves").innerHTML += black_div;
+            insertAtIndex(`black-moves`, black_div, index);
 
             $(".story").scrollTop($(".story")[0].scrollHeight);
         } else {
             if (isFirstMove) {
                 let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
-                document.getElementById("move-number").innerHTML += move_number_div;
+                insertAtIndex(`move-number`, move_number_div, index);
 
                 let blank_div = `<div id="-1" class="move-cell">...</div>`;
-                document.getElementById("white-moves").innerHTML += blank_div;
+                insertAtIndex(`white-moves`, blank_div, index);
 
                 let move_div = `<div id="${id}" class="move-cell">${notation}</div>`;
-                document.getElementById("black-moves").innerHTML += move_div;
+                insertAtIndex(`black-moves`, move_div, index);
             } else {
                 isFirstMove = false;
                 $("#temp-div").prop('id', `${id}`);
                 $(`#${id}`).text(`${notation}`);
             }
-            highlightMoveCell(id);
         }
+        removeMoveCellHighlight();
+        highlightMoveCell(id);
     }
 
-    function resolveBranchConflict(branch, state) {
+    function resolveBranchConflict(branch, state, move, done) {
         // Check if conflict exists
-        const parent = getParent(branch, state);
+        $.ajax({
+            url: `board/checkParent`,
+        })
+        .done(function(data){
+            console.log(data);
+            if (!data.success) {
+                isFirstMove = true;
+            }
+            done(branch, state, move);
+        });
     }
 
     function addMoveToStoryBoard() {
@@ -557,10 +582,7 @@
         })
         .done( (data) => {
             const { branch, state, move, annotation } = data;
-
-            createMoveDivs(branch, state, move);
-            resolveBranchConflict(branch, state);
-            
+            resolveBranchConflict(branch, state, move, createMoveDivs);
         });
     }
 
