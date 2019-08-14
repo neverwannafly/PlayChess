@@ -242,7 +242,8 @@ def get_next_state(branchId, configuration):
     success = USER_DICT['current_user_' + str(session['username'])].chessboard.get_next_state(int(branchId))
     if success:
         new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard(configuration)
-        return jsonify({"success": True, "board": new_board})
+        state = USER_DICT['current_user_' + str(session['username'])].chessboard.get_state()
+        return jsonify({"success": True, "board": new_board, "state": state})
     return jsonify({"success": False})
 
 @mod.route('/board/getPrevState/<configuration>')
@@ -251,7 +252,8 @@ def get_prev_state(configuration):
     success = USER_DICT['current_user_' + str(session['username'])].chessboard.get_prev_state()
     if success:
         new_board = USER_DICT['current_user_' + str(session['username'])].chessboard.draw_chessboard(configuration)
-        return jsonify({"success": True, "board": new_board})
+        state = USER_DICT['current_user_' + str(session['username'])].chessboard.get_state()
+        return jsonify({"success": True, "board": new_board, "state": state})
     return jsonify({"success": False})
 
 @mod.route('/board/getCurrentState')
