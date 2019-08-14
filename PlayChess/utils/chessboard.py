@@ -353,6 +353,9 @@ class Chessboard:
         # An array holding recent changes in board position
         self._changes = []
 
+        self._in_check = {0: False, 1: False}
+        self._game_status = None
+
         # Objects holding current and all states of the chessboard
         self._states = StateManager()
 
@@ -443,13 +446,19 @@ class Chessboard:
             return [True, "insufficient material", "0.5"]
         return [False]
 
-    def fetch_game_status(self):
+    def _fetch_game_status(self):
         status = [self.is_checkmate]
         if not status[0]:
             status = self.is_draw()
         else:
             status += ["checkmate", "0" if self._moves%2==0 else "1"]
-        return status
+        self._game_status = status
+
+    def fetch_game_status(self):
+        return self._game_status
+
+    def in_check(color):
+        return self._in_check[color]
 
     @property
     def fen_notation(self):
@@ -939,7 +948,7 @@ class Chessboard:
             self.reset_chessboard(fen_notation=state[0])
         return state[1]
 
-    def get_move_english_notation(self, piece_name, dest_piece, initial_pos, final_pos):
+    def get_move_english_notation(self, piece_name, dest_piece, initial_pos, final_pos, queening=None):
         move = ''
         if piece_name[0] != 'P':
             move += 'N' if piece_name=="Knight" else piece_name[0]
@@ -954,6 +963,16 @@ class Chessboard:
         
         if piece_name[0]=="K" and (initial_pos=="e1" or initial_pos=="e8") and (final_pos=="c1" or final_pos=="c8"):
             move = "0-0-0"
+
+        # If Queening is done
+        if queening is not None:
+            move += "=" + queening
+
+        # Add # if it's checkmate
+        if self._game_status[0] and self._game_status[1]=="checkmate":
+            move += "#"
+        elif self._in_check[self._moves%2]:
+            move += "+"
 
         return move
 
@@ -982,8 +1001,10 @@ class Chessboard:
         elif self._enpassant_target_square:
             self._enpassant_flag_life += 1
 
+        self._fetch_game_status()
+
         # Parse move data and store it
-        move = self.get_move_english_notation(piece_name, cap_piece, initial_pos, final_pos)
+        move = self.get_move_english_notation(piece_name, cap_piece, initial_pos, final_pos, dest_piece)
         
         self._states.create_branch(self.fen_notation, move)
         # self._states.print_state()
@@ -1062,14 +1083,16 @@ class Chessboard:
         white_king = self._pieces["white"]["King"][0]
         if (self.is_square_under_attack(white_king)):
             self._changes.append({'pos': white_king, 'class': self.convert_to_index(white_king).html_class + ' check'})
+            self._in_check[0] = True
+        else:
+            self._in_check[0] = False
 
         black_king = self._pieces["black"]["King"][0]
         if (self.is_square_under_attack(black_king)):
             self._changes.append({'pos': black_king, 'class': self.convert_to_index(black_king).html_class + ' check'})
-
-        if (self.is_checkmate):
-            color = 'white' if self._moves%2==0 else 'black'
-            self._changes.append({'mate': color})
+            self._in_check[1] = True
+        else:
+            self._in_check[1] = False
 
     def move_top(self, initial_pos, limit=10):
         def cond(X, Y, limit):
