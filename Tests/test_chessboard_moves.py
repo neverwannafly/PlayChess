@@ -40,6 +40,10 @@ def test_legal_pawn_moves(client):
     new_queen_move = client.get('/board/makemove/d2-c1-Q')
     assert b'"success":true' in new_queen_move.data
 
+    client.get('/board/reset?fen=5b1r/1pQbkBpp/5q1n/4N3/p2n4/2N5/PPPP1PPP/R1BQK2R w KQ - 3 12')
+    new_queen_move = client.get('/board/makemove/c7-d8')
+    assert b'"success":true' in new_queen_move.data
+
 def test_castling(client):
     login(client)
     # Check short castle
