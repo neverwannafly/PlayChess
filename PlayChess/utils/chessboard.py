@@ -919,6 +919,7 @@ class Chessboard:
             "branch": state.get_id(),
             "state": state._state,
             "move": state.get_move(),
+            "notation": state._annotation,
         }
 
     def set_state(self, branch_id, current_state):
