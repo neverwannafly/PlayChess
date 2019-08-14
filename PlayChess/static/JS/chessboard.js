@@ -169,6 +169,7 @@
                         if (checkSquare!==null) {
                             $(checkSquare).removeClass("check");
                             checkSquare = null;
+                            saveCheckSquare();
                         }
                         make_move(data['changes']);
                         addMoveToStoryBoard();
@@ -218,6 +219,7 @@
                 $(".board-flip").removeClass("btn-info");
                 $(".board-flip").addClass("btn-dark");
             }
+            loadCheckSquare();
         });
     }
 
@@ -326,6 +328,8 @@
         })
         .done(function(data) {
             if (data.success) {
+                removeMoveCellHighlight();
+                highlightMoveCell(data.state.branch, data.state.state);
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
                 if (engineEval) {
                     setEngineEvaluation();
@@ -343,6 +347,8 @@
         })
         .done(function(data) {
             if (data.success) {
+                removeMoveCellHighlight();
+                highlightMoveCell(data.state.branch, data.state.state);
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
                 if (engineEval) {
                     setEngineEvaluation();
@@ -540,7 +546,8 @@
     }
 
     function resolveBranchConflict(branch, state) {
-        
+        // Check if conflict exists
+        const parent = getParent(branch, state);
     }
 
     function addMoveToStoryBoard() {
@@ -549,9 +556,9 @@
             url: url,
         })
         .done( (data) => {
-            const { state, branch, notation } = data;
+            const { branch, state, move, annotation } = data;
 
-            createMoveDivs(branch, state, notation);
+            createMoveDivs(branch, state, move);
             resolveBranchConflict(branch, state);
             
         });
@@ -581,6 +588,7 @@
 
     function loadCheckSquare() {
         checkSquare = JSON.parse(localStorage.checkSquare || null);
+        $(`${checkSquare}`).addClass('check');
     }
 
     function saveConfiguration() {
@@ -627,8 +635,7 @@
     }
 
     function loadSessionVars() {
-        loadCheckSquare();
-        loadConfiguration();
+        loadConfiguration()
         loadEngineEval();
         loadStoryMode();
         loadStrength();
