@@ -35,3 +35,6 @@ class InvalidFenNotation(Exception):
 
 class DefenderColorNotSpecified(Exception):
     """Is raised when you check for attack on a square without specifying defender color"""
+
+class BranchingLimitReached(Exception):
+    """Is raised when branching limit of chessboard class is reached"""
