@@ -73,3 +73,6 @@ CHESS_PIECE_CLASS = {
 
 # Starting Position Notation
 START_POSITION_NOTATION = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+
+# Branching Limit
+BRANCHING_LIMIT = 1000

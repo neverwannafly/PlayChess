@@ -209,6 +209,8 @@ class StateManager:
         elif self.search_states(fen) == -1:
             branch_id = self._branch_count
             branch_name = "Branch" + str(branch_id)
+            if self._branch_count >= config.BRANCHING_LIMIT:
+                raise exceptions.BranchingLimitReached()
             self._branch_count += 1
             self._active_branch = branch_id
             self._states[self._current_state][branch_id] = Branch(
