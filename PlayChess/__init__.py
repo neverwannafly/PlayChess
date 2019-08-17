@@ -8,8 +8,9 @@ import os
 
 from flask import Flask
 from flask_socketio import SocketIO
+from celery import Celery
 
-from .config import configurations
+from .config import configurations, Worker
 
 app = Flask(__name__)
 
@@ -27,6 +28,15 @@ app.config['JSON_SORT_KEYS'] = configurations['JSON_AUTO_SORT']
 
 app.config['TEST_PASSWORD'] = os.environ.get('TEST_PASSWORD', None)
 app.config['TEST_USERNAME'] = os.environ.get('TEST_USERNAME', None)
+
+# Celery initialization
+app.config['CELERY_BROKER_URL'] = os.environ.get('REDIS_URL', None)
+app.config['CELERY_RESULT_BACKEND'] = os.environ.get('REDIS_URL', None)
+
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
+
+Worker.worker = celery
 
 # Socket IO connection.
 socketio = SocketIO(app)

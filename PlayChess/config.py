@@ -76,3 +76,6 @@ START_POSITION_NOTATION = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 
 
 # Branching Limit
 BRANCHING_LIMIT = 1000
+
+class Worker:
+    worker = None

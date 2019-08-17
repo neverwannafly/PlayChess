@@ -4,10 +4,12 @@ import os
 
 from flask import Blueprint, request, jsonify
 from ..utils import token
+from ..config import Worker
 
 import chess, chess.engine
 
 mod = Blueprint('api', __name__)
+clry = Worker.worker
 
 ## Api's
 @mod.route('/gettoken/', methods=['GET'])
@@ -46,6 +48,18 @@ def getEngineEval():
     })
 
 # Send start date and end date as the string "None" if you want to fetch all events
-@mod.route('/events/<startDate>/<endDate>', methods=['GET'])
-def getAicfEvents(startDate, endDate):
+@mod.route('/events', methods=['GET'])
+def getAicfEvents():
     pass
+
+@mod.route('/long', methods=['GET'])
+def long_task():
+    i = _long_task.apply_async(args=[])
+    return jsonify({"success": str(i)})
+
+@clry.task
+def _long_task():
+    i = 0
+    while i<100000000:
+        i += 1
+    return i
