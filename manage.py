@@ -130,6 +130,57 @@ if len(sys.argv) == 2:
                 TERMINAL_COLORS['CEND']
             )
             sys.exit(1)
+    elif sys.argv[1] == "redis":
+        try:
+            print(
+                TERMINAL_COLORS['CBOLD'] + 
+                TERMINAL_COLORS['CBLUE'] + 
+                "Running Redis Server" +
+                TERMINAL_COLORS['CEND'] + 
+                TERMINAL_COLORS['CEND']
+            )
+            subprocess.call(['./app.sh', 'redis'])
+        except KeyboardInterrupt:
+            print(
+                TERMINAL_COLORS['CRED'] + 
+                "Exiting Server..." + 
+                TERMINAL_COLORS['CEND']
+            )
+            sys.exit(1)
+    elif sys.argv[1] == "celery":
+        try:
+            print(
+                TERMINAL_COLORS['CBOLD'] + 
+                TERMINAL_COLORS['CBLUE'] + 
+                "Running Celery Server" +
+                TERMINAL_COLORS['CEND'] + 
+                TERMINAL_COLORS['CEND']
+            )
+            subprocess.call(['./app.sh', 'celery'])
+        except KeyboardInterrupt:
+            print(
+                TERMINAL_COLORS['CRED'] + 
+                "Exiting Server..." + 
+                TERMINAL_COLORS['CEND']
+            )
+            sys.exit(1)
+    elif sys.argv[1] == "celery":
+        try:
+            print(
+                TERMINAL_COLORS['CBOLD'] + 
+                TERMINAL_COLORS['CBLUE'] + 
+                "Running Mongo Server" +
+                TERMINAL_COLORS['CEND'] + 
+                TERMINAL_COLORS['CEND']
+            )
+            subprocess.call(['./app.sh', 'mongo'])
+        except KeyboardInterrupt:
+            print(
+                TERMINAL_COLORS['CRED'] + 
+                "Exiting Server..." + 
+                TERMINAL_COLORS['CEND']
+            )
+            sys.exit(1)
     else:
         print(
             TERMINAL_COLORS['CRED'] + 

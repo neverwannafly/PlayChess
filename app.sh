@@ -26,6 +26,15 @@ main() {
     elif [ $1 == "shell" ]
     then
         runscript "shell.sh"
+    elif [ $1 == "redis" ]
+    then
+        runscript "redis.sh"
+    elif [ $1 == "celery" ]
+    then
+        runscript "celery.sh"
+    elif [ $1 == "mongo" ]
+    then
+        runscript "mongo.sh"
     else
         exit -1
     fi

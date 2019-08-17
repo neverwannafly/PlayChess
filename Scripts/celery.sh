@@ -1,0 +1,1 @@
+celery worker -A run.celery --loglevel=info
