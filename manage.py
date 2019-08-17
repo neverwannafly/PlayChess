@@ -164,7 +164,7 @@ if len(sys.argv) == 2:
                 TERMINAL_COLORS['CEND']
             )
             sys.exit(1)
-    elif sys.argv[1] == "celery":
+    elif sys.argv[1] == "mongo":
         try:
             print(
                 TERMINAL_COLORS['CBOLD'] + 
