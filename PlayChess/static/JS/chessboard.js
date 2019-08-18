@@ -505,6 +505,7 @@
         .done( (data) => {
             let states = data;
             for (let i=0; i<states.length; i++) {
+                console.log(states[i][1]);
                 resolveBranchConflict(states[i][0], states[i][1], states[i][2], createMoveDivs);
             }
         });
@@ -526,10 +527,18 @@
 
     function createMoveDivs(branch, state, notation) {
         const id = makeId(branch, state);
+        const next = makeId(branch, state+1);
         const index = getIndex(activeMoveCell);
 
+        if ($(`#${id}`).length > 0) {
+            removeMoveCellHighlight();
+            highlightMoveCell(id);
+            return;
+        }
+
+        console.log(state);
+
         if (state%2!=0) {
-            isFirstMove = false;
             // insert move number
             let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
             insertAtIndex(`move-number`, move_number_div, index);
@@ -537,7 +546,7 @@
             let move_div = `<div id="${id}" class="move-cell">${notation}</div>`;
             insertAtIndex(`white-moves`, move_div, index);
 
-            let black_div = `<div id="temp-div" class="move-cell">...</div>`;
+            let black_div = `<div id="temp-${next}" class="move-cell">...</div>`;
             insertAtIndex(`black-moves`, black_div, index);
 
             $(".story").scrollTop($(".story")[0].scrollHeight);
@@ -546,17 +555,19 @@
                 let move_number_div = `<div class="move-number-cell">${Math.floor((state+1)/2)}</div>`
                 insertAtIndex(`move-number`, move_number_div, index);
 
-                let blank_div = `<div id="-1" class="move-cell">...</div>`;
+                let blank_div = `<div class="move-cell">...</div>`;
                 insertAtIndex(`white-moves`, blank_div, index);
 
                 let move_div = `<div id="${id}" class="move-cell">${notation}</div>`;
                 insertAtIndex(`black-moves`, move_div, index);
             } else {
-                isFirstMove = false;
-                $("#temp-div").prop('id', `${id}`);
+                $(`#temp-${id}`).prop('id', `${id}`);
                 $(`#${id}`).text(`${notation}`);
             }
         }
+
+        isFirstMove = false;
+
         removeMoveCellHighlight();
         highlightMoveCell(id);
     }
