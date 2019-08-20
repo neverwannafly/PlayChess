@@ -445,6 +445,7 @@
         $(".board-story").removeClass("btn-dark");
 
         $("#storyboard").css("display", "flex");
+        createAlert("This feature is still in development");
     }
 
     function dismissStoryMode() {
