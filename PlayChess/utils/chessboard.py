@@ -309,11 +309,16 @@ class StateManager:
     def get_branch_state(self):
         is_first = True
         branch_state = []
-        for branch in self._states:
-            for key in branch:
-                if not is_first:
-                    branch_state.append((branch[key]._id, branch[key]._state, branch[key]._move))
-                is_first = False
+        parent = None
+        for move_num, state in reversed(list(enumerate(self._states))):
+            branch = state.get(self._active_branch, False)
+            if move_num>=1 and branch:
+                branch_state.append((branch._id, branch._state, branch._move))
+                parent = branch._parent
+            elif move_num>=1 and parent is not None:
+                new_branch = state.get(parent, 0)
+                branch_state.append((new_branch._id, new_branch._state, new_branch._move))
+        branch_state = list(reversed(branch_state))
         return branch_state
 
     def print_state(self):
