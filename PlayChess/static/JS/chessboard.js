@@ -505,8 +505,8 @@
         .done( (data) => {
             let states = data;
             for (let i=0; i<states.length; i++) {
-                console.log(states[i][1]);
-                resolveBranchConflict(states[i][0], states[i][1], states[i][2], createMoveDivs);
+                console.log(states);
+                createMoveDivs(states[i][0], states[i][1], states[i][2]);
             }
         });
     }
@@ -572,7 +572,7 @@
         highlightMoveCell(id);
     }
 
-    function resolveBranchConflict(branch, state, move, done) {
+    function createVariation(branch, state, move) {
         // Check if conflict exists
         $.ajax({
             url: `board/checkParent`,
@@ -593,7 +593,7 @@
         })
         .done( (data) => {
             const { branch, state, move, annotation } = data;
-            resolveBranchConflict(branch, state, move, createMoveDivs);
+            createMoveDivs(branch, state, move);
         });
     }
 
