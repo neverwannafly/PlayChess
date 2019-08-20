@@ -226,7 +226,7 @@ def make_move(move):
 @decorators.login_required
 def get_game_status():
     status = USER_DICT['current_user_' + str(session['username'])].chessboard.fetch_game_status()
-    if len(status) == 1:
+    if status is not None and len(status) == 1:
         return jsonify({
             'status': 'ongoing'
         })
