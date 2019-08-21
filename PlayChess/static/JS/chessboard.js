@@ -507,7 +507,7 @@
             let states = data;
             for (let i=0; i<states.length; i++) {
                 console.log(states);
-                resolveBranchConflict(states[i][0], states[i][1], states[i][2], createMoveDivs);
+                createMoveDivs(states[i][0], states[i][1], states[i][2]);
             }
         });
     }
