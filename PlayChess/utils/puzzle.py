@@ -39,7 +39,7 @@ class Puzzle:
     def getScore():
         return self.moves / len(self.solution)
 
-def updatePuzzleResult(db_object, puzzle_id, username, result):
+def pushPuzzleResult(db_object, puzzle_id, username, result):
     puzzle = db_object.puzzle.update_one(
         {'_id': puzzle_id},
         {'$inc': {
@@ -62,7 +62,7 @@ def addTag(db_object, puzzle_id, tag):
         {"$push": {'tags': tag}},
     )
 
-def createPuzzle(db_object, start_pos, solution):
+def createPuzzle(db_object, start_pos, solution, tags=[]):
     db_object.puzzle.insert_one({
         'attempts': 0,
         'solved': 0,
@@ -70,7 +70,7 @@ def createPuzzle(db_object, start_pos, solution):
         'public': False,
         'start_pos': start_pos,
         'solution': solution,
-        'tags': []
+        'tags': tags
     })
 
 def fetch_puzzle(db_object, puzzle_id):
