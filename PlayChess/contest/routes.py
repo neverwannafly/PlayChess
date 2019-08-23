@@ -21,6 +21,7 @@ from ..config import CONTESTS, USER_DICT
 
 # Database initialisation
 from .. import database
+db = database.db
 
 # Make users to be logged in for 5 days!
 @mod.before_app_first_request
@@ -39,4 +40,12 @@ def show_stats():
 
 ### View functions start ###
 
-@mod.route
+@mod.route('/<contest_code>')
+def main(contest_code):
+    cntst = CONTESTS.get(contest_code, None)
+    if cntst is None:
+        cntst = contest.loadContest(db, contest_code)
+        if cntst is None:
+            return render_template('info.html', info='Contest Doesnt exist', title='404')
+        CONTESTS[contest_code] = cntst
+    return render_template('info.html', info=cntst.info, title=cntst.title)
