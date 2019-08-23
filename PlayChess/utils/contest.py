@@ -3,34 +3,50 @@ from .exceptions import ContestEnded
 
 class Contest:
     def __init__(self, contest_obj):
-        self._id = contest_obj._id
-        self.puzzles = contest_obj.puzzles
-        self.players = contest_obj.players
-        self.date = contest_obj.date
-        self.time = contest_obj.time
-        self.info = ""
-        self.title = ""
+        self._id = contest_obj['_id']
+        self.puzzles = contest_obj['puzzles']
+        self.players = contest_obj['players']
+        self.date = contest_obj['date']
+        self.time = contest_obj['time']
+        self.info = contest_obj['info']
+        self.title = contest_obj['title']
 
-    def update_details(self, info, title):
+    def update_details(self, db_object, info, title):
         self.info = info
         self.title = title
+        db_object.contest.update_one(
+            {'_id': self._id},
+            {'$set': {
+                'info': info,
+                'title': title,
+            }}
+        )
 
-    def register_user(self, db_object, username):
+    def register_user(self, db_object, user):
+        plyr = db_object.contest.find_one(
+            {'players': user.username}
+        )
+        if plyr is not None:
+            user.in_contest['status'] = True
+            user.in_contest['contest_id'] = self._id
+            self.players[user.username] = 0
+            # raise ContestEnded("This user has already given the contests")
         user.in_contest['status'] = True
         user.in_contest['contest_id'] = self._id
-        self.players[username] = 0
-        register_player(db_object, self._id, username)
+        self.players[user.username] = 0
+        register_player(db_object, self._id, user.username)
 
     def finish_user_session(self, user):
         user.in_contest['status'] = False
         user.in_contest['contest_id'] = None
 
     def has_user_session_ended(self, user):
-        return user.in_contest['status']==True and user.in_contest['contest_id']==self._id
+        return not (user.in_contest['status']==True and user.in_contest['contest_id']==self._id)
 
-    def get_puzzle(self, puzzle_index, user):
-        if not self.has_user_session_ended(user):
-            return Puzzle(fetch_puzzle(self.puzzles[puzzle_index])).get_board()
+    def get_puzzle(self, db_object, puzzle_index, user):
+        if (not self.has_user_session_ended(user)) and puzzle_index>=0 and puzzle_index<len(self.puzzles):
+            print(self.puzzles[puzzle_index])
+            return fetch_puzzle(db_object, self.puzzles[puzzle_index])
         return None
 
     def submit_ans(self, db_object, puzzle_index, username, score):
@@ -39,7 +55,18 @@ class Contest:
             return {'success': True}
         return {'success': False}
 
-    def add_puzzle(self, db_object, start_fen, solution):
+    def add_puzzle(self, db_object, puzzle_id):
+        if db_object.puzzle.find_one({'_id': puzzle_id}) is None:
+            return False
+        db_object.contest.update_one(
+            {'_id': self._id},
+            {'$push': {
+                'puzzles': puzzle_id,
+            }}
+        )
+        return True
+
+    def create_puzzle(self, db_object, start_fen, solution):
         puzzle = createPuzzle(db_object, start_fen, solution)
         self.puzzles.append(puzzle.inserted_id)
         db_object.contest.update_one(
@@ -69,8 +96,8 @@ def register_player(db_object, contest_code, username):
     )
 
 def loadContest(db_object, contest_code):
-    contest = db_object.contests.find_one({
-        'contest_code': contest_code,
+    contest = db_object.contest.find_one({
+        '_id': contest_code,
     })
     if contest is None:
         return None
@@ -83,4 +110,6 @@ def create_contest(db_object, contest_code, puzzles, date, time):
         'puzzles': [],
         'date': date,
         'time': time,
+        'info': '',
+        'title': '',
     })

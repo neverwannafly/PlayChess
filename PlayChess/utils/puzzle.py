@@ -4,17 +4,17 @@ from ..config import Worker
 clry = Worker.worker
 
 class Puzzle:
-    def __init__(puzzle_obj):
-        self._id = puzzle_obj.id
-        self.attemps = puzzle_obj.attempts
-        self.solved = puzzle_obj.solved
-        self.rating = puzzle_obj.rating
-        self.public = puzzle_obj.public
-        self.start_pos = puzzle_obj.start_pos
-        self.solution = puzzle_obj.solution
+    def __init__(self, puzzle_obj):
+        self._id = puzzle_obj['_id']
+        self.attemps = puzzle_obj['attempts']
+        self.solved = puzzle_obj['solved']
+        self.rating = puzzle_obj['rating']
+        self.public = puzzle_obj['public']
+        self.start_pos = puzzle_obj['start_pos']
+        self.solution = puzzle_obj['solution']
         self.moves = 0
-        self.tags = puzzle_obj.tags
-        self.board = Chessboard(puzzle_obj.start_pos)
+        self.tags = puzzle_obj['tags']
+        self.board = Chessboard(puzzle_obj['start_pos'])
 
     def get_board(self):
         return self.board.draw_chessboard_for_white()
@@ -27,13 +27,16 @@ class Puzzle:
 
         res.changes.append(self.board.make_move(initial_pos, final_pos, dest_piece=dest_piece))
         notation = initial_pos + "-" + final_pos if dest_piece is None else initial_pos + "-" + final_pos + "-" + dest_piece
+        self.moves += 1
 
         if self.moves < len(self.solution) and self.solution[self.moves] ==  notation:
-            self.moves += 1
             res['changes'].append(self.board.make_move(self.solution[self.moves]))
+            self.moves += 1
             res['success'] = True
-        elif self.moves == len(self.solution):
+
+        if self.moves == len(self.solution):
             res['puzzleOver'] = True
+
         return res
 
     def getScore():
