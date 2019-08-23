@@ -8,6 +8,12 @@ class Contest:
         self.players = contest_obj.players
         self.date = contest_obj.date
         self.time = contest_obj.time
+        self.info = ""
+        self.title = ""
+
+    def update_details(self, info, title):
+        self.info = info
+        self.title = title
 
     def register_user(self, db_object, username):
         user.in_contest['status'] = True
@@ -28,7 +34,7 @@ class Contest:
 
     def submit_ans(self, user, puzzle_index, score):
         if self.has_user_session_ended(user):
-            
+
             update_puzzle_score()
             return {'success': True}
         return {'success': False}
@@ -37,7 +43,7 @@ def update_puzzle_score(db_object, contest_code, puzzle_id, username, score):
     key = 'players. + username'
     db_object.contest.update_one(
         {'_id': contest_code},
-        {'$inc' {
+        {'$inc': {
             key: score,
         }}
     )
@@ -53,9 +59,11 @@ def register_player(db_object, contest_code, username):
     )
 
 def loadContest(db_object, contest_code):
-    contest = db_object.find_one({
+    contest = db_object.contests.find_one({
         'contest_code': contest_code,
     })
+    if contest is None:
+        return None
     return Contest(contest)
 
 def create_contest(db_object, contest_code, puzzles, date, time):
