@@ -59,7 +59,7 @@ def updatePuzzleResult(db_object, puzzle_id, username, result):
 def addTag(db_object, puzzle_id, tag):
     db_object.update_one(
         {'_id': puzzle_id},
-        "$push": {'tags': tag},
+        {"$push": {'tags': tag}},
     )
 
 def createPuzzle(db_object, start_pos, solution):
@@ -75,6 +75,6 @@ def createPuzzle(db_object, start_pos, solution):
 
 def fetch_puzzle(db_object, puzzle_id):
     puzzle = db_object.puzzle.find_one(
-        '_id': puzzle_id
+        {'_id': puzzle_id}
     )
     return Puzzle(puzzle)
