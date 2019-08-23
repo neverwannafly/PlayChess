@@ -1,0 +1,50 @@
+<!-- This template would be used for inheritance across different webpages of the site app! -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Favicons ! -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='Images/favicons/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='Images/favicons/favicon.ico') }}" type="image/x-icon">
+    <!-- Favicons end -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap and Jquery -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!--Google Fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lexend+Deca&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <!-- Web page exclusive imports go in includes -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static', filename='CSS/contest.css')}}">
+    <title>
+        {{ DTU19TT1 }}
+    </title>
+</head>
+<body>
+    <div class="main">
+        <div class="container board heading raised">
+            <h1><u>DTU CHESS TRIALS</u></h1>
+        </div>
+        <div class="container board raised">
+        <center> 
+            <h5> Important Rules for Puzzle Round </h5> 
+            <h6>(The puzzle round will be held on 24th August between 6PM-10PM)</h6>
+        </center>
+        <hr width='90%'>
+            <ul>
+                <li>Solving a puzzle successfully will give you 1 point. Partial markings will also be given on puzzles whose solution is more than 1 move depending on how much of it you solve</li>
+                <li>Once you start, you'll need to finish the contest within 20 minutes</li>
+                <li>If you skip a puzzle, you wont be able to attempt it</li>
+                <li>You would be given only 1 attempt at solving a puzzle. If you accidentally selected a wrong square, you can deselect it by clicking anywhere except a valid move square. No excuses like misclick would be entertained</li>
+                <li>Leaderboards would be displayed after the contest concludes</li>
+            </ul>
+        </div>
+        <div class="interactive-buttons raised">
+            <button class="raised btn btn-danger btn-lg btn-block btn-disabled"> START CONTEST </button>
+        </div>
+    </div>
+</body>
+</html>
