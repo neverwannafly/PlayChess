@@ -1,4 +1,4 @@
-from .puzzle import fetch_puzzle, Puzzle, updatePuzzleResult
+from .puzzle import fetch_puzzle, Puzzle, pushPuzzleResult, createPuzzle
 from .exceptions import ContestEnded
 
 class Contest:
@@ -18,6 +18,7 @@ class Contest:
     def register_user(self, db_object, username):
         user.in_contest['status'] = True
         user.in_contest['contest_id'] = self._id
+        self.players[username] = 0
         register_player(db_object, self._id, username)
 
     def finish_user_session(self, user):
@@ -28,16 +29,25 @@ class Contest:
         return user.in_contest['status']==True and user.in_contest['contest_id']==self._id
 
     def get_puzzle(self, puzzle_index, user):
-        if self.has_user_session_ended(user):
+        if not self.has_user_session_ended(user):
             return Puzzle(fetch_puzzle(self.puzzles[puzzle_index])).get_board()
         return None
 
-    def submit_ans(self, user, puzzle_index, score):
-        if self.has_user_session_ended(user):
-
-            update_puzzle_score()
+    def submit_ans(self, db_object, puzzle_index, username, score):
+        if not self.has_user_session_ended(user):
+            update_puzzle_score(db_object, self._id, self.puzzles[puzzle_index], username, score)
             return {'success': True}
         return {'success': False}
+
+    def add_puzzle(self, db_object, start_fen, solution):
+        puzzle = createPuzzle(db_object, start_fen, solution)
+        self.puzzles.append(puzzle.inserted_id)
+        db_object.contest.update_one(
+            {'_id': self._id},
+            {'$push': {
+                'puzzles': puzzle.inserted_id,
+            }}
+        )
 
 def update_puzzle_score(db_object, contest_code, puzzle_id, username, score):
     key = 'players. + username'
@@ -47,7 +57,7 @@ def update_puzzle_score(db_object, contest_code, puzzle_id, username, score):
             key: score,
         }}
     )
-    updatePuzzleResult(db_object, puzzle_id, username, score)
+    pushPuzzleResult(db_object, puzzle_id, username, score)
 
 def register_player(db_object, contest_code, username):
     key = 'players.' + username
@@ -70,7 +80,7 @@ def create_contest(db_object, contest_code, puzzles, date, time):
     db_object.contest.insert_one({
         '_id': contest_code,
         'players': {},
-        'puzzles': puzzles,
+        'puzzles': [],
         'date': date,
         'time': time,
     })
