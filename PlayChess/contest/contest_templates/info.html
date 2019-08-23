@@ -20,33 +20,12 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/contest.css')}}">
     <title>
-        DTUCHT19
+        {{ title | safe }}
     </title>
 </head>
 <body>
     <div class="main">
-        <div class="container board heading raised">
-            <h1><u>DTU CHESS TRIALS</u></h1>
-        </div>
-        <div class="container board raised">
-        <center> 
-            <h5> Important Rules for Puzzle Round </h5> 
-            <h6>(The puzzle round will be held on 24th August between 6PM-10PM)</h6>
-        </center>
-        <hr width='90%'>
-            <ul>
-                <li>Solving a puzzle successfully will give you 1 point. Partial markings will also be given on puzzles whose solution is more than 1 move depending on how much of it you solve.</li>
-                <li>There is no negative marking if you fail at a puzzle</li>
-                <li>No tiebreakers would be used to resolve ties. People with same score will be treated as same rank</li>
-                <li>Once you start, you'll need to finish the contest within 20 minutes.</li>
-                <li>If you skip a puzzle, you wont be able to attempt it.</li>
-                <li>You would be given only 1 attempt at solving a puzzle. If you accidentally selected a wrong square, you can deselect it by clicking anywhere except a valid move square. No excuses like misclick would be entertained.</li>
-                <li>Leaderboards would be displayed after the contest concludes.</li>
-            </ul>
-        </div>
-        <div class="interactive-buttons raised">
-            <button class="raised btn btn-danger btn-lg btn-block btn-disabled"> START CONTEST </button>
-        </div>
+        {{ info | safe }}
     </div>
 </body>
 </html>
