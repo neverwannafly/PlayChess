@@ -10,25 +10,9 @@
     <script src="{{ url_for('static', filename='JS/contest.js')}}"></script>
 {% endblock %}
 {% block body %}
-    <div class="main-page-loader">
-        <center>
-            <div class="container">
-                <img class="loading-image raised" src="{{ url_for('static', filename='Images/loading_gifs/main-page-loader.gif') }}" alt="loading-page">
-            </div>
-            <div class="heading">
-                <h1><a href="#">LOADING DTUCHT19</a></h1>
-            </div>
-        </center>
-    </div>
     <div class="main">
         <div class="board">
             <div id="alerts">
-            </div>
-            <div class="raised eval">
-                <div class="progress">
-                    <div id="white-eval" class="progress-bar" role="progressbar" style="width: 50%; background-color: white" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                    <div id="black-eval" class="progress-bar" role="progressbar" style="width: 50%; background-color: black" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
             </div>
             <div class="raised chessboard">
                 <table class="no-spacing" cellspacing="0">
@@ -37,18 +21,10 @@
                     </tbody>
                 </table>
             </div>
-            <div class="interactive-buttons">
-                <button  data-toggle="tooltip" title="Back" class="raised board-left btn btn-dark" data-placement="bottom"><i class="fas fa-arrow-left"></i></button>
-                <button data-toggle="tooltip" title="Next" class="raised board-right btn btn-dark" data-placement="bottom"><i class="fas fa-arrow-right" ></i></button>
-                <button class="raised board-flip btn btn-dark" data-toggle="tooltip" title="Flip" data-placement="bottom"><i class="fas fa-random"></i></button>
-            </div>
         </div>
-        <div id="storyboard">
-            <div class="story raised">
-                <div id="move-number"></div>
-                <div id="white-moves"></div>
-                <div id="black-moves"></div>
-            </div>
+        <div id="clock">
+           <div class="timer raised">
+           </div>
         </div> 
     </div>
 
