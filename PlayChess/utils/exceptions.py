@@ -38,3 +38,6 @@ class DefenderColorNotSpecified(Exception):
 
 class BranchingLimitReached(Exception):
     """Is raised when branching limit of chessboard class is reached"""
+
+class ContestEnded(Exception):
+    """Is raised when an operation is performed on a contest that has ended"""
