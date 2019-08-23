@@ -69,3 +69,6 @@ from PlayChess.utils.chessboard import StateManager
 
 # Make database accessible for unit testing
 from PlayChess.database import db
+
+# Make objects and functions available for command line execution
+from PlayChess.utils import puzzle, contest
