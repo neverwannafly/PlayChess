@@ -1,5 +1,7 @@
-from PlayChess import puzzle
+from PlayChess import puzzle, contest
 from PlayChess import db
+
+from bson.objectid import ObjectId
 
 puzzle.createPuzzle(db, "6k1/ppR5/3B2p1/3p4/4rnK1/5P2/PP1r3P/8 b - -", ['d2-g2', 'g4-h4', 'g6-g5'], ['Mate in Two'])
 puzzle.createPuzzle(db, "2r3r1/1RQ5/1P1qk3/3p1p1p/3p3P/3BbP2/PP4P1/5K1R w - - 1 2", ['c7-f7', 'e6-e5', 'f7-f5'], ['Mate in Two'])
@@ -21,3 +23,25 @@ puzzle.createPuzzle(db, "1k6/pp6/2pb4/3p4/6B1/2P2R1P/PP4P1/4q1BK w - - 1 2", ['f
 puzzle.createPuzzle(db, "3q1rk1/p1pn1p2/1rQb3p/4p1p1/4N3/6B1/PPP2PPP/3R1RK1 w - - 1 2", ['c6-d7', 'd8-d7', 'e5-f6'], ['Fork'])
 puzzle.createPuzzle(db, "8/3k4/1K6/8/4BR2/4p3/4p3/8 w - - 0 1", ['e4-f5', 'd7-d6', 'f4-d4', 'd6-e5', 'd4-e4'], ['Endgame'])
 puzzle.createPuzzle(db, "8/8/1pp5/1qk1K2B/1p1R4/8/2PP4/8 w - - 0 1", ['d4-d5', 'c6-d5', 'd2-d4'], ['Endgame', 'Skewer', 'Sacrifice'])
+
+cntst = contest.loadContest(db, "DTUCHT19")
+res = cntst.add_puzzle(db, ObjectId("5d601556bc44849f51dfd6be"))
+cntst.add_puzzle(db, ObjectId("5d601556bc44849f51dfd6bf"))
+cntst.add_puzzle(db, ObjectId("5d601556bc44849f51dfd6c0"))
+cntst.add_puzzle(db, ObjectId("5d601556bc44849f51dfd6c1"))
+cntst.add_puzzle(db, ObjectId("5d601556bc44849f51dfd6c2"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6c3"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6c4"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6c5"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6c6"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6c7"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6c8"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6c9"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6ca"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6cb"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6cc"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6cd"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6ce"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6cf"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6d0"))
+cntst.add_puzzle(db,ObjectId("5d601556bc44849f51dfd6d1"))
