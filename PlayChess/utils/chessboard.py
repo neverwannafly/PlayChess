@@ -464,8 +464,11 @@ class Chessboard:
     def fetch_game_status(self):
         return self._game_status
 
-    def in_check(color):
+    def in_check(self, color):
         return self._in_check[color]
+
+    def check_color(self):
+        return self._moves % 2 == 0
 
     @property
     def fen_notation(self):
