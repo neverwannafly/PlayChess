@@ -26,7 +26,12 @@ class User:
             'status': False,
             'url': None,
         }
+        self.in_contest = {
+            'status': False,
+            'contest_id': None,
+        }
         self.sessionid = None
+        self.puzzle = None # A puzzle board when user attempts a puzzle
         self.chessboard = Chessboard()
 
     ## Future update operations would be carried here if required!
