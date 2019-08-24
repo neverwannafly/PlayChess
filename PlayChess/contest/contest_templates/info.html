@@ -24,8 +24,39 @@
     </title>
 </head>
 <body>
+    <div id="alerts">
+        {% if error_code==1 %}
+            <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>You've submitted your response!</div>
+        {% endif %}
+    </div>
     <div class="main">
         {{ info | safe }}
     </div>
+    <div class="interactive-buttons raised">
+        <button id="enter" class="raised btn btn-danger btn-lg btn-block btn-disabled"> ENTER </button>
+    </div>
 </body>
+     <script>
+    $("#enter").on('click', function(){
+        let contestBegTime = 1566649731911 - 60*60 * 1000;
+        let contestEndTime = 1566664131911;
+        let curr_time = new Date();
+        console.log("HEY");
+        if (curr_time > contestBegTime && curr_time < contestEndTime) {
+            console.log("work");
+            register();
+        } else {
+            console.log("Already Over!");
+        }
+    });
+
+    function register() {
+        let contest_id = window.location.href;
+        let base_url = window.location.href;
+        base_url = base_url.slice(0, base_url.indexOf('/contest')+8);
+        contest_id = contest_id.slice(contest_id.indexOf('contest/')+8);
+        window.location.href = `${base_url}/${contest_id}/register`;
+    }
+    </script>
 </html>
