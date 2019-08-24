@@ -36,12 +36,12 @@ def load_session_vars():
 
 @mod.before_request
 def show_stats():
-    # print(CONTESTS)
     pass
 
 ### View functions start ###
 
 @mod.route('/<contest_code>')
+@decorators.login_required
 def main(contest_code):
     cntst = CONTESTS.get(contest_code, None)
     if cntst is None:
@@ -62,11 +62,13 @@ def register_contest(contest_code):
             return jsonify({'error': 'contest not found!'})
         else:
             CONTESTS[contest_code] = cntst
+    if not cntst.has_user_session_ended(USER_DICT['current_user_'+str(session['username'])]):
+        redirect(url_for('contest.main_contest', contest_code=contest_code))
     try:
         cntst.register_user(db, USER_DICT['current_user_'+str(session['username'])])
     except exceptions.ContestEnded:
         return render_template('info.html', info=cntst.info, title=cntst.title, error_code=1)
-    return redirect(url_for('contest.main_contest'))
+    return redirect(url_for('contest.main_contest', contest_code=contest_code))
 
 @mod.route('/<contest_code>/start')
 @decorators.login_required
@@ -163,7 +165,7 @@ def get_leaderboards(contest_code):
         return jsonify({'success': False})
     data = cntst.players
     sorted_data = sorted(data.items(), key=lambda x: x[1], reverse=True)
-    rankings = [{'name': rank[0], 'team': 'DTU', 'gap': rank[1]} for rank in sorted_data]
+    rankings = [{'name': rank[0], 'team': 'DTU', 'gap': round(rank[1], 2)} for rank in sorted_data]
     return render_template('leaderboard.html', rankings=rankings, title=cntst.title)
 
 @mod.route('/<contest_code>/end_contest')
@@ -176,3 +178,12 @@ def end_contest(contest_code):
     USER_DICT['current_user_' + str(session['username'])].puzzle = None
     return jsonify({'success': True})
     
+@mod.route('/<contest_code>/finish_contest')
+@decorators.login_required
+def finish_contest(contest_code):
+    cntst = CONTESTS.get(contest_code, None)
+    if cntst is None:
+        return jsonify({'success': False})
+    cntst.end_contest(db)
+    USER_DICT['current_user_' + str(session['username'])].puzzle = None
+    return jsonify({'success': True})
