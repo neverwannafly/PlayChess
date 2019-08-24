@@ -36,7 +36,8 @@ def load_session_vars():
 
 @mod.before_request
 def show_stats():
-    print(CONTESTS)
+    # print(CONTESTS)
+    pass
 
 ### View functions start ###
 
@@ -58,7 +59,7 @@ def main_contest(contest_code):
     if cntst is None:
         cntst = contest.loadContest(db, contest_code)
         if cntst is None:
-            return url_for('contest.main')
+            return jsonify({'error': 'contest not found!'})
         else:
             CONTESTS[contest_code] = cntst
     try:
@@ -71,25 +72,34 @@ def main_contest(contest_code):
 @decorators.login_required
 def fetch_puzzle(contest_code):
     cntst = CONTESTS.get(contest_code, None)
-    print(cntst, "Hello")
     if cntst is None:
         return jsonify({'success': False})
+    if USER_DICT['current_user_'+str(session['username'])].puzzle is not None:
+        color = USER_DICT['current_user_'+str(session['username'])].puzzle.board.check_color()
+        if color==1:
+            board = USER_DICT['current_user_'+str(session['username'])].puzzle.board.draw_chessboard_for_white()
+        else:
+            board = USER_DICT['current_user_'+str(session['username'])].puzzle.board.draw_chessboard_for_black()
+        return jsonify({'success': True, 'board': board})
     puzzle_index = request.args.get('index', 0)
     puzzle = cntst.get_puzzle(db, int(puzzle_index), USER_DICT['current_user_'+str(session['username'])])
+    if puzzle is None:
+        return jsonify({'contest_ended': True})
     USER_DICT['current_user_'+str(session['username'])].puzzle = puzzle
     color = USER_DICT['current_user_'+str(session['username'])].puzzle.board.check_color()
     if color==1:
-        board = USER_DICT['current_user_'+str(session['username'])].puzzle.board.draw_chessboard_for_black()
-    else:
         board = USER_DICT['current_user_'+str(session['username'])].puzzle.board.draw_chessboard_for_white()
+    else:
+        board = USER_DICT['current_user_'+str(session['username'])].puzzle.board.draw_chessboard_for_black()
     return jsonify({'success': True, 'board': board})
 
 @mod.route('/<contest_code>/makemove/<move>')
 def make_move(contest_code, move):
     cntst = CONTESTS.get(contest_code, None)
     if cntst is None:
-        return jsonify({'success': False})
+        return jsonify({'move': False})
     puzzle = USER_DICT['current_user_'+str(session['username'])].puzzle
+    index = int(request.args.get('index'))
     squares = move.split('-')
     dest_square = squares[2] if len(squares)==3 else None
     try:
@@ -101,10 +111,24 @@ def make_move(contest_code, move):
             'move': False,
             'auth': False,
             })
-    return jsonify({
-        'move': True,
-        'move_info': move_info,
-    })
+    success = move_info['success']
+    puzzleOver = move_info['puzzleOver']
+    changes = move_info['changes']
+
+    if puzzleOver and success:
+        score = puzzle.get_score()
+        cntst.submit_ans(db, index, USER_DICT['current_user_'+str(session['username'])], score)
+        USER_DICT['current_user_'+str(session['username'])].puzzle = None
+        return jsonify({'move': True, 'success': True, 'puzzleOver': True, 'changes': changes})
+    
+    if success:
+        return jsonify({'move': True, 'success': True, 'puzzleOver': False, 'changes': changes})
+        
+    score = puzzle.get_score()
+    cntst.submit_ans(db, index, USER_DICT['current_user_'+str(session['username'])], score)
+    USER_DICT['current_user_'+str(session['username'])].puzzle = None
+    return jsonify({'move': True, 'success': False, 'puzzleOver': True, 'changes': changes})
+
 
 @mod.route('/<contest_code>/generateLegalMoves/<init_pos>')
 def generate_legal_moves(contest_code, init_pos):
@@ -117,6 +141,15 @@ def generate_legal_moves(contest_code, init_pos):
     except exceptions.SideNotAuthorizedToMakeMove as error:
         return jsonify({'moves': []})
     return jsonify({'moves': moves})
+
+@mod.route('/<contest_code>/leaderboards')
+def get_leaderboards(contest_code):
+    cntst = CONTESTS.get(contest_code, None)
+    if cntst is None:
+        return jsonify({'success': False})
+    data = cntst.players
+    rankings = sorted(data.items(), key=lambda x: x[1], reverse=True)
+    return jsonify({'rankings': rankings})
 
 @mod.route('/<contest_code>/end_contest')
 @decorators.login_required
