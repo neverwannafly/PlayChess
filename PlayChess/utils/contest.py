@@ -27,10 +27,7 @@ class Contest:
             {'players': user.username}
         )
         if plyr is not None:
-            user.in_contest['status'] = True
-            user.in_contest['contest_id'] = self._id
-            self.players[user.username] = 0
-            # raise ContestEnded("This user has already given the contests")
+            raise ContestEnded("This user has already given the contests")
         user.in_contest['status'] = True
         user.in_contest['contest_id'] = self._id
         self.players[user.username] = 0
@@ -39,6 +36,7 @@ class Contest:
     def finish_user_session(self, user):
         user.in_contest['status'] = False
         user.in_contest['contest_id'] = None
+        updatePlayerContest(db_object, contest_code, user.username)
 
     def has_user_session_ended(self, user):
         return not (user.in_contest['status']==True and user.in_contest['contest_id']==self._id)
@@ -74,6 +72,14 @@ class Contest:
                 'puzzles': puzzle.inserted_id,
             }}
         )
+
+def updatePlayerContest(db_object, contest_code, username):
+    db_object.users.update_one(
+        {'username': username},
+        {'$push': {
+            'contests': contest_code,
+        }}
+    )
 
 def update_puzzle_score(db_object, contest_code, puzzle_id, username, score):
     key = 'players.' + username
