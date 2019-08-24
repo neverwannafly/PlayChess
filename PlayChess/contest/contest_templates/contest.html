@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    Home
+    {{ title }}
 {% endblock %}
 {% block includes %}
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/chessboard.css')}}"/>
@@ -24,8 +24,6 @@
             </div>
         </div>
         <div id="clock" class="raised">
-            <div id="days"></div>
-            <div id="hours"></div>
             <div id="minutes"></div>
             <div id="seconds"></div>
         </div> 
