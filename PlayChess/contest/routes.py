@@ -166,6 +166,12 @@ def get_leaderboards(contest_code):
     data = cntst.players
     sorted_data = sorted(data.items(), key=lambda x: x[1], reverse=True)
     rankings = [{'name': rank[0], 'team': 'DTU', 'gap': round(rank[1], 2)} for rank in sorted_data]
+    for i, rank in enumerate(rankings):
+        user = db.users.find({'username': rank['name']})
+        rankings[i]['name'] = user[0]['first_name'] + " " + user[0]['last_name']
+
+    print(rankings)
+
     return render_template('leaderboard.html', rankings=rankings, title=cntst.title)
 
 @mod.route('/<contest_code>/end_contest')
