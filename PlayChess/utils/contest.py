@@ -10,6 +10,7 @@ class Contest:
         self.time = contest_obj['time']
         self.info = contest_obj['info']
         self.title = contest_obj['title']
+        self.lifetime = contest_obj['lifetime']
 
     def update_details(self, db_object, info, title):
         self.info = info
@@ -33,13 +34,20 @@ class Contest:
         self.players[user.username] = 0
         register_player(db_object, self._id, user.username)
 
-    def finish_user_session(self, user):
+    def finish_user_session(self, db_object, contest_code, user):
         user.in_contest['status'] = False
         user.in_contest['contest_id'] = None
         updatePlayerContest(db_object, contest_code, user.username)
 
     def has_user_session_ended(self, user):
-        return not (user.in_contest['status']==True and user.in_contest['contest_id']==self._id)
+        return not user.in_contest['status']==True and user.in_contest['contest_id']==self._id and self.lifetime==1
+
+    def end_contest(self, db_object):
+        self.lifetime = 0
+        db_object.contest.update(
+            {'_id': self._id},
+            {'$set', {'lifetime': 0}},
+        )
 
     def get_puzzle(self, db_object, puzzle_index, user):
         if (not self.has_user_session_ended(user)) and puzzle_index>=0 and puzzle_index<len(self.puzzles):
@@ -48,6 +56,7 @@ class Contest:
 
     def submit_ans(self, db_object, puzzle_index, user, score):
         if not self.has_user_session_ended(user) and puzzle_index>=0 and puzzle_index<len(self.puzzles):
+            self.players[user.username] += score
             update_puzzle_score(db_object, self._id, self.puzzles[puzzle_index], user.username, score)
             return {'success': True}
         return {'success': False}
@@ -108,13 +117,16 @@ def loadContest(db_object, contest_code):
         return None
     return Contest(contest)
 
-def create_contest(db_object, contest_code, date, time):
+def create_contest(db_object, contest_code, date, time, begin=None, end=None):
     db_object.contest.insert_one({
         '_id': contest_code,
         'players': {},
         'puzzles': [],
         'date': date,
         'time': time,
+        'begin': begin,
+        'end': end,
         'info': '',
         'title': '',
+        'lifetime': 1,
     })

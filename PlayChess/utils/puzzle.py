@@ -28,19 +28,19 @@ class Puzzle:
 
         if self.moves < len(self.solution) and self.solution[self.moves] ==  notation:
             res['success'] = True
-
-        self.moves += 1
-
-        res['changes'] += self.board.make_move(initial_pos, final_pos, dest_piece=dest_piece)
-        if self.moves < len(self.solution):
-            squares = self.solution[self.moves].split('-')
-            dest_square = squares[2] if len(squares)==3 else None
-            res['changes'] += self.board.make_move(squares[0], squares[1], dest_piece=dest_square)
             self.moves += 1
+            res['changes'] += self.board.make_move(initial_pos, final_pos, dest_piece=dest_piece)
+            if self.moves < len(self.solution):
+                squares = self.solution[self.moves].split('-')
+                dest_square = squares[2] if len(squares)==3 else None
+                res['changes'] += self.board.make_move(squares[0], squares[1], dest_piece=dest_square)
+                self.moves += 1
+            else:
+                res['puzzleOver'] = True
 
-        if self.moves == len(self.solution):
-            res['puzzleOver'] = True
-
+            return res
+            
+        res['changes'] += self.board.make_move(initial_pos, final_pos, dest_piece=dest_piece)
         return res
 
     def get_score(self):
