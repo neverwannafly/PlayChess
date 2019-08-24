@@ -56,7 +56,6 @@
                     data: { index: index },
                 })
                 .done( (data) => {
-                    console.log(data['changes']);
                     if (!data["move"]) {
                         console.log("Invalid Move!");
                     } else if (data["success"] && data["puzzleOver"]) {
@@ -85,8 +84,8 @@
                     
                 });
             }
-        });
 
+        });
         $("td").hover(mouseIn, mouseOut);
 
         disableBackButton();
@@ -105,6 +104,9 @@
             data: { 'index': index },
         })
         .done(function(data){
+            if (data.contest_ended) {
+                endContest();
+            }
             if (data.success) {
                 $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
             }
@@ -181,6 +183,10 @@
             saveEndTime();
         }
 
+        function checkIfContestEnded() {
+            var now = new Date();
+        }
+
         function makeTimer() {
 
             var now = new Date();
@@ -189,17 +195,7 @@
             var timeLeft = endTime - now;
             if (timeLeft<=0) {
                 window.clearInterval(clock);
-                $.ajax({
-                    url: 'end_contest',
-                })
-                .done(function(){
-                    let contest_id = window.location.href;
-                    let base_url = window.location.href;
-                    base_url = base_url.slice(0, base_url.indexOf('/contest')+8);
-                    contest_id = contest_id.slice(contest_id.indexOf('contest/')+8);
-                    contest_id = contest_id.slice(0, contest_id.indexOf('/'));
-                    window.location.href = `${base_url}/${contest_id}/leaderboards`;
-                });
+                endContest();
                 timeLeft = 0;
             }
 
@@ -217,6 +213,24 @@
         }
         
         clock = setInterval(function() { makeTimer(); }, 1000);
+    }
+
+    function loadLeaderboards() {
+        let contest_id = window.location.href;
+        let base_url = window.location.href;
+        base_url = base_url.slice(0, base_url.indexOf('/contest')+8);
+        contest_id = contest_id.slice(contest_id.indexOf('contest/')+8);
+        contest_id = contest_id.slice(0, contest_id.indexOf('/'));
+        window.location.href = `${base_url}/${contest_id}/leaderboards`;
+    }
+
+    function endContest() {
+        $.ajax({
+            url: 'end_contest',
+        })
+        .done(function(){
+            loadLeaderboards();
+        });
     }
 
     function mouseIn() {
