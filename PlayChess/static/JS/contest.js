@@ -2,31 +2,26 @@
 
 (function(){
 
-    let checkSquare = null;
     let isFirstMove = true;
     let activeMoveCell = null;
     let index = 0;
+
+    var endTime;
+    var clock;
     // const window_url = window.location.href;
     // const url_index = window_url.indexOf('contest/');
     // const contest_code = window_url.slice(url_index + 8);
 
     $(document).ready(function(){
 
+        loadSessionVars();
+
         var initial_pos, final_pos;
         var squares = null;
 
         // Send AJAX request to get first puzzle
-        $.ajax({
-            url: `fetchPuzzle`,
-            data: { 'index': index },
-        })
-        .done(function(data){
-            if (data.success) {
-                console.log(data.board);
-                $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
-                startClock();
-            }
-        });
+        getPuzzle();
+        loadClock();
 
         $(document).on('click', '.square', (event) => {
             const target = $(event.target);
@@ -38,7 +33,7 @@
                 } 
                 else {
                     $("#"+initial_pos).addClass("active-cell");
-                    const url = "board/generateLegalMoves/" + initial_pos;
+                    const url = "generateLegalMoves/" + initial_pos;
                     $.ajax({
                         url: url,
                     })
@@ -55,39 +50,38 @@
                 if (checkPromotionValidity(initial_pos)) {
                     promotion = "-" + prompt("Type Q/N/B/R");
                 }
-                const url = "board/makemove/" + initial_pos + "-" + final_pos + promotion;
+                const url = "makemove/" + initial_pos + "-" + final_pos + promotion;
                 $.ajax({
                     url: url,
+                    data: { index: index },
                 })
                 .done( (data) => {
-                    console.log(data);
-                    if (!data["gameFinished"] && data["success"]) {
-                        console.log(data['changes'])
-                        if (checkSquare!==null) {
-                            $(checkSquare).removeClass("check");
-                            checkSquare = null;
-                            saveCheckSquare();
-                        }
+                    console.log(data['changes']);
+                    if (!data["move"]) {
+                        console.log("Invalid Move!");
+                    } else if (data["success"] && data["puzzleOver"]) {
+                        console.log("Puzzle solved successfully");
                         make_move(data['changes']);
-                    } else if (data["gameFinished"]) {
-                        console.log("Game Finished", data["result"]);
+                        index += 1;
+                        saveIndexValue();
+                        createAlert("Correct", 1);
+                        getPuzzle();
+
+                    } else if (!data["success"] && data["puzzleOver"]) {
+                        console.log("Puzzle Failed!");
+                        make_move(data['changes']);
+                        index += 1;
+                        saveIndexValue();
+                        createAlert("Incorrect", 0);
+                        getPuzzle();
                     }
                     else {
-                        console.log("Invalid Move!");
+                        console.log("Correct Move! Keep on going");
+                        make_move(data['changes']);
+                        createAlert("Keep on Going!", 4);
                     }
                     removeHighlight(squares);
                     $("#"+initial_pos).removeClass("active-cell");
-
-                    // check for game status here
-                    let url = "board/getGameStatus";
-                    $.ajax({
-                        url: url,
-                    })
-                    .done( (data) => {
-                        if (data["status"]==="finished") {
-                            alert(`Game ended! Result: ${data["result"]}-${1-data["result"]}, Cause: ${data["cause"]}`);
-                        }
-                    });
                     
                 });
             }
@@ -105,16 +99,25 @@
         <button type="button" class="close" data-dismiss="alert">&times;</button>${text}</div>`);
     }
 
+    function getPuzzle() {
+        $.ajax({
+            url: `fetchPuzzle`,
+            data: { 'index': index },
+        })
+        .done(function(data){
+            if (data.success) {
+                $("tbody").replaceWith("<tbody>"+data.board+"</tbody>");
+            }
+        });
+    }
+
     function make_move(changes) {
         for (var i=0; i<changes.length; i++) {
             const square_id = "#" + changes[i]['pos'];
             const square_class = changes[i]['class'];
-            if (square_class.includes("check")) {
-                checkSquare = square_id;
-                saveCheckSquare();
-            }
             $(square_id).removeClass("white-K white-Q white-R white-B white-N white-p black-K black-Q black-R black-B black-N black-p none-_");
             $(square_id).addClass(square_class);
+            $(square_id).removeClass('check');
         }
     }
 
@@ -169,8 +172,54 @@
         })(window);
     }
 
-    function startClock() {
+    function loadClock() {
 
+        if(endTime===null) {
+            endTime = new Date()
+            endTime.setMinutes(endTime.getMinutes() + 20);
+            endTime = (Date.parse(endTime) / 1000);
+            saveEndTime();
+        }
+
+        function makeTimer() {
+
+            var now = new Date();
+            now = (Date.parse(now) / 1000);
+
+            var timeLeft = endTime - now;
+            if (timeLeft<=0) {
+                window.clearInterval(clock);
+                console.log("time's up!");
+                $.ajax({
+                    url: 'leaderboards',
+                })
+                .done(function(data){
+                    console.log(data);
+                })
+                // $.ajax({
+                //     url: 'end_contest',
+                // })
+                // .done(function(data){
+                //     // Go to leaderboards
+                    
+                // });
+                timeLeft = 0;
+            }
+
+            var days = Math.floor(Math.max(timeLeft / 86400), 0); 
+            var hours = Math.floor(Math.max((timeLeft - (days * 86400)) / 3600), 0);
+            var minutes = Math.floor(Math.max((timeLeft - (days * 86400) - (hours * 3600 )) / 60), 0);
+            var seconds = Math.floor(Math.max((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60))), 0);
+    
+            if (hours < "10") { hours = "0" + hours; }
+            if (minutes < "10") { minutes = "0" + minutes; }
+            if (seconds < "10") { seconds = "0" + seconds; }
+
+            $("#minutes").html(minutes + "<span>Mins </span>");
+            $("#seconds").html(seconds + "<span>Seconds </span>");
+        }
+        
+        clock = setInterval(function() { makeTimer(); }, 1000);
     }
 
     function mouseIn() {
@@ -190,17 +239,25 @@
         return white_pawn || black_pawn;
     }
 
-    function saveCheckSquare() {
-        localStorage.checkSquare = JSON.stringify(checkSquare);
+    function saveIndexValue() {
+        localStorage.index = JSON.stringify(index);
     }
 
-    function loadCheckSquare() {
-        checkSquare = JSON.parse(localStorage.checkSquare || null);
-        $(`${checkSquare}`).addClass('check');
+    function loadIndexValue() {
+        index = JSON.parse(localStorage.index || 0);
+    }
+
+    function saveEndTime() {
+        localStorage.endTime = JSON.stringify(endTime);
+    }
+
+    function loadEndTime() {
+        endTime = JSON.parse(localStorage.endTime || null);
     }
 
     function loadSessionVars() {
-        loadCheckSquare()
+        loadIndexValue()
+        loadEndTime();
     }
 
     var incrementClick = (function(){
