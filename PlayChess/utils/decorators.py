@@ -37,3 +37,9 @@ def deprecated(func):
         )
         return func(args[0])
     return wrapper
+
+def disable(func):
+    @wraps(func)
+    def wrapper(*args):
+        return None
+    return wrapper
