@@ -183,10 +183,6 @@
             saveEndTime();
         }
 
-        function checkIfContestEnded() {
-            var now = new Date();
-        }
-
         function makeTimer() {
 
             var now = new Date();

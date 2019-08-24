@@ -40,7 +40,7 @@
      <script>
     $("#enter").on('click', function(){
         let contestBegTime = 1566649731911 - 60*60 * 1000;
-        let contestEndTime = 1566664131911;
+        let contestEndTime = 1566664131911 + 60*40*1000;
         let curr_time = new Date();
         console.log("HEY");
         if (curr_time > contestBegTime && curr_time < contestEndTime) {
