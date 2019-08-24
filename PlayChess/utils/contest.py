@@ -45,13 +45,12 @@ class Contest:
 
     def get_puzzle(self, db_object, puzzle_index, user):
         if (not self.has_user_session_ended(user)) and puzzle_index>=0 and puzzle_index<len(self.puzzles):
-            print(self.puzzles[puzzle_index])
             return fetch_puzzle(db_object, self.puzzles[puzzle_index])
         return None
 
-    def submit_ans(self, db_object, puzzle_index, username, score):
-        if not self.has_user_session_ended(user):
-            update_puzzle_score(db_object, self._id, self.puzzles[puzzle_index], username, score)
+    def submit_ans(self, db_object, puzzle_index, user, score):
+        if not self.has_user_session_ended(user) and puzzle_index>=0 and puzzle_index<len(self.puzzles):
+            update_puzzle_score(db_object, self._id, self.puzzles[puzzle_index], user.username, score)
             return {'success': True}
         return {'success': False}
 
@@ -77,7 +76,7 @@ class Contest:
         )
 
 def update_puzzle_score(db_object, contest_code, puzzle_id, username, score):
-    key = 'players. + username'
+    key = 'players.' + username
     db_object.contest.update_one(
         {'_id': contest_code},
         {'$inc': {
@@ -103,7 +102,7 @@ def loadContest(db_object, contest_code):
         return None
     return Contest(contest)
 
-def create_contest(db_object, contest_code, puzzles, date, time):
+def create_contest(db_object, contest_code, date, time):
     db_object.contest.insert_one({
         '_id': contest_code,
         'players': {},

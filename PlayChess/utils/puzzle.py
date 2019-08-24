@@ -23,27 +23,31 @@ class Puzzle:
         return self.board.generate_legal_moves(initial_pos)
 
     def make_move(self, initial_pos, final_pos, dest_piece=None):
-        res = { changes: [], success: False, puzzleOver: False }
-
-        res.changes.append(self.board.make_move(initial_pos, final_pos, dest_piece=dest_piece))
+        res = { 'changes': [], 'success': False, 'puzzleOver': False }
         notation = initial_pos + "-" + final_pos if dest_piece is None else initial_pos + "-" + final_pos + "-" + dest_piece
-        self.moves += 1
 
         if self.moves < len(self.solution) and self.solution[self.moves] ==  notation:
-            res['changes'].append(self.board.make_move(self.solution[self.moves]))
-            self.moves += 1
             res['success'] = True
+
+        self.moves += 1
+
+        res['changes'] += self.board.make_move(initial_pos, final_pos, dest_piece=dest_piece)
+        if self.moves < len(self.solution):
+            squares = self.solution[self.moves].split('-')
+            dest_square = squares[2] if len(squares)==3 else None
+            res['changes'] += self.board.make_move(squares[0], squares[1], dest_piece=dest_square)
+            self.moves += 1
 
         if self.moves == len(self.solution):
             res['puzzleOver'] = True
 
         return res
 
-    def getScore():
+    def get_score(self):
         return self.moves / len(self.solution)
 
 def pushPuzzleResult(db_object, puzzle_id, username, result):
-    puzzle = db_object.puzzle.update_one(
+    db_object.puzzle.update_one(
         {'_id': puzzle_id},
         {'$inc': {
             "attempts": 1,
@@ -53,8 +57,8 @@ def pushPuzzleResult(db_object, puzzle_id, username, result):
     db_object.users.update_one(
         {'username': username},
         {"$push": {"puzzles": {
-                "_id" : puzzle.updated_id,
-                "success": result,
+                "_id" : puzzle_id,
+                "score": result,
             }
         }}
     )
@@ -66,7 +70,7 @@ def addTag(db_object, puzzle_id, tag):
     )
 
 def createPuzzle(db_object, start_pos, solution, tags=[]):
-    db_object.puzzle.insert_one({
+    insert_id = db_object.puzzle.insert_one({
         'attempts': 0,
         'solved': 0,
         'rating': 1200,
@@ -75,6 +79,7 @@ def createPuzzle(db_object, start_pos, solution, tags=[]):
         'solution': solution,
         'tags': tags
     })
+    return insert_id
 
 def fetch_puzzle(db_object, puzzle_id):
     puzzle = db_object.puzzle.find_one(
