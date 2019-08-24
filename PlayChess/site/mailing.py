@@ -7,7 +7,6 @@ from email.mime.text import MIMEText
 
 from ..utils import decorators
 
-@decorators.disable
 def sendMail(id, email, username):
     try:
         email_conn = SMTP(config.configurations['host'], config.configurations['port'])
