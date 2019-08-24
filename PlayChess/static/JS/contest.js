@@ -189,20 +189,17 @@
             var timeLeft = endTime - now;
             if (timeLeft<=0) {
                 window.clearInterval(clock);
-                console.log("time's up!");
                 $.ajax({
-                    url: 'leaderboards',
+                    url: 'end_contest',
                 })
-                .done(function(data){
-                    console.log(data);
-                })
-                // $.ajax({
-                //     url: 'end_contest',
-                // })
-                // .done(function(data){
-                //     // Go to leaderboards
-                    
-                // });
+                .done(function(){
+                    let contest_id = window.location.href;
+                    let base_url = window.location.href;
+                    base_url = base_url.slice(0, base_url.indexOf('/contest')+8);
+                    contest_id = contest_id.slice(contest_id.indexOf('contest/')+8);
+                    contest_id = contest_id.slice(0, contest_id.indexOf('/'));
+                    window.location.href = `${base_url}/${contest_id}/leaderboards`;
+                });
                 timeLeft = 0;
             }
 
