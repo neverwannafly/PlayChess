@@ -5,6 +5,7 @@
 {% block includes %}
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/chessboard.css')}}"/>
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/contest.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='CSS/clock.css')}}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.26.10/dist/sweetalert2.all.min.js"></script>
     <script src="{{ url_for('static', filename='JS/contest.js')}}"></script>
@@ -22,9 +23,11 @@
                 </table>
             </div>
         </div>
-        <div id="clock">
-           <div class="timer raised">
-           </div>
+        <div id="clock" class="raised">
+            <div id="days"></div>
+            <div id="hours"></div>
+            <div id="minutes"></div>
+            <div id="seconds"></div>
         </div> 
     </div>
 
