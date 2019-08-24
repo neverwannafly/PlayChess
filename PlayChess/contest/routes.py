@@ -52,9 +52,9 @@ def main(contest_code):
             CONTESTS[contest_code] = cntst
     return render_template('info.html', info=cntst.info, title=cntst.title)
 
-@mod.route('/<contest_code>/start')
+@mod.route('/<contest_code>/register')
 @decorators.login_required
-def main_contest(contest_code):
+def register_contest(contest_code):
     cntst = CONTESTS.get(contest_code, None)
     if cntst is None:
         cntst = contest.loadContest(db, contest_code)
@@ -66,7 +66,21 @@ def main_contest(contest_code):
         cntst.register_user(db, USER_DICT['current_user_'+str(session['username'])])
     except exceptions.ContestEnded:
         return render_template('info.html', info=cntst.info, title=cntst.title, error_code=1)
-    return render_template('contest.html')
+    return redirect(url_for('contest.main_contest'))
+
+@mod.route('/<contest_code>/start')
+@decorators.login_required
+def main_contest(contest_code):
+    cntst = CONTESTS.get(contest_code, None)
+    if cntst is None:
+        cntst = contest.loadContest(db, contest_code)
+        if cntst is None:
+            return jsonify({'error': 'contest not found!'})
+        else:
+            CONTESTS[contest_code] = cntst
+    if cntst.has_user_session_ended(USER_DICT['current_user_'+str(session['username'])]):
+        return render_template('info.html', info=cntst.info, title=cntst.title, error_code=1)
+    return render_template('contest.html', title=cntst.title)
 
 @mod.route('/<contest_code>/fetchPuzzle')
 @decorators.login_required
@@ -148,8 +162,9 @@ def get_leaderboards(contest_code):
     if cntst is None:
         return jsonify({'success': False})
     data = cntst.players
-    rankings = sorted(data.items(), key=lambda x: x[1], reverse=True)
-    return jsonify({'rankings': rankings})
+    sorted_data = sorted(data.items(), key=lambda x: x[1], reverse=True)
+    rankings = [{'name': rank[0], 'team': 'DTU', 'gap': rank[1]} for rank in sorted_data]
+    return render_template('leaderboard.html', rankings=rankings, title=cntst.title)
 
 @mod.route('/<contest_code>/end_contest')
 @decorators.login_required
@@ -157,7 +172,7 @@ def end_contest(contest_code):
     cntst = CONTESTS.get(contest_code, None)
     if cntst is None:
         return jsonify({'success': False})
-    cntst.finish_user_session(USER_DICT['current_user_' + str(session['username'])])
+    cntst.finish_user_session(db, contest_code, USER_DICT['current_user_' + str(session['username'])])
     USER_DICT['current_user_' + str(session['username'])].puzzle = None
     return jsonify({'success': True})
     
