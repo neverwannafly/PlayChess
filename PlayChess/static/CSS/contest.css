@@ -63,6 +63,14 @@ body {
     box-shadow:         3px 3px 5px 6px rgba(0, 0, 0, 0.4);
 }
 
+.interactive-buttons {
+    margin-top: 3%;
+    align-self: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
 @media only screen and (max-width: 787px) {
     .sidebar {
         width: 80px !important;
