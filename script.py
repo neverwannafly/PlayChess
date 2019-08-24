@@ -3,10 +3,18 @@ from PlayChess import db
 
 from bson.objectid import ObjectId
 
+db.users.update({'username': 'alwayswannaly'}, {'$pull': {'contests': {} }})
+db.users.update({'username': 'alwayswannaly'}, {'$pull': {'puzzles': {} }})
+db.users.update({'username': 'neverwannafly'}, {'$pull': {'contests': {} }})
+db.users.update({'username': 'neverwannafly'}, {'$pull': {'puzzles': {} }})
+
+db.puzzle.remove({})
+db.contest.remove({})
+
 contest.create_contest(db, "DTUCHT19", None, None)
 cntst = contest.loadContest(db, "DTUCHT19")
 
-cntst.update_details(db,"""<div class=\"container board heading raised\"><h1><u>DTU CHESS TRIALS</u></h1></div><div class=\"container board raised\"><center><h5> Important Rules for Puzzle Round </h5><h6>(The puzzle round will be held on 24th August between 6PM-10PM)</h6></center><hr width='90%' height='10%' color='beige'><ul><li>Solving a puzzle successfully will give you 1 point. Partial markings will also be given on puzzles whose solution is more than 1 move depending on how much of it you solve.</li><li>There is no negative marking if you fail at a puzzle</li><li>No tiebreakers would be used to resolve ties. People with same score will be treated as same rank</li><li>Once you start, you'll need to finish the contest within 20 minutes.</li><li>If you skip a puzzle, you wont be able to attempt it.</li><li>You would be given only 1 attempt at solving a puzzle. If you accidentally selected a wrong square, you can deselect it by clicking anywhere except a valid move square. No excuses like misclick would be entertained.</li><li>Leaderboards would be displayed after the contest concludes.</li></ul></div><div class=\"interactive-buttons raised\"><button class=\"raised btn btn-danger btn-lg btn-block btn-disabled\"> START CONTEST </button></div>""", "DTUCHT19")
+cntst.update_details(db,"""<div class=\"container board heading raised\"><h1><u>DTU CHESS TRIALS</u></h1></div><div class=\"container board raised\"><center><h5> Important Rules for Puzzle Round </h5><h6>(The puzzle round will be held on 24th August between 6PM-10PM)</h6></center><hr width='90%' height='10%' color='beige'><ul><li>Solving a puzzle successfully will give you 1 point. Partial markings will also be given on puzzles whose solution is more than 1 move depending on how much of it you solve.</li><li>There is no negative marking if you fail at a puzzle</li><li>No tiebreakers would be used to resolve ties. People with same score will be treated as same rank</li><li>Once you start, you'll need to finish the contest within 20 minutes.</li><li>If you skip a puzzle, you wont be able to attempt it.</li><li>You would be given only 1 attempt at solving a puzzle. If you accidentally selected a wrong square, you can deselect it by clicking anywhere except a valid move square. No excuses like misclick would be entertained.</li><li>Leaderboards would be displayed after the contest concludes.</li></ul></div>""", "DTUCHT19")
 
 p1 = puzzle.createPuzzle(db, "6k1/ppR5/3B2p1/3p4/4rnK1/5P2/PP1r3P/8 b - - 0 0", ['d2-g2', 'g4-h4', 'g6-g5'], ['Mate in Two'])
 cntst.add_puzzle(db, p1.inserted_id)
@@ -42,7 +50,7 @@ p1 = puzzle.createPuzzle(db, "r3r1k1/ppQ1n1pp/q7/4Nb2/3P4/2P4P/P4PP1/R1B1K2R b K
 cntst.add_puzzle(db, p1.inserted_id)
 p1 = puzzle.createPuzzle(db, "1k6/pp6/2pb4/3p4/6B1/2P2R1P/PP4P1/4q1BK w - - 1 2", ['f3-e3', 'e1-e3', 'g1-e3'], ['Queen Trap', 'Backrank Weakness'])
 cntst.add_puzzle(db, p1.inserted_id)
-p1 = puzzle.createPuzzle(db, "3q1rk1/p1pn1p2/1rQb3p/4p1p1/4N3/6B1/PPP2PPP/3R1RK1 w - - 1 2", ['c6-d7', 'd8-d7', 'e5-f6'], ['Fork'])
+p1 = puzzle.createPuzzle(db, "3q1rk1/p1pn1p2/1rQb3p/4p1p1/4N3/6B1/PPP2PPP/3R1RK1 w - - 1 2", ['c6-d7', 'd8-d7', 'e4-f6'], ['Fork'])
 cntst.add_puzzle(db, p1.inserted_id)
 p1 = puzzle.createPuzzle(db, "8/3k4/1K6/8/4BR2/4p3/4p3/8 w - - 0 1", ['e4-f5', 'd7-d6', 'f4-d4', 'd6-e5', 'd4-e4'], ['Endgame'])
 cntst.add_puzzle(db, p1.inserted_id)
