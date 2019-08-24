@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  border-top: 4px solid #DC0000;
+  background: #15151E;
+  color: #fff;
+  font-family: 'Rubik', sans-serif;
+  /* center the table horizontally */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+table {
+  /* position relative to include a band on the left of the container */
+  margin: 0rem 1rem;
+  position: relative;
+  /* cap the width of the table, allowing for a sizeable portion of white space if allowed by the viewport */
+  width: calc(90vw - 2rem);
+  max-width: 800px;
+  /* spacing to separate the table rows vertically */
+  border-spacing: 0 1rem;
+}
+/* with a pseudo element add a band with a repeating linear gradient */
+table:before {
+  position: absolute;
+  content: '';
+  right: calc(100% + 1rem);
+  top: 0;
+  height: 100%;
+  width: 1.5rem;
+  border-radius: 5px;
+  border: 1px solid #38383F;
+  background: repeating-linear-gradient(-45deg, #15151E 0px, #15151E 4px, #38383F 4px, #38383F 8px);
+}
+/* center every element nested in a table row */
+table tr > * {
+  text-align: center;
+  padding: 0.5rem;
+}
+/* align every second item of each row to the left */
+table tr > *:nth-child(2) {
+  text-align: left;
+}
+
+
+/* style the headings to have thin uppercase titles for the columns */
+table th {
+  font-weight: 300;
+  letter-spacing: 0.04rem;
+  font-size: 0.9rem;
+  color: #eee;
+  text-transform: uppercase;
+}
+
+/* slightly increase the weight of the cell describing the position */
+table td.position {
+  font-weight: 500;
+}
+
+/* style the cell with the driver visually separating the first, last name and team */
+table td.driver {
+  padding-left: 1rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.05rem;
+}
+table td.driver strong {
+  text-transform: uppercase;
+  font-weight: 500;
+}
+table td.driver span {
+  text-transform: capitalize;
+  margin-left: 0.75rem;
+  font-size: 0.8rem;
+  color: #999;
+  letter-spacing: initial;
+}
+
+/* style the span nested in the last cell to have the gap in a rounded rectangle */
+table td.gap span {
+  background: #38383F;
+  border-radius: 30px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+/* on smaller viewports remove the third column from sight */
+@media (max-width: 500px) {
+  table tr > *:nth-child(3) {
+    display: none;
+  }
+}
