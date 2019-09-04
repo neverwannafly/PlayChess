@@ -1,1 +1,1 @@
- ~/mongodb/bin/mongod
+ ~/mongodb/bin/mongod --dbpath data/db
