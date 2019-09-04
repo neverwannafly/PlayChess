@@ -1,4 +1,4 @@
-from flask import session, redirect, url_for
+from flask import session, redirect, url_for, request
 from functools import wraps
 
 from ..config import TERMINAL_COLORS
@@ -11,6 +11,7 @@ def login_required(view_function):
         if username:
             return view_function(*args, **kwargs)
         else:
+            print(request.path)
             return redirect(url_for('site.login'))
     return wrapper
 

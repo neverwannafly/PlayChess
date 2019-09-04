@@ -7,17 +7,17 @@
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/index.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/sidebar.css')}}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/sidebar-themes.css')}}"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-    <link rel="stylesheet" href="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.26.10/dist/sweetalert2.all.min.js"></script>
-    <script src="{{ url_for('static', filename='JS/chessboard.js')}}"></script>
-    <script src="{{ url_for('static', filename='JS/index.js')}}"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.js"></script>
-    <!--<script src="{{ url_for('static', filename='JS/SnowfallEffect/sketch.js')}}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='SRC/CSS/fa.min.css')}}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='SRC/CSS/customScroll.min.css')}}"/>
+    <script src="{{ url_for('static', filename='SRC/JS/socket.io.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='SRC/JS/sweetalert.min.js')}}"></script>
+    <!--<script src="{{ url_for('static', filename='SRC/JS/p5.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='SRC/JS/p5.dom.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='JS/SnowfallEffect/sketch.js')}}"></script>
     <script src="{{ url_for('static', filename='JS/SnowfallEffect/snowflake.js')}}"></script>-->
     <script src="{{ url_for('static', filename='JS/sidebar.js')}}"></script>
+    <script src="{{ url_for('static', filename='JS/chessboard.js')}}"></script>
+    <script src="{{ url_for('static', filename='JS/index.js')}}"></script>
 {% endblock %}
 {% block body %}
     <div class="main-page-loader">

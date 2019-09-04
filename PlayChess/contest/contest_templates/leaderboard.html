@@ -4,8 +4,8 @@
 {% endblock %}
 {% block includes %}
     <link rel="stylesheet" href="{{ url_for('static', filename='CSS/leaderboard.css')}}"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.26.10/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='SRC/CSS/fa.min.css')}}"/>
+    <script src="{{ url_for('static', filename='SRC/JS/sweetalert.min.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js"></script>
     <script src="{{ url_for('static', filename='JS/leaderboard.js')}}"></script>
 {% endblock %}
