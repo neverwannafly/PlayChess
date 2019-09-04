@@ -113,3 +113,6 @@ venv.bak/
 
 # Redis
 dump.rdb
+
+# Mongodb
+data
