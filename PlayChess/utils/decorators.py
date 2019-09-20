@@ -9,9 +9,13 @@ def login_required(view_function):
     def wrapper(*args, **kwargs):
         username = session.get('username')
         if username:
+            if session.get('next', False):
+                next_url = "/" + "/".join(session['next'].split('/')[3:])
+                session.pop('next')
+                return redirect(next_url)
             return view_function(*args, **kwargs)
         else:
-            print(request.path)
+            session['next'] = request.base_url
             return redirect(url_for('site.login'))
     return wrapper
 
