@@ -2,7 +2,7 @@ let snow = [];
 let gravity;
 let wind;
 let sinIndex = 0;
-let maxSnowFlakes = 250;
+let maxSnowFlakes = 180;
 
 let spriteSheet;
 let textures = [];
@@ -12,7 +12,7 @@ function stop() {
 }
 
 function start() {
-    maxSnowFlakes = 250;
+    maxSnowFlakes = 180;
 }
 
 function preload() {
@@ -57,4 +57,4 @@ function draw() {
 
 }
 
-stop();
+// stop();
