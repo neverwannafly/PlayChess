@@ -57,4 +57,4 @@ function draw() {
 
 }
 
-// stop();
+stop();
