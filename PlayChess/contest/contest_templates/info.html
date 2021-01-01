@@ -39,7 +39,11 @@
 </body>
      <script>
     $("#enter").on('click', function(){
-        alert("Contest hasnt started yet!");
+        if (window.location.href.slice(window.location.href.indexOf('contest/')+8) === 'PZZLTR') {
+            register();
+        } else {
+            alert("Contest hasnt started yet!");
+        }
     });
 
     function register() {
