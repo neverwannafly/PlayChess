@@ -6,6 +6,7 @@ billiard==3.6.1.0
 celery==4.3.0
 cffi==1.12.3
 Click==7.0
+dnspython==1.16.0
 Flask==1.0.2
 Flask-SocketIO==3.3.2
 graphviz==0.11.1
