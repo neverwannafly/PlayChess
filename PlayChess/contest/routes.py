@@ -163,7 +163,7 @@ def get_leaderboards(contest_code):
     cntst = CONTESTS.get(contest_code, None)
     if cntst is None:
         return jsonify({'success': False})
-    # return render_template('leaderboard.html', rankings={}, title=cntst.title)
+    return render_template('leaderboard.html', rankings={}, title=cntst.title)
     data = cntst.players
     sorted_data = sorted(data.items(), key=lambda x: x[1], reverse=True)
     rankings = [{'name': rank[0], 'team': 'DTU', 'gap': round(rank[1], 2)} for rank in sorted_data]
