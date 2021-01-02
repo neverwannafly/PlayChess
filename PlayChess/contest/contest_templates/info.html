@@ -39,21 +39,7 @@
 </body>
      <script>
     $("#enter").on('click', function(){
-        if (window.location.href.slice(window.location.href.indexOf('contest/')+8) === 'PZZLTR') {
-            register();
-        } else {
-            let contestBegTime = 1609583400000 - 1000;
-            let contestEndTime = 1609594200000 + 60*60*1000 + 1000;
-            let curr_time = new Date();
-            if (curr_time > contestBegTime && curr_time < contestEndTime) {
-                console.log("work");
-                register();
-            } else if (curr_time <= contestBegTime) {
-                alert("Contest hasnt started yet");
-            } else {
-                alert("Contest is already over!");
-            }
-        }
+        register();
     });
 
     function register() {
