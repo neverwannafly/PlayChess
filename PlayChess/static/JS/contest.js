@@ -251,7 +251,7 @@
     }
 
     function loadIndexValue() {
-        index = JSON.parse(localStorage.index || 0);
+        index = 0;
     }
 
     function saveEndTime() {
@@ -259,7 +259,7 @@
     }
 
     function loadEndTime() {
-        endTime = JSON.parse(localStorage.endTime || null);
+        endTime = null;
     }
 
     function loadSessionVars() {
