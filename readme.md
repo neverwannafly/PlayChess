@@ -1,3 +1,5 @@
+NOTE: This Project is deprecated in favour of new and improved Chess on Rails Project (https://github.com/neverwannafly/Chess-on-Rails)
+
 <p align="center"><img src="PlayChess/static/Images/logo/PlayChess.png" alt="PlayChess" height="150px"></p>
 
 # PlayChess WebApp
